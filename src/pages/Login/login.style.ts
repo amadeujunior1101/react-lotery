@@ -4,10 +4,19 @@ import { device } from "../mideaQuerysDefault"
 const ContainerFluid = styled.div`
   background: #F7F7F7;
   width: 100%;
-  height: calc(100% - var(--footer-login));
+ 
   display: flex;
   align-items: center;
   justify-content: center;
+
+   @media ${device.tablet && device.mobileL && device.mobileM && device.mobileS}{
+        height: 100%;
+     }
+
+     @media ${device.laptop}{
+        height: calc(100% - var(--footer-login));
+     }
+     
 `;
 
 const BoxGeneral = styled.div`
@@ -75,8 +84,23 @@ const DivTitleOne = styled.div`
 
 const SpanTitleOne = styled.span`
     text-align: center;
-    font: italic normal bold 65px Helvetica Neue;
+    /* font: italic normal bold 65px Helvetica Neue; */
     color: #707070;
+
+    @media ${device.mobileL && device.mobileM && device.mobileS}{
+        font: italic normal bold 35px Helvetica Neue;
+        margin-top: 30px;
+  }
+
+    @media ${device.tablet} {
+        font: italic normal bold 45px Helvetica Neue;
+        margin-top: 100px;
+  }
+
+    @media ${device.laptop}{
+        font: italic normal bold 65px Helvetica Neue;
+        margin-top: 0;
+  }
 `;
 
 const DivButtonFor = styled.button`
@@ -107,9 +131,19 @@ const SpanButtonFor = styled.span`
 
 const SpanLotery = styled.span`
     text-align: center;
-    font: italic normal bold 83px Helvetica Neue;
     color: #707070;
     text-transform: uppercase;
+
+    @media ${device.mobileL && device.mobileM && device.mobileS}{
+        font: italic normal bold 35px Helvetica Neue;
+  }
+    @media ${device.tablet}{
+        font: italic normal bold 45px Helvetica Neue;
+  }
+
+    @media ${device.laptop}{
+        font: italic normal bold 70px Helvetica Neue;
+  }
 `;
 
 
@@ -139,7 +173,7 @@ const DivCardLogin = styled.div`
 `;
 
 const DivInputEmail = styled.div`
-     width: 350px; 
+    
      height: 80px; 
      background: #FFFFFF;
      border-top-left-radius: 10px; 
@@ -148,6 +182,16 @@ const DivInputEmail = styled.div`
      display: flex;
      justify-content: center;
      align-items: center;
+    
+     @media ${device.mobileL && device.mobileM && device.mobileS}{
+        width: 300px; 
+     }
+     @media ${device.tablet}{
+        width: 350px; 
+     }
+     @media ${device.laptop}{
+        width: 350px; 
+     }
 `;
 
 const DivInputPassword = styled.div`
@@ -159,6 +203,16 @@ const DivInputPassword = styled.div`
      display: flex;
      justify-content: center;
      align-items: center;
+
+     @media ${device.mobileL && device.mobileM && device.mobileS}{
+        width: 300px; 
+     }
+     @media ${device.tablet}{
+        width: 350px; 
+     }
+     @media ${device.laptop}{
+        width: 350px; 
+     }
 `;
 
 const InputLogin = styled.input`
@@ -168,6 +222,8 @@ const InputLogin = styled.input`
     margin: auto 20px auto 20px;
     font: italic normal bold 18px Helvetica Neue;
     color: #9D9D9D;
+
+    
 `;
 
 const DivButtonLogin = styled.div`
@@ -178,12 +234,26 @@ const DivButtonLogin = styled.div`
    border-bottom-right-radius: 10px;
    justify-content: center; 
    display: grid;
+
+   @media ${device.mobileL && device.mobileM && device.mobileS}{
+        width: 300px; 
+     }
+     @media ${device.tablet}{
+        width: 350px; 
+     }
+     @media ${device.laptop}{
+        width: 350px; 
+     }
 `;
 
 const DivForgot = styled.div`
-   width: 350px;
+  width: 350px; 
    text-align: right;
    margin-top: 20px;
+
+   @media ${device.mobileL && device.mobileM && device.mobileS}{
+        width: 300px; 
+     }
 
    /* cursor: pointer;
     border: none; */
@@ -207,12 +277,25 @@ const ButtonLogin = styled.button`
     border: none;
 
     margin: 40px auto 40px auto;
+
+    @media ${device.tablet && device.mobileL && device.mobileM && device.mobileS}{
+        margin: 20px auto 20px auto;
+     }
 `;
 
 const SpanLogin = styled.span`
     text-align: center;
-    font: italic normal bold 35px Helvetica Neue;
     color: #B5C401;
+
+    @media ${device.mobileL && device.mobileM && device.mobileS}{
+        font: italic normal bold 22px Helvetica Neue;
+     }
+     @media ${device.tablet}{
+         font: italic normal bold 35px Helvetica Neue;
+     }
+     @media ${device.laptop}{
+         font: italic normal bold 35px Helvetica Neue;
+     }
 `;
 
 const ButtonForgot = styled.button`
@@ -220,6 +303,8 @@ const ButtonForgot = styled.button`
     cursor: pointer;
     border: none;
     margin-right: 10px;
+
+  
     /* margin: 30px auto 30px auto;  */
 `;
 
@@ -232,12 +317,27 @@ const ButtonSigUp = styled.button`
     border: none;
 
     margin: 30px auto 30px auto; 
+
+    @media ${device.mobileL && device.mobileM && device.mobileS}{
+        margin: 10px auto 10px auto; 
+     }
+     @media ${device.tablet}{
+        margin: 20px auto 20px auto; 
+     }
+     /* @media ${device.laptop}{
+        margin: 20px auto 20px auto; 
+     } */
+   
 `;
 
 const SpanSigUp = styled.span`
     text-align: center;
-    font: italic normal bold 35px/70px Helvetica Neue;
+    font: italic normal bold 25px Helvetica Neue;
     color: #707070;
+
+     @media ${device.laptop}{
+        font: italic normal bold 35px/70px Helvetica Neue;
+     }
 `;
 
 const Footer = styled.div`

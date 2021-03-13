@@ -33,29 +33,29 @@ function Login() {
                         </SpanTitleAuthentication>
                             </div>
                             <DivCardLogin>
-                                <div style={{boxShadow: "0px 3px 25px #00000014", borderRadius: 14}}>
+                                <div style={{ boxShadow: "0px 3px 25px #00000014", borderRadius: 14 }}>
 
-                                
-                                <DivInputEmail >
-                                    <InputLogin type="text" placeholder="Email"/>
-                                </DivInputEmail>
-                                <DivInputPassword>
-                                    <InputLogin type="password" placeholder="Password" />
-                                </DivInputPassword>
-                                <DivButtonLogin>
-                                    <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                                        <DivForgot>
-                                            <ButtonForgot>
-                                                <SpanForgot>I forget my password</SpanForgot>
-                                            </ButtonForgot>
-                                        </DivForgot>
-                                    </div>
-                                    <div>
-                                        <ButtonLogin>
-                                            <SpanLogin>Log In <i>-></i></SpanLogin>
-                                        </ButtonLogin>
-                                    </div>
-                                </DivButtonLogin>
+
+                                    <DivInputEmail >
+                                        <InputLogin type="text" placeholder="Email" />
+                                    </DivInputEmail>
+                                    <DivInputPassword>
+                                        <InputLogin type="password" placeholder="Password" />
+                                    </DivInputPassword>
+                                    <DivButtonLogin>
+                                        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                                            <DivForgot>
+                                                <ButtonForgot>
+                                                    <SpanForgot>I forget my password</SpanForgot>
+                                                </ButtonForgot>
+                                            </DivForgot>
+                                        </div>
+                                        <div>
+                                            <ButtonLogin>
+                                                <SpanLogin>Log In <i>-></i></SpanLogin>
+                                            </ButtonLogin>
+                                        </div>
+                                    </DivButtonLogin>
                                 </div>
 
                             </DivCardLogin>
