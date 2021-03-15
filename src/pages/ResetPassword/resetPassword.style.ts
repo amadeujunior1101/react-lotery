@@ -172,7 +172,7 @@ const SpanTitleAuthentication = styled.span`
     color: #707070;
 `;
 
-const FormLogin = styled.form`
+const FormResetPassword = styled.form`
     justify-content: center;
     display: grid;
     margin-top: 25px;
@@ -221,7 +221,7 @@ const DivInputPassword = styled.div`
      }
 `;
 
-const InputLogin = styled.input`
+const InputEmail = styled.input`
     width: 100%;
     height: 30px;
     border: none;
@@ -314,7 +314,7 @@ const ButtonForgot = styled.button`
     /* margin: 30px auto 30px auto;  */
 `;
 
-const ButtonSigUp = styled.button`
+const ButtonSigUp = styled.button.attrs({type: 'submit'})`
     background: #F7F7F7;
     border-radius: 100px;
     justify-content: center;
@@ -368,10 +368,10 @@ export {
     SpanLotery,
     ContainerBoxRight,
     SpanTitleAuthentication,
-    FormLogin,
+    FormResetPassword,
     DivInputEmail,
     DivInputPassword,
-    InputLogin,
+    InputEmail,
     DivButtonLogin,
     DivForgot,
     SpanForgot,

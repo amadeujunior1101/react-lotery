@@ -1,17 +1,20 @@
 import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxLeft, DivBoxRight, ContainerBoxLeft, DivTitleOne, SpanTitleOne,
-    DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormLogin, DivInputEmail,
-    DivInputPassword, InputLogin, DivButtonLogin, DivForgot, SpanForgot, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp, ButtonForgot, Footer,
-} from "./login.style"
+    DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormResetPassword, DivInputEmail,
+    DivInputPassword, InputEmail, DivButtonLogin, DivForgot, SpanForgot, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp, ButtonForgot, Footer,
+} from "./resetPassword.style";
 
-function Login() {
+function ResetPassword() {
     const handleSubmit = (e: React.FormEvent<HTMLInputElement>) => {
         e.preventDefault()
     }
 
+    function toBack() {
+        console.log("toBack()")
+    }
+
     return (
         <Wrapper>
-
             <ContainerFluid>
                 <BoxGeneral>
                     <DivBoxLeft>
@@ -33,38 +36,28 @@ function Login() {
                         <ContainerBoxRight>
                             <div>
                                 <SpanTitleAuthentication>
-                                    Authentication
+                                    Reset Password
                         </SpanTitleAuthentication>
                             </div>
-                            <FormLogin onSubmit={handleSubmit}>
+                            <FormResetPassword onSubmit={handleSubmit}>
                                 <div style={{ boxShadow: "0px 3px 25px #00000014", borderRadius: 14 }}>
 
                                     <DivInputEmail >
-                                        <InputLogin type="text" placeholder="Email" />
+                                        <InputEmail type="text" placeholder="Email" />
                                     </DivInputEmail>
-                                    <DivInputPassword>
-                                        <InputLogin type="password" placeholder="Password" autoComplete="on" />
-                                    </DivInputPassword>
                                     <DivButtonLogin>
-                                        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                                            <DivForgot>
-                                                <ButtonForgot>
-                                                    <SpanForgot>I forget my password</SpanForgot>
-                                                </ButtonForgot>
-                                            </DivForgot>
-                                        </div>
                                         <div>
                                             <ButtonLogin>
-                                                <SpanLogin>Log In <i>-</i></SpanLogin>
+                                                <SpanLogin>Send Link<i>-</i></SpanLogin>
                                             </ButtonLogin>
                                         </div>
                                     </DivButtonLogin>
                                 </div>
 
-                            </FormLogin>
+                            </FormResetPassword>
                             {/* <div> */}
-                            <ButtonSigUp>
-                                <SpanSigUp>Sign Up <i>-</i></SpanSigUp>
+                            <ButtonSigUp onClick={() => toBack()}>
+                                <SpanSigUp><i>-</i>Back</SpanSigUp>
                             </ButtonSigUp>
                             {/* </div> */}
                         </ContainerBoxRight>
@@ -79,4 +72,4 @@ function Login() {
     )
 }
 
-export default Login;
+export default ResetPassword;

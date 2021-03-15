@@ -178,12 +178,34 @@ const FormLogin = styled.form`
     margin-top: 25px;
 `;
 
-const DivInputEmail = styled.div`
+const DivInputName= styled.div`
     
      height: 80px; 
      background: #FFFFFF;
      border-top-left-radius: 10px; 
      border-top-right-radius: 10px; 
+     border: 1px solid #EBEBEB;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+    
+     @media ${device.mobileL && device.mobileM && device.mobileS}{
+        width: 300px; 
+     }
+     @media ${device.tablet}{
+        width: 350px; 
+     }
+     @media ${device.laptop}{
+        width: 350px; 
+     }
+`;
+
+const DivInputEmail = styled.div`
+    
+     height: 80px; 
+     background: #FFFFFF;
+     /* border-top-left-radius: 10px; 
+     border-top-right-radius: 10px;  */
      border: 1px solid #EBEBEB;
      display: flex;
      justify-content: center;
@@ -369,6 +391,7 @@ export {
     ContainerBoxRight,
     SpanTitleAuthentication,
     FormLogin,
+    DivInputName,
     DivInputEmail,
     DivInputPassword,
     InputLogin,

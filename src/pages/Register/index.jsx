@@ -1,10 +1,10 @@
 import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxLeft, DivBoxRight, ContainerBoxLeft, DivTitleOne, SpanTitleOne,
-    DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormLogin, DivInputEmail,
+    DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormLogin, DivInputName, DivInputEmail,
     DivInputPassword, InputLogin, DivButtonLogin, DivForgot, SpanForgot, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp, ButtonForgot, Footer,
-} from "./login.style"
+} from "./register.style"
 
-function Login() {
+function Register() {
     const handleSubmit = (e: React.FormEvent<HTMLInputElement>) => {
         e.preventDefault()
     }
@@ -33,29 +33,25 @@ function Login() {
                         <ContainerBoxRight>
                             <div>
                                 <SpanTitleAuthentication>
-                                    Authentication
+                                    Registration
                         </SpanTitleAuthentication>
                             </div>
                             <FormLogin onSubmit={handleSubmit}>
                                 <div style={{ boxShadow: "0px 3px 25px #00000014", borderRadius: 14 }}>
 
+                                    <DivInputName >
+                                        <InputLogin type="text" placeholder="Name" />
+                                    </DivInputName>
                                     <DivInputEmail >
-                                        <InputLogin type="text" placeholder="Email" />
+                                        <InputLogin type="email" placeholder="Email" />
                                     </DivInputEmail>
                                     <DivInputPassword>
                                         <InputLogin type="password" placeholder="Password" autoComplete="on" />
                                     </DivInputPassword>
                                     <DivButtonLogin>
-                                        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                                            <DivForgot>
-                                                <ButtonForgot>
-                                                    <SpanForgot>I forget my password</SpanForgot>
-                                                </ButtonForgot>
-                                            </DivForgot>
-                                        </div>
                                         <div>
                                             <ButtonLogin>
-                                                <SpanLogin>Log In <i>-</i></SpanLogin>
+                                                <SpanLogin>Register <i>-</i></SpanLogin>
                                             </ButtonLogin>
                                         </div>
                                     </DivButtonLogin>
@@ -64,7 +60,7 @@ function Login() {
                             </FormLogin>
                             {/* <div> */}
                             <ButtonSigUp>
-                                <SpanSigUp>Sign Up <i>-</i></SpanSigUp>
+                                <SpanSigUp><i>-</i>Back</SpanSigUp>
                             </ButtonSigUp>
                             {/* </div> */}
                         </ContainerBoxRight>
@@ -79,4 +75,4 @@ function Login() {
     )
 }
 
-export default Login;
+export default Register;
