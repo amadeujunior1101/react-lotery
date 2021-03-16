@@ -189,7 +189,7 @@ main {
     margin-top: 20px;
     margin-bottom: 30px;
 }
-.box-3 .container-balls .ball {
+/* .box-3 .container-balls .ball {
     background: #adc0c4;
     border-radius: 100%;
     align-items: center;
@@ -197,7 +197,7 @@ main {
     display: flex;
     cursor: pointer;
     margin-bottom: 5px;
-}
+} */
 .box-3 .container-balls .ball span {
     font: normal normal bold 20px/24px Helvetica Neue;
     color: #ffffff;

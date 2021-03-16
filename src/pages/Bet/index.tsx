@@ -2,17 +2,22 @@ import React, { useEffect, useState, AriaAttributes, DOMAttributes } from "react
 import "./bet.style.css";
 import dataJson from "../../mock/games.json"
 import ButtonChooseBet from "../../components/ButtonChooseBet"
+import BallBet from "../../components/Ball"
+import LoadBalls from "../../components/LoadBalls"
 
-// import {  } from "./bet.style"
-
-interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
-    // extends React's HTMLAttributes
-    active?: string;
+// import { Ball, SpanBall } from "./bet.style"
+interface Item {
+    type: string;
+    color: string;
+    range: number;
 }
 
 function Bet() {
     const [activeId, setActiveId] = useState(1)
-    const [balls, setBalls] = useState<Item>()
+    const [game, setGames] = useState<Item>()
+    const [selectedBalls, setSelectedBalls] = useState<Array<number>>([])
+    const [color, setColor] = useState<String>("#adc0c4")
+
     let ids = 0;
 
     const [data, setData] = useState([dataJson.types])
@@ -20,82 +25,58 @@ function Bet() {
         return console.log(data[0])
     }
 
-    // let $elementButtonChoose = document.querySelector(".buttons-choose")
-    let $elementButton = document.querySelector("button")
+    function selectedNumber(id: number) {
 
-    $elementButton?.setAttribute("active", "true");
+        setSelectedBalls([...selectedBalls, id])
 
-    interface Item {
-        type: string;
-        range: number;
     }
 
     function changeState(id: number, item: string) {
         setActiveId(id)
-
         let results = data[0].filter(el => {
             return el.type === item
         })
-
-        setBalls(results[0])
-
-        console.log("Range: ", results)
+        setGames(results[0]);
+        setSelectedBalls([])
     }
 
-    let text = 10;
+    function verifyColor(number: number) {
+        return selectedBalls.filter(el => {
+            return el === number + 1
+        })
+    }
 
     function loadBalls() {
-        // if (!balls?.range) {
-        //     console.error('No data here!');
-        //     return null
-        // 
-
-        return Array.apply(0, Array(balls?.range)).map(function (x, i) {
-            i + 1 < 10
-                ? (i = (`${"0" + (i + 1)}`))
-                : (i = i + 1);
+        return Array.apply(0, Array(game?.range)).map(function (x, i) {
+            console.log(verifyColor(i))
             return (
-                <div className="ball" key={i} >
-                    <span style={{ color: "#FFF" }}>
-                        {String(i)}
-                    </span>
-                </div>
+                <BallBet
+                    key={i}
+                    numberBall={i}
+                    color={verifyColor(i).length !== 0 ? String(game?.color) : "#adc0c4"}
+                    selectedNumber={(e: number) => { selectedNumber(e) }}
+                    arrBalls={selectedBalls}
+                />
             )
         })
 
-        // for (let index = 0; index < 25; index++) {
-        //     // console.error('Numero de bolas!', balls.range);
-        //     console.log("teste")
-        //     return (
-        //         <div className="ball" >
-        //             <span style={{ color: "#FFF" }}>
-        //                 {1}
-        //             </span>
-        //         </div>
-        //     )
-        // }
-
-        // return [1, 2, 3, 4, 5, 6].map(item => {
-        //     return (
-        //         <div className="ball" >
-        //             <span style={{ color: "#FFF" }}>
-        //                 {item}
-        //             </span>
-        //         </div>
-        //     )
-        // })
     }
-
-
 
     useEffect(() => {
         loadDataJson()
         let results = data[0].filter(el => {
             return el.type
         })
-        setBalls(results[0])
+        setGames(results[0])
         changeState(1, results[0].type)
+
+        // console.log("executou no useEffects")
     }, [])
+
+    // useEffect(() => {
+    //     loadBalls()
+    // }, [activeId])
+
     return (
         <>
             <div className="wrapper-topbar">
@@ -137,9 +118,7 @@ function Bet() {
                                         )
                                     })
                                 }
-                                {/* <button className="choose-button-one" active="true" id="lotofacil">Lotofácil</button>
-                                <button className="choose-button-two" active="false" id="mega-sena">Mega-Sena</button>
-                                <button className="choose-button-three" active="false" id="lotomania">Lotomania</button> */}
+
                             </div>
                         </div>
                         <div className="box-2">
@@ -158,7 +137,7 @@ function Bet() {
                                 {/* Ball's */}
 
                                 {loadBalls()}
-
+                                {/* <LoadBalls range={Number(game?.range)} color={String(game?.color)}/> */}
 
                             </div>
                             <div className="buttons-options">
@@ -167,7 +146,7 @@ function Bet() {
                                     <button className="button-clear-game">Clear game</button>
                                 </div>
                                 <div>
-                                    <button className="button-add-cart"><i className="fas fa-cart-plus"> </i>Add to cart</button>
+                                    <button className="button-add-cart" onClick={() => console.log("Items no arrayTemp", selectedBalls)}><i className="fas fa-cart-plus"> </i>Add to cart</button>
                                 </div>
                             </div>
                         </div>

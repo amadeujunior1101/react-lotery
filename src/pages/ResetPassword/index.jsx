@@ -5,6 +5,7 @@ import {
 } from "./resetPassword.style";
 
 function ResetPassword() {
+    console.log("ResetPassword() ")
     const handleSubmit = (e: React.FormEvent<HTMLInputElement>) => {
         e.preventDefault()
     }

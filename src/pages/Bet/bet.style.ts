@@ -7,6 +7,10 @@ interface ButtonProps {
     // active: boolean;
 };
 
+interface DivBallProps {
+    bg: string;
+};
+
 /* background: ${(p: ButtonProps)=>p.background};
 color: ${(p: ButtonProps)=>p.color};
 border: ${(p: ButtonProps)=>p.border}; */
@@ -31,6 +35,23 @@ const ButtonChoose = styled.button<ButtonProps>`
     box-shadow: none;
 `;
 
+const Ball = styled.div<DivBallProps>`
+    background: ${(p: DivBallProps) => p.bg === "#adc0c4" ? "#adc0c4" : p.bg};
+    /* background: #adc0c4; */
+    border-radius: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    cursor: pointer;
+    margin-bottom: 5px;
+`;
+
+const SpanBall = styled.span`
+   color: #FFF
+`;
+
 export {
     ButtonChoose,
+    Ball,
+    SpanBall,
 }
