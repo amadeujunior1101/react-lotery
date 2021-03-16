@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 // import "../pages/Bet/bet.style.css";
 
 import { ButtonChoose } from "../pages/Bet/bet.style"
@@ -16,11 +16,15 @@ interface Item {
 interface Props {
   item: Item;
   id: string;
-  // active: string;
+  // stateCurrent: arrayButtons;
+  // changeState(action: number): ()=>{}
+  func: Function
+  active: number;
 }
 
 function ButtonChooseBet(props: Props) {
-  console.log("props id", props.id)
+
+  // console.log("props id", props.func)
   //  let elementButtonChoose= document.querySelector(".button-choose")
   //  let elementButton:  Props = document.querySelector(".choose-button-one")
 
@@ -30,10 +34,11 @@ function ButtonChooseBet(props: Props) {
 
   return (
     <ButtonChoose
-      background={props.id === "1" ? `${props.item.color}` : "#FFF"}
-      color={props.id !== "1" ? `${props.item.color}` : "#FFF"}
+      background={Number(props.id) === props.active ? `${props.item.color}` : "#FFF"}
+      color={Number(props.id) !== props.active ? `${props.item.color}` : "#FFF"}
       border={`2px solid ${props.item.color}`}
       id={props.id}
+      onClick={() => { props.func(Number(props.id)) }}
     >
       {props.item.type}
     </ButtonChoose>

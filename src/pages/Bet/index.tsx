@@ -11,11 +11,13 @@ interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
 }
 
 function Bet() {
+    const [activeId, setActiveId] = useState(1)
+    const [balls, setBalls] = useState<Item>()
     let ids = 0;
 
     const [data, setData] = useState([dataJson.types])
     function loadDataJson() {
-        console.log(data[0])
+        return console.log(data[0])
     }
 
     // let $elementButtonChoose = document.querySelector(".buttons-choose")
@@ -23,9 +25,76 @@ function Bet() {
 
     $elementButton?.setAttribute("active", "true");
 
+    interface Item {
+        type: string;
+        range: number;
+    }
+
+    function changeState(id: number, item: string) {
+        setActiveId(id)
+
+        let results = data[0].filter(el => {
+            return el.type === item
+        })
+
+        setBalls(results[0])
+
+        console.log("Range: ", results)
+    }
+
+    let text = 10;
+
+    function loadBalls() {
+        // if (!balls?.range) {
+        //     console.error('No data here!');
+        //     return null
+        // 
+
+        return Array.apply(0, Array(balls?.range)).map(function (x, i) {
+            i + 1 < 10
+                ? (i = (`${"0" + (i + 1)}`))
+                : (i = i + 1);
+            return (
+                <div className="ball" key={i} >
+                    <span style={{ color: "#FFF" }}>
+                        {String(i)}
+                    </span>
+                </div>
+            )
+        })
+
+        // for (let index = 0; index < 25; index++) {
+        //     // console.error('Numero de bolas!', balls.range);
+        //     console.log("teste")
+        //     return (
+        //         <div className="ball" >
+        //             <span style={{ color: "#FFF" }}>
+        //                 {1}
+        //             </span>
+        //         </div>
+        //     )
+        // }
+
+        // return [1, 2, 3, 4, 5, 6].map(item => {
+        //     return (
+        //         <div className="ball" >
+        //             <span style={{ color: "#FFF" }}>
+        //                 {item}
+        //             </span>
+        //         </div>
+        //     )
+        // })
+    }
+
+
 
     useEffect(() => {
         loadDataJson()
+        let results = data[0].filter(el => {
+            return el.type
+        })
+        setBalls(results[0])
+        changeState(1, results[0].type)
     }, [])
     return (
         <>
@@ -57,7 +126,14 @@ function Bet() {
                                     data[0].map(item => {
                                         ids = ids + 1;
                                         return (
-                                            <ButtonChooseBet key={item.type} item={item} id={ids.toString()} />
+                                            <ButtonChooseBet
+                                                key={item.type}
+                                                item={item}
+                                                id={ids.toString()}
+                                                func={(e: number) => changeState(e, item.type)}
+                                                active={activeId}
+
+                                            />
                                         )
                                     })
                                 }
@@ -81,13 +157,7 @@ function Bet() {
                             <div className="container-balls">
                                 {/* Ball's */}
 
-                                {/* {data[0].map(item => {
-                                    <div className="ball">
-                                        <span style={{ border: "2px solid #adc0c4" }}>
-                                            {item.range}
-                                        </span>
-                                    </div>
-                                })} */}
+                                {loadBalls()}
 
 
                             </div>
