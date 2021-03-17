@@ -187,6 +187,7 @@
 
     let indexRemoveArray = 0;
     let $elementScroll = doc.createElement("div");
+    
     $buttonAddToCart.addEventListener("click", function clearGame() {
         if (arrayTemp.length < retorno[0]["max-number"]) return;
 

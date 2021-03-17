@@ -4,7 +4,35 @@ import dataJson from "../../mock/games.json"
 import ButtonChooseBet from "../../components/ButtonChooseBet"
 import BallBet from "../../components/Ball"
 
-// import { Ball, SpanBall } from "./bet.style"
+import {
+    DivButtonsChoose,
+    ParagraphDescription,
+    WrapperTopbar,
+    TopBar,
+    BlockLeft,
+    SpanLogo,
+    DivBarLogo,
+    SpanHome,
+    BlockRight,
+    SpanAccount, 
+    SpanLogOut,
+    Container,
+    Main,
+    ContentLeft,
+    DivBox1,
+    DivBox2,
+    DivBox3,
+    SpanTitleGame,
+    ContainerBalls,
+    DivButtonsOptions,
+    ButtonOption,
+    ButtonAddToCard,
+    BlockTitlesTop,
+    SpanTitleOne,
+    SpanTitleTwo,
+    SpanPatch,
+} from "./bet.style"
+
 interface Item {
     type: string;
     color: string;
@@ -16,7 +44,7 @@ interface Item {
 
 interface Cart {
     type: string,
-    price: string
+    price: number
     bets: Array<String>
 }
 
@@ -110,10 +138,36 @@ function Bet() {
 
         cart?.push({
             type: String(game?.type),
-            price: String(game?.price),
+            price: Number(game?.price),
             bets: cartTemporary
         });
         console.log("Itens no carinho:", cart);
+    }
+
+    function removeItemCart(indexRemove: number) {
+        let newCart = cart.filter((item, index, object) => {
+            return index !== indexRemove
+        })
+        setCart(newCart)
+    }
+
+    function cartValue() {
+        let total;
+        if (cart.length === 0) {
+            total = "0,00"
+
+        } else {
+            total = cart.reduce((accumulator: any, currentValue) => {
+                return Number(accumulator) + currentValue.price;
+            }, [0]);
+
+            return total
+                .toFixed(2)
+                .replace(".", ",")
+                .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+        }
+
+        return total
     }
 
     useEffect(() => {
@@ -127,30 +181,30 @@ function Bet() {
 
     return (
         <>
-            <div className="wrapper-topbar">
-                <div className="top-bar">
-                    <div className="block-left">
+            <WrapperTopbar>
+                <TopBar>
+                    <BlockLeft>
                         <div>
-                            <span className="logo">TGL</span>
-                            <div className="bar-logo"></div>
+                            <SpanLogo>TGL</SpanLogo>
+                            <DivBarLogo></DivBarLogo>
                         </div>
-                        <span className="home">Home</span>
-                    </div>
-                    <div className="block-right">
-                        <span className="account">Account</span>
-                        <span className="log-out">Log out <i className="fas fa-arrow-right"></i></span>
-                    </div>
-                </div>
-            </div>
-            <div className="container">
-                <main>
-                    <div className="content-left">
-                        <div className="box-1">
-                            <div className="block-titles-top">
-                                <span className="span-title-one"><span className="patch"> new bet</span> for {game?.type}</span>
-                                <span className="span-title-two">Choose a game</span>
-                            </div>
-                            <div className="buttons-choose">
+                        <SpanHome>Home</SpanHome>
+                    </BlockLeft>
+                    <BlockRight>
+                        <SpanAccount>Account</SpanAccount>
+                        <SpanLogOut>Log out <i className="fas fa-arrow-right"></i></SpanLogOut>
+                    </BlockRight>
+                </TopBar>
+            </WrapperTopbar>
+            <Container>
+                <Main>
+                    <ContentLeft>
+                        <DivBox1>
+                            <BlockTitlesTop>
+                                <SpanTitleOne><SpanPatch> new bet</SpanPatch> for {game?.type}</SpanTitleOne>
+                                <SpanTitleTwo>Choose a game</SpanTitleTwo>
+                            </BlockTitlesTop>
+                            <DivButtonsChoose>
                                 {
                                     dataJSON[0].map((item, index, object) => {
                                         index += 1;
@@ -166,52 +220,76 @@ function Bet() {
                                     })
                                 }
 
-                            </div>
-                        </div>
-                        <div className="box-2">
+                            </DivButtonsChoose>
+                        </DivBox1>
+                        <DivBox2>
                             <div className="text-information">
-                                <span>Fill your bet</span>
-                                <p className="description">
+                                <SpanTitleGame>Fill your bet</SpanTitleGame>
+                                <ParagraphDescription>
                                     {game?.description}
-                                </p>
+                                </ParagraphDescription>
                             </div>
-                        </div>
-                        <div className="box-3">
-                            <div className="container-balls">
+                        </DivBox2>
+                        <DivBox3>
+                            <ContainerBalls>
                                 {/* Ball's */}
                                 {loadBalls()}
-                            </div>
-                            <div className="buttons-options">
+                            </ContainerBalls>
+                            <DivButtonsOptions>
                                 <div>
-                                    <button className="button-complete-game" onClick={() => { completeGame() }}>Complete game</button>
-                                    <button className="button-clear-game" onClick={() => { cleanGame() }}>Clear game</button>
+                                    <ButtonOption onClick={() => { completeGame() }}>Complete game</ButtonOption>
+                                    <ButtonOption onClick={() => { cleanGame() }}>Clear game</ButtonOption>
                                 </div>
                                 <div>
-                                    <button className="button-add-cart" onClick={() => { addToCart() }}><i className="fas fa-cart-plus"> </i>Add to cart</button>
+                                    <ButtonAddToCard onClick={() => { addToCart() }}><i className="fas fa-cart-plus"> </i>Add to cart</ButtonAddToCard>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
+                            </DivButtonsOptions>
+                        </DivBox3>
+                    </ContentLeft>
                     <div className="content-rigth">
                         <div className="card-base">
                             <div className="title-card">
                                 <span>cart</span>
                             </div>
                             <div className="div-information-cart-empty">
-                                <span className="information-cart-empty">Sem itens no cart</span>
+                                {
+                                    cart.length === 0 ?
+                                        <span className="information-cart-empty">Sem itens no cart</span>
+                                        :
+                                        <div className="scroll-list" style={{ overflowY: "scroll", maxHeight: 300 }}>
+                                            {
+                                                cart.map((item, index, object) => {
+                                                    return (
+                                                        <div className="list-games" key={index}>
+                                                            <div className="game-icon">
+                                                                <i className="fas fa-trash-alt" style={{ cursor: "pointer" }} onClick={() => removeItemCart(index)}></i>
+                                                            </div>
+                                                            <div className="divisor-element" style={{ background: "#7F3992" }}>
+                                                            </div>
+                                                            <div className="game-description">
+                                                                <span className="span-number-list">{(item.bets).join(", ")}</span>
+                                                                <span className="span-type" style={{ color: "#7F3992" }}>{item.type}</span>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        </div>
+                                }
+
                             </div>
 
 
                         </div>
                         <div className="cart-total">
-                            <span>cart <strong className="value-total">TOTAL: R$ <span className="span-value-total">0</span></strong></span>
+                            <span>cart <strong className="value-total">TOTAL: R$ <span className="span-value-total">{cartValue()}</span></strong></span>
                         </div>
                         <div className="save-button">
                             <span>Save <i className="fas fa-arrow-right"></i></span>
                         </div>
                     </div>
-                </main>
-            </div>
+                </Main>
+            </Container>
 
             <div className="footer">
                 <span className="text-footer">Copyright 2021 Luby Software</span>
