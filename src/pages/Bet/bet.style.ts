@@ -11,6 +11,10 @@ interface DivBallProps {
     bg: string;
 };
 
+interface TypeColorProps {
+    color: string;
+};
+
 /* background: ${(p: ButtonProps)=>p.background};
 color: ${(p: ButtonProps)=>p.color};
 border: ${(p: ButtonProps)=>p.border}; */
@@ -126,8 +130,11 @@ const Container = styled.div`
  background-color: "#F7F7F7";
 justify-content: center;
 display: grid;
+
 `;
 const Main = styled.main`
+width: 1200px;
+display: flex;
 `;
 const ContentLeft = styled.div`
  width: 65%;
@@ -207,7 +214,125 @@ const SpanPatch = styled.span`
     text-transform: uppercase;
     font: italic normal bold 24px Helvetica Neue;
 `;
+const ContentRight = styled.div`
+ width: 35%;
+`;
+const DivCardBase = styled.div`
+  border-radius: 10px 10px 0 0;
+    background: #fff;
+    /* border: 1px solid #e2e2e2; */
+    margin: 40px 0 auto 10px;
+    padding: 15px;
+    border-left: 1px solid #e2e2e2;
+    border-top: 1px solid #e2e2e2;
+    border-right: 1px solid #e2e2e2;
+`;
 
+const DivTitleCard = styled.div`
+ text-align: left;
+    font: italic normal bold 24px Helvetica Neue;
+    color: #707070;
+    text-transform: uppercase;
+`;
+
+const SpanInformationCartEmpty = styled.span`
+ display: flex;
+    justify-content: center;
+    font: normal normal 300 24px/85px Helvetica Neue;
+    color: #707070;
+`;
+const ScrollList = styled.div`
+ overflow-y: scroll;
+ max-height: 300px;
+`;
+const DivCartTotal = styled.div`
+margin: 0 0 auto 10px;
+padding: 15px;
+border-left: 1px solid #e2e2e2;
+border-right: 1px solid #e2e2e2;
+`;
+const SpanCartTotal = styled.span`
+ font: italic normal bold 24px/85px Helvetica Neue;
+    letter-spacing: 0px;
+    color: #707070;
+    text-transform: uppercase;
+`;
+const ValueTotal = styled.strong`
+  text-align: left;
+    font: normal normal 300 24px/85px Helvetica Neue;
+    color: #707070;
+`;
+const SpanValueTotal = styled.span`
+  text-align: left;
+    font: normal normal 300 24px/85px Helvetica Neue;
+    color: #707070;
+`;
+const DivSaveButton = styled.div`
+  width: auto;
+    height: 95px;
+    background: #f4f4f4 0% 0%;
+    border: 1px solid #e2e2e2;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin: 0 0 auto 10px;
+    padding: 15px;
+    border-radius: 0 0 10px 10px;
+`;
+const SpanSaveButton = styled.span`
+  text-align: center;
+    font: italic normal bold 35px/70px Helvetica Neue;
+    color: #27c383;
+`;
+const DivFooter = styled.div`
+   width: 100%;
+    height: 70px;
+
+    justify-content: center;
+    align-items: center;
+    border-top: 2px solid #ebebeb;
+    display: flex;
+    margin-top: 150px;
+`;
+const SpanTextFooter = styled.span`
+   text-align: center;
+    font: normal 15px Helvetica Neue;
+    color: #707070;
+`;
+const DivListGames = styled.div`
+   display: flex;
+    margin-top: 35px;
+`;
+const DivGameIcon = styled.div`
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    width: 50px;
+`;
+
+const DivDivisorElement = styled.div<TypeColorProps>`
+   width: 5px;
+    height: auto;
+    background: ${(p) => p.color && p.color};
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+`;
+const DivGameDescription = styled.div`
+  margin: 10px 5px 10px 10px;
+    display: grid;
+    width: 280px;
+    word-wrap: break-word;
+`;
+const SpanNumberList = styled.span`
+  text-align: left;
+    font: italic bold 18px Helvetica Neue;
+    color: #868686;
+    width: 280px;
+`;
+const SpanType = styled.span<TypeColorProps>`
+  color: ${(p) => p.color && p.color};
+
+`;
 
 export {
     ButtonChoose,
@@ -239,4 +364,24 @@ export {
     SpanTitleOne,
     SpanTitleTwo,
     SpanPatch,
+    ContentRight,
+    DivCardBase,
+    DivTitleCard,
+    SpanInformationCartEmpty,
+    ScrollList,
+    DivListGames,
+    DivGameIcon,
+    DivDivisorElement,
+    DivGameDescription,
+    SpanNumberList,
+    SpanType,
+
+    DivCartTotal,
+    SpanCartTotal,
+    ValueTotal,
+    SpanValueTotal,
+    DivSaveButton,
+    SpanSaveButton,
+    DivFooter,
+    SpanTextFooter,
 }

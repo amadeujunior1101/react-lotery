@@ -1,8 +1,9 @@
-import React, { useEffect, useState, AriaAttributes, DOMAttributes } from "react";
-import "./bet.style.css";
+import { useEffect, useState } from "react";
+// import "./bet.style.css";
 import dataJson from "../../mock/games.json"
 import ButtonChooseBet from "../../components/ButtonChooseBet"
 import BallBet from "../../components/Ball"
+import CartItem from "../../components/CartItem"
 
 import {
     DivButtonsChoose,
@@ -14,7 +15,7 @@ import {
     DivBarLogo,
     SpanHome,
     BlockRight,
-    SpanAccount, 
+    SpanAccount,
     SpanLogOut,
     Container,
     Main,
@@ -31,6 +32,20 @@ import {
     SpanTitleOne,
     SpanTitleTwo,
     SpanPatch,
+    ContentRight,
+    DivCardBase,
+    DivTitleCard,
+    SpanInformationCartEmpty,
+    ScrollList,
+
+    DivCartTotal,
+    SpanCartTotal,
+    ValueTotal,
+    SpanValueTotal,
+    DivSaveButton,
+    SpanSaveButton,
+    DivFooter,
+    SpanTextFooter,
 } from "./bet.style"
 
 interface Item {
@@ -43,9 +58,10 @@ interface Item {
 }
 
 interface Cart {
-    type: string,
-    price: number
-    bets: Array<String>
+    type: string;
+    price: number;
+    bets: Array<String>;
+    color: string;
 }
 
 function Bet() {
@@ -55,10 +71,6 @@ function Bet() {
     const [selectedBalls, setSelectedBalls] = useState<Array<number>>([])
     const [cart, setCart] = useState<Cart[]>([])
     const [cartTemporary, setCartTemporary] = useState<Array<string>>([])
-
-    // function loadDataJson() {
-    //     return console.log(dataJSON[0])
-    // }
 
     function selectedNumber(id: number) {
 
@@ -139,7 +151,8 @@ function Bet() {
         cart?.push({
             type: String(game?.type),
             price: Number(game?.price),
-            bets: cartTemporary
+            bets: cartTemporary,
+            color: String(game?.color),
         });
         console.log("Itens no carinho:", cart);
     }
@@ -171,7 +184,6 @@ function Bet() {
     }
 
     useEffect(() => {
-        // loadDataJson()
         let results = dataJSON[0].filter(el => {
             return el.type
         })
@@ -232,7 +244,6 @@ function Bet() {
                         </DivBox2>
                         <DivBox3>
                             <ContainerBalls>
-                                {/* Ball's */}
                                 {loadBalls()}
                             </ContainerBalls>
                             <DivButtonsOptions>
@@ -246,54 +257,50 @@ function Bet() {
                             </DivButtonsOptions>
                         </DivBox3>
                     </ContentLeft>
-                    <div className="content-rigth">
-                        <div className="card-base">
-                            <div className="title-card">
+                    <ContentRight>
+                        <DivCardBase>
+                            <DivTitleCard>
                                 <span>cart</span>
-                            </div>
+                            </DivTitleCard>
                             <div className="div-information-cart-empty">
                                 {
                                     cart.length === 0 ?
-                                        <span className="information-cart-empty">Sem itens no cart</span>
+                                        <SpanInformationCartEmpty>Sem itens no cart</SpanInformationCartEmpty>
                                         :
-                                        <div className="scroll-list" style={{ overflowY: "scroll", maxHeight: 300 }}>
+                                        <ScrollList>
                                             {
                                                 cart.map((item, index, object) => {
                                                     return (
-                                                        <div className="list-games" key={index}>
-                                                            <div className="game-icon">
-                                                                <i className="fas fa-trash-alt" style={{ cursor: "pointer" }} onClick={() => removeItemCart(index)}></i>
-                                                            </div>
-                                                            <div className="divisor-element" style={{ background: "#7F3992" }}>
-                                                            </div>
-                                                            <div className="game-description">
-                                                                <span className="span-number-list">{(item.bets).join(", ")}</span>
-                                                                <span className="span-type" style={{ color: "#7F3992" }}>{item.type}</span>
-                                                            </div>
-                                                        </div>
+                                                        <CartItem
+                                                            key={index}
+                                                            bets={item.bets}
+                                                            type={item.type}
+                                                            color={item.color}
+                                                            index={index}
+                                                            removeItemCart={(e: number) => { removeItemCart(e) }}
+                                                        />
                                                     )
                                                 })
                                             }
-                                        </div>
+                                        </ScrollList>
                                 }
 
                             </div>
 
-
-                        </div>
-                        <div className="cart-total">
-                            <span>cart <strong className="value-total">TOTAL: R$ <span className="span-value-total">{cartValue()}</span></strong></span>
-                        </div>
-                        <div className="save-button">
-                            <span>Save <i className="fas fa-arrow-right"></i></span>
-                        </div>
-                    </div>
+                        </DivCardBase>
+                        <DivCartTotal>
+                            <SpanCartTotal>cart <ValueTotal>TOTAL: R$ <SpanValueTotal>{cartValue()}</SpanValueTotal></ValueTotal></SpanCartTotal>
+                        </DivCartTotal>
+                        <DivSaveButton>
+                            <SpanSaveButton>Save <i className="fas fa-arrow-right"></i></SpanSaveButton>
+                        </DivSaveButton>
+                    </ContentRight>
                 </Main>
             </Container>
 
-            <div className="footer">
-                <span className="text-footer">Copyright 2021 Luby Software</span>
-            </div>
+            <DivFooter>
+                <SpanTextFooter>Copyright 2021 Luby Software</SpanTextFooter>
+            </DivFooter>
         </>
     )
 }
