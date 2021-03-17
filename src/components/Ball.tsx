@@ -6,11 +6,9 @@ interface PropsBall {
     color: string;
     selectedNumber: Function
     arrBalls: Array<number>
-    // func: Function
 }
 
 function Index(props: PropsBall) {
-    
     return (
         <Ball bg={String(props.color)} onClick={() => { props.selectedNumber(props.numberBall + 1) }}>
             <SpanBall>
@@ -18,7 +16,6 @@ function Index(props: PropsBall) {
             </SpanBall>
         </Ball>
     )
-
 }
 
 export default Index;
