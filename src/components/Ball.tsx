@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Ball, SpanBall } from "../pages/Bet/bet.style";
+import { Ball, SpanBall } from "../pages/Game/game.style";
 
 interface PropsBall {
     numberBall: number;

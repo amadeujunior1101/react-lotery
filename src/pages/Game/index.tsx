@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-// import "./bet.style.css";
 import dataJson from "../../mock/games.json"
 import ButtonChooseBet from "../../components/ButtonChooseBet"
 import BallBet from "../../components/Ball"
@@ -12,6 +11,7 @@ import {
     TopBar,
     BlockLeft,
     SpanLogo,
+    DivMenu,
     DivBarLogo,
     SpanHome,
     BlockRight,
@@ -46,7 +46,7 @@ import {
     SpanSaveButton,
     DivFooter,
     SpanTextFooter,
-} from "./bet.style"
+} from "./game.style"
 
 interface Item {
     type: string;
@@ -64,8 +64,8 @@ interface Cart {
     color: string;
 }
 
-function Bet() {
-    const [dataJSON, setDataJSON] = useState([dataJson.types])
+function Game() {
+    const [dataJSON] = useState([dataJson.types])
     const [activeId, setActiveId] = useState(1)
     const [game, setGames] = useState<Item>()
     const [selectedBalls, setSelectedBalls] = useState<Array<number>>([])
@@ -117,7 +117,7 @@ function Bet() {
     function completeGame() {
         while (selectedBalls.length < Number(game?.["max-number"])) {
             let number = Math.floor(Math.random() * Number(game?.range) + 1);
-            const found = selectedBalls.some((element) => element == Number(number));
+            const found = selectedBalls.some((element) => element === Number(number));
             if (!found) {
                 let newNumber = "";
                 number < 10
@@ -205,98 +205,12 @@ function Bet() {
                     <BlockRight>
                         <SpanAccount>Account</SpanAccount>
                         <SpanLogOut>Log out <i className="fas fa-arrow-right"></i></SpanLogOut>
+                        <DivMenu><i className="fas fa-bars"></i></DivMenu>
                     </BlockRight>
                 </TopBar>
             </WrapperTopbar>
-            <Container>
-                <Main>
-                    <ContentLeft>
-                        <DivBox1>
-                            <BlockTitlesTop>
-                                <SpanTitleOne><SpanPatch> new bet</SpanPatch> for {game?.type}</SpanTitleOne>
-                                <SpanTitleTwo>Choose a game</SpanTitleTwo>
-                            </BlockTitlesTop>
-                            <DivButtonsChoose>
-                                {
-                                    dataJSON[0].map((item, index, object) => {
-                                        index += 1;
-                                        return (
-                                            <ButtonChooseBet
-                                                key={item.type}
-                                                item={item}
-                                                id={index.toString()}
-                                                func={(e: number) => changeState(e, item.type)}
-                                                active={activeId}
-                                            />
-                                        )
-                                    })
-                                }
 
-                            </DivButtonsChoose>
-                        </DivBox1>
-                        <DivBox2>
-                            <div className="text-information">
-                                <SpanTitleGame>Fill your bet</SpanTitleGame>
-                                <ParagraphDescription>
-                                    {game?.description}
-                                </ParagraphDescription>
-                            </div>
-                        </DivBox2>
-                        <DivBox3>
-                            <ContainerBalls>
-                                {loadBalls()}
-                            </ContainerBalls>
-                            <DivButtonsOptions>
-                                <div>
-                                    <ButtonOption onClick={() => { completeGame() }}>Complete game</ButtonOption>
-                                    <ButtonOption onClick={() => { cleanGame() }}>Clear game</ButtonOption>
-                                </div>
-                                <div>
-                                    <ButtonAddToCard onClick={() => { addToCart() }}><i className="fas fa-cart-plus"> </i>Add to cart</ButtonAddToCard>
-                                </div>
-                            </DivButtonsOptions>
-                        </DivBox3>
-                    </ContentLeft>
-                    <ContentRight>
-                        <DivCardBase>
-                            <DivTitleCard>
-                                <span>cart</span>
-                            </DivTitleCard>
-                            <div className="div-information-cart-empty">
-                                {
-                                    cart.length === 0 ?
-                                        <SpanInformationCartEmpty>Sem itens no cart</SpanInformationCartEmpty>
-                                        :
-                                        <ScrollList>
-                                            {
-                                                cart.map((item, index, object) => {
-                                                    return (
-                                                        <CartItem
-                                                            key={index}
-                                                            bets={item.bets}
-                                                            type={item.type}
-                                                            color={item.color}
-                                                            index={index}
-                                                            removeItemCart={(e: number) => { removeItemCart(e) }}
-                                                        />
-                                                    )
-                                                })
-                                            }
-                                        </ScrollList>
-                                }
-
-                            </div>
-
-                        </DivCardBase>
-                        <DivCartTotal>
-                            <SpanCartTotal>cart <ValueTotal>TOTAL: R$ <SpanValueTotal>{cartValue()}</SpanValueTotal></ValueTotal></SpanCartTotal>
-                        </DivCartTotal>
-                        <DivSaveButton>
-                            <SpanSaveButton>Save <i className="fas fa-arrow-right"></i></SpanSaveButton>
-                        </DivSaveButton>
-                    </ContentRight>
-                </Main>
-            </Container>
+            {/* container  */}
 
             <DivFooter>
                 <SpanTextFooter>Copyright 2021 Luby Software</SpanTextFooter>
@@ -305,4 +219,4 @@ function Bet() {
     )
 }
 
-export default Bet;
+export default Game;

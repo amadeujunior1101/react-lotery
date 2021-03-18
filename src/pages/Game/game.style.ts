@@ -1,4 +1,5 @@
-import styled, { StyledFunction } from "styled-components";
+import styled from "styled-components";
+import { device } from "../mideaQuerysDefault"
 
 interface ButtonProps {
     background: string;
@@ -117,6 +118,12 @@ const SpanAccount = styled.span`
  text-align: center;
 font: italic normal bold 20px Helvetica Neue;
 color: #707070;
+display: none;
+
+@media ${device.tablet}{
+        display: block;
+     }
+
 `;
 
 const SpanLogOut = styled.span`
@@ -124,6 +131,21 @@ const SpanLogOut = styled.span`
     font: italic normal bold 20px Helvetica Neue;
     color: #707070;
     margin-left: 80px;
+    display: none;
+
+    @media ${device.tablet}{
+        display: block;
+     }
+`;
+
+const DivMenu = styled.div`
+ 
+    @media ${device.mobileL}{
+        display: block;
+     }
+     @media ${device.tablet}{
+        display: none;
+     }
 `;
 
 const Container = styled.div`
@@ -344,6 +366,7 @@ export {
     TopBar,
     BlockLeft,
     SpanLogo,
+    DivMenu,
     DivBarLogo,
     SpanHome,
     BlockRight,

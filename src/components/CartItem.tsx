@@ -1,4 +1,4 @@
-import { DivListGames, DivGameIcon, DivDivisorElement, DivGameDescription, SpanNumberList, SpanType } from "../pages/Bet/bet.style"
+import { DivListGames, DivGameIcon, DivDivisorElement, DivGameDescription, SpanNumberList, SpanType } from "../pages/Game/game.style"
 
 interface Props {
     removeItemCart: Function;
