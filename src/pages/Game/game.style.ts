@@ -57,6 +57,30 @@ const SpanBall = styled.span`
 
 const DivButtonsChoose = styled.div`
    margin: 20px 0 20px 0;
+   display: flex;
+   /* width: 100%; */
+   /* @media ${device.mobileS}{
+        padding: 0 10px 0 10px;
+        width: 300px;
+        overflow-y: scroll;
+     }
+   @media ${device.mobileM}{
+        padding: 0 10px 0 10px;
+        width: 100%;
+        overflow-y: scroll;
+     } */
+`;
+
+const DivScrollButtonsChoose = styled.div`
+width: 320px;
+display: flex;
+overflow-y: scroll;
+
+@media ${device.mobileS}{
+width: 100%;
+overflow-y: hidden;
+} 
+
 `;
 
 const ParagraphDescription = styled.p`
@@ -73,6 +97,53 @@ const WrapperTopbar = styled.div`
     justify-content: center;
     border-bottom: 2px solid #ebebeb;
     display: flex;
+    padding: 0;
+
+    /* @media ${device.mobileS}{
+        padding: 0 10px 0 10px;
+        width: 320px
+     }
+    @media ${device.mobileM}{
+        padding: 0 10px 0 10px;
+        width: 375px
+     }
+    @media ${device.mobileL}{
+        padding: 0 10px 0 10px;
+        width: 576px
+     }
+    @media ${device.tablet}{
+        width: 768px;
+     }
+    @media ${device.laptop}{
+        padding: 0;
+        width: 100%;
+     } */
+`;
+const DivMenuMobile = styled.div`
+    width: 100%;
+    /* height: 70px; */
+    justify-content: center;
+    border-bottom: 2px solid #ebebeb;
+    display: flex;
+    padding: 0;
+
+    @media ${device.mobileL}{
+        display: block;
+        
+     }
+     @media ${device.tablet}{
+        display: none;
+     }
+`;
+
+const UlMenuMobile = styled.div`
+justify-content: center;
+display: grid;
+list-style: none;
+    a{
+            color: #707070;
+            text-decoration: none;
+    }
 `;
 
 const TopBar = styled.div`
@@ -81,6 +152,27 @@ const TopBar = styled.div`
     width: 100%;
     display: flex;
     width: 1200px;
+
+    @media ${device.mobileS}{
+        padding: 0 10px 0 10px;
+        width: 320px;
+     }
+    @media ${device.mobileM}{
+        padding: 0 10px 0 10px;
+        width: 375px;
+     }
+    @media ${device.mobileL}{
+        padding: 0 10px 0 10px;
+        width: 576px;
+     }
+    @media ${device.tablet}{
+        padding: 0 10px 0 10px;
+        width: 768px;
+     }
+    @media ${device.laptop}{
+        padding: 0;
+        width: 1200px;
+     }
 `;
 
 const BlockLeft = styled.div`
@@ -117,8 +209,12 @@ display: flex;
 const SpanAccount = styled.span`
  text-align: center;
 font: italic normal bold 20px Helvetica Neue;
-color: #707070;
 display: none;
+
+a{
+color: #707070;
+    text-decoration: none;
+}
 
 @media ${device.tablet}{
         display: block;
@@ -129,9 +225,16 @@ display: none;
 const SpanLogOut = styled.span`
  text-align: center;
     font: italic normal bold 20px Helvetica Neue;
-    color: #707070;
     margin-left: 80px;
     display: none;
+
+    a{
+    color: #707070;
+    text-decoration: none;
+    }
+    i{
+        color: #707070;
+    }
 
     @media ${device.tablet}{
         display: block;
@@ -139,6 +242,10 @@ const SpanLogOut = styled.span`
 `;
 
 const DivMenu = styled.div`
+
+    i{
+        color: #707070;
+    }
  
     @media ${device.mobileL}{
         display: block;
@@ -157,9 +264,42 @@ display: grid;
 const Main = styled.main`
 width: 1200px;
 display: flex;
+margin-top: auto;
+
+@media ${device.mobileS}{
+        display: grid;
+        width: 320px;
+     }
+@media ${device.mobileM}{
+        display: grid;
+        width: 375px;
+     }
+@media ${device.mobileL}{
+        display: grid;
+        width: 576px;
+     }
+@media ${device.tablet}{
+        display: grid;
+        width: 768px;
+     }
+@media ${device.laptop}{
+        display: flex;
+        width: 1200px;
+        margin-top: 50px;
+     }
 `;
 const ContentLeft = styled.div`
- width: 65%;
+ 
+
+ @media ${device.mobileS}{
+        width: 100%;
+     }
+ @media ${device.mobileL}{
+        width: 100%;
+     }
+ @media ${device.laptop}{
+    width: 65%;
+     }
 `;
 const DivBox1 = styled.div`
  display: grid;
@@ -175,12 +315,26 @@ color: #868686;
 `;
 const ContainerBalls = styled.div`
 display: grid;
-grid-template-columns: repeat(10, 1fr);
+/* grid-template-columns: repeat(10, 1fr); */
 grid-auto-rows: 75px;
 grid-gap: 5px 8px;
 padding: 0 10px 10px 0;
 margin-top: 20px;
 margin-bottom: 30px;
+
+@media ${device.mobileS}{
+    grid-template-columns: repeat(4, 1fr);
+}
+@media ${device.mobileM}{
+    grid-template-columns: repeat(5, 1fr);
+}
+@media ${device.mobileL}{
+    grid-template-columns: repeat(8, 1fr);
+}
+@media ${device.tablet}{
+    grid-template-columns: repeat(10, 1fr);
+}
+
 `;
 const DivButtonsOptions = styled.div`
  display: flex;
@@ -216,6 +370,27 @@ outline: none;
 box-shadow: none;
 `;
 
+const DivCardMobile = styled.div`
+display: grid;
+
+@media ${device.laptop}{
+   display: none;
+}
+
+`;
+const DivWrapperCartMobile = styled.div`
+width: 100%;
+display: flex;
+justify-content: flex-end;
+margin-top: 20px;
+cursor: pointer;
+`;
+const SpanCountCart = styled.span`
+margin-top: 8px;
+position: absolute;
+color: #dc3545;
+font-weight: bold;
+`;
 const BlockTitlesTop = styled.div`
 display: grid;
 `;
@@ -223,7 +398,7 @@ const SpanTitleOne = styled.span`
   color: #707070;
     text-transform: uppercase;
     font: italic normal 24px Helvetica Neue;
-    margin-top: 70px;
+    margin-top: 40px;
 `;
 const SpanTitleTwo = styled.span`
  text-align: left;
@@ -237,7 +412,15 @@ const SpanPatch = styled.span`
     font: italic normal bold 24px Helvetica Neue;
 `;
 const ContentRight = styled.div`
- width: 35%;
+display: none;
+/* width: 100%; */
+ /* @media ${device.tablet}{
+display: none;
+} */
+@media ${device.laptop}{
+display: block;
+width: 35%;
+}
 `;
 const DivCardBase = styled.div`
   border-radius: 10px 10px 0 0;
@@ -248,6 +431,7 @@ const DivCardBase = styled.div`
     border-left: 1px solid #e2e2e2;
     border-top: 1px solid #e2e2e2;
     border-right: 1px solid #e2e2e2;
+
 `;
 
 const DivTitleCard = styled.div`
@@ -360,9 +544,12 @@ export {
     ButtonChoose,
     Ball,
     SpanBall,
+    DivScrollButtonsChoose,
     DivButtonsChoose,
     ParagraphDescription,
     WrapperTopbar,
+    DivMenuMobile,
+    UlMenuMobile,
     TopBar,
     BlockLeft,
     SpanLogo,
@@ -383,6 +570,9 @@ export {
     DivButtonsOptions,
     ButtonOption,
     ButtonAddToCard,
+    DivCardMobile,
+    DivWrapperCartMobile,
+    SpanCountCart,
     BlockTitlesTop,
     SpanTitleOne,
     SpanTitleTwo,

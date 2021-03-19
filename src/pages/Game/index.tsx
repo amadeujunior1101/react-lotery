@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import dataJson from "../../mock/games.json"
 import ButtonChooseBet from "../../components/ButtonChooseBet"
 import BallBet from "../../components/Ball"
@@ -8,6 +9,8 @@ import {
     DivButtonsChoose,
     ParagraphDescription,
     WrapperTopbar,
+    DivMenuMobile,
+    UlMenuMobile,
     TopBar,
     BlockLeft,
     SpanLogo,
@@ -25,9 +28,13 @@ import {
     DivBox3,
     SpanTitleGame,
     ContainerBalls,
+    DivScrollButtonsChoose,
     DivButtonsOptions,
     ButtonOption,
     ButtonAddToCard,
+    DivCardMobile,
+    DivWrapperCartMobile,
+    SpanCountCart,
     BlockTitlesTop,
     SpanTitleOne,
     SpanTitleTwo,
@@ -65,6 +72,9 @@ interface Cart {
 }
 
 function Game() {
+    const [openMenu, setOpenMenu] = useState(false);
+    const [visibleCartMobile, setVisibleCartMobile] = useState(false);
+
     const [dataJSON] = useState([dataJson.types])
     const [activeId, setActiveId] = useState(1)
     const [game, setGames] = useState<Item>()
@@ -203,14 +213,164 @@ function Game() {
                         <SpanHome>Home</SpanHome>
                     </BlockLeft>
                     <BlockRight>
-                        <SpanAccount>Account</SpanAccount>
-                        <SpanLogOut>Log out <i className="fas fa-arrow-right"></i></SpanLogOut>
-                        <DivMenu><i className="fas fa-bars"></i></DivMenu>
+                        <SpanAccount>
+                            <Link to="/register">Account</Link>
+                        </SpanAccount>
+                        <SpanLogOut>
+                            <Link to="/login">Log Out </Link>
+                            <i className="fas fa-arrow-right"></i></SpanLogOut>
+                        <DivMenu onClick={() => { setOpenMenu(!openMenu) }}><i className="fas fa-bars"></i></DivMenu>
                     </BlockRight>
                 </TopBar>
             </WrapperTopbar>
+            {
+                openMenu ?
+                    <DivMenuMobile>
+                        <UlMenuMobile>
+                            <Link to="/register">Account</Link>
+                            <Link to="/login">Log Out</Link>
+                        </UlMenuMobile>
+                    </DivMenuMobile>
+                    : null
+            }
 
-            {/* container  */}
+            <Container>
+                <Main>
+                    <ContentLeft>
+                        <DivBox1>
+
+                            <DivCardMobile>
+                                <DivWrapperCartMobile onClick={() => { setVisibleCartMobile(!visibleCartMobile) }}>
+                                    <i className="fas fa-shopping-cart" style={{ color: "#707070" }}></i>
+                                    <SpanCountCart>{cart.length}</SpanCountCart>
+                                </DivWrapperCartMobile>
+                                {
+                                    visibleCartMobile ?
+                                        <div style={{ maxWidth: "100%" }}>
+                                            <DivCardBase style={{ marginTop: 10 }}>
+                                                <DivTitleCard>
+                                                    <span>cart</span>
+                                                </DivTitleCard>
+                                                <div className="div-information-cart-empty">
+                                                    {
+                                                        cart.length === 0 ?
+                                                            <SpanInformationCartEmpty>Sem itens no cart</SpanInformationCartEmpty>
+                                                            :
+                                                            <ScrollList>
+                                                                {
+                                                                    cart.map((item, index, object) => {
+                                                                        return (
+                                                                            <CartItem
+                                                                                key={index}
+                                                                                bets={item.bets}
+                                                                                type={item.type}
+                                                                                color={item.color}
+                                                                                index={index}
+                                                                                removeItemCart={(e: number) => { removeItemCart(e) }}
+                                                                            />
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </ScrollList>
+                                                    }
+                                                </div>
+                                            </DivCardBase>
+                                            <DivCartTotal>
+                                                <SpanCartTotal>cart <ValueTotal>TOTAL: R$ <SpanValueTotal>{cartValue()}</SpanValueTotal></ValueTotal></SpanCartTotal>
+                                            </DivCartTotal>
+                                            <DivSaveButton>
+                                                <SpanSaveButton>Save <i className="fas fa-arrow-right"></i></SpanSaveButton>
+                                            </DivSaveButton>
+                                        </div>
+                                        : null
+                                }
+                            </DivCardMobile>
+
+                            <BlockTitlesTop>
+                                <SpanTitleOne><SpanPatch> new bet</SpanPatch> for {game?.type}</SpanTitleOne>
+                                <SpanTitleTwo>Choose a game</SpanTitleTwo>
+                            </BlockTitlesTop>
+                            <DivScrollButtonsChoose>
+                                <DivButtonsChoose>
+                                    {
+                                        dataJSON[0].map((item, index, object) => {
+                                            index += 1;
+                                            return (
+                                                <ButtonChooseBet
+                                                    key={item.type}
+                                                    item={item}
+                                                    id={index.toString()}
+                                                    func={(e: number) => changeState(e, item.type)}
+                                                    active={activeId}
+                                                />
+                                            )
+                                        })
+                                    }
+                                </DivButtonsChoose>
+                            </DivScrollButtonsChoose>
+                        </DivBox1>
+                        <DivBox2>
+                            <div className="text-information">
+                                <SpanTitleGame>Fill your bet</SpanTitleGame>
+                                <ParagraphDescription>
+                                    {game?.description}
+                                </ParagraphDescription>
+                            </div>
+                        </DivBox2>
+                        <DivBox3>
+                            <ContainerBalls>
+                                {loadBalls()}
+                            </ContainerBalls>
+                            <DivButtonsOptions>
+                                <div>
+                                    <ButtonOption onClick={() => { completeGame() }}>Complete game</ButtonOption>
+                                    <ButtonOption onClick={() => { cleanGame() }}>Clear game</ButtonOption>
+                                </div>
+                                <div>
+                                    <ButtonAddToCard onClick={() => { addToCart() }}><i className="fas fa-cart-plus"> </i>Add to cart</ButtonAddToCard>
+                                </div>
+                            </DivButtonsOptions>
+                        </DivBox3>
+                    </ContentLeft>
+                    <ContentRight style={{}}>
+                        <DivCardBase>
+                            <DivTitleCard>
+                                <span>cart</span>
+                            </DivTitleCard>
+                            <div className="div-information-cart-empty">
+                                {
+                                    cart.length === 0 ?
+                                        <SpanInformationCartEmpty>Sem itens no cart</SpanInformationCartEmpty>
+                                        :
+                                        <ScrollList>
+                                            {
+                                                cart.map((item, index, object) => {
+                                                    return (
+                                                        <CartItem
+                                                            key={index}
+                                                            bets={item.bets}
+                                                            type={item.type}
+                                                            color={item.color}
+                                                            index={index}
+                                                            removeItemCart={(e: number) => { removeItemCart(e) }}
+                                                        />
+                                                    )
+                                                })
+                                            }
+                                        </ScrollList>
+                                }
+                            </div>
+                        </DivCardBase>
+                        <DivCartTotal>
+                            <SpanCartTotal>cart <ValueTotal>TOTAL: R$ <SpanValueTotal>{cartValue()}</SpanValueTotal></ValueTotal></SpanCartTotal>
+                        </DivCartTotal>
+                        <DivSaveButton>
+                            <SpanSaveButton>Save <i className="fas fa-arrow-right"></i></SpanSaveButton>
+                        </DivSaveButton>
+                    </ContentRight>
+                </Main>
+            </Container>
+
 
             <DivFooter>
                 <SpanTextFooter>Copyright 2021 Luby Software</SpanTextFooter>
