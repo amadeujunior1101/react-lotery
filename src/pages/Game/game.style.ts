@@ -484,6 +484,7 @@ const DivSaveButton = styled.div`
     margin: 0 0 auto 10px;
     padding: 15px;
     border-radius: 0 0 10px 10px;
+    cursor: pointer;
 `;
 const SpanSaveButton = styled.span`
   text-align: center;

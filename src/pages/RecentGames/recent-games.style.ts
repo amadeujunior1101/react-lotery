@@ -266,8 +266,8 @@ const DivListGames = styled.div`
 const DivDivisorElement = styled.div`
    width: 5px;
     height: auto;
-    /* background: ${(p) => p.color && p.color}; */
-    background: orange;
+    background: ${(p) => p.color && p.color};
+    /* background: orange; */
     border-radius: 20px;
 `;
 const DivGameDescription = styled.div`
@@ -286,8 +286,8 @@ const SpanNumberList = styled.span`
 `;
 // const SpanType = styled.span<TypeColorProps>`
 const SpanType = styled.span`
-  /* color: ${(p) => p.color && p.color}; */
-  color: orange;
+  color: ${(p) => p.color && p.color};
+  /* color: orange; */
   font: italic normal bold 20px Helvetica Neue;
 `;
 const SpanInfos = styled.span`

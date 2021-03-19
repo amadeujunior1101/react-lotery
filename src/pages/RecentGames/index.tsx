@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { ArrayObjects } from "../../store/Carts/Carts.types"
+
 import dataJson from "../../mock/games.json"
 import ButtonChooseBet from "../../components/ButtonChooseBet"
 
@@ -42,17 +45,39 @@ interface Item {
     price: number;
 }
 
+export interface ItemCart {
+    type: string;
+    price: number;
+    bets: Array<String>;
+    color: string;
+}
+
 function RecentGames() {
+    const result = useSelector((state: ArrayObjects) => state.cart);
+    const [gameResults, setGamesResults] = useState(result)
+
+    // useEffect(() => {
+    // }, [])
+    // setGamesResults(result)
+    console.log("Results:", result)
+
     const [dataJSON] = useState([dataJson.types])
     const [activeId, setActiveId] = useState(1)
     const [game, setGames] = useState<Item>()
     const [selectedBalls, setSelectedBalls] = useState<Array<number>>([])
+
 
     function changeState(id: number, item: string) {
         setActiveId(id)
         let results = dataJSON[0].filter(el => {
             return el.type === item
         })
+        setGamesResults(
+            result.filter(el => {
+                return el.type === results[0].type
+            })
+        )
+
         setGames(results[0]);
         setSelectedBalls([])
     }
@@ -63,6 +88,13 @@ function RecentGames() {
         })
         setGames(results[0])
         changeState(1, results[0].type)
+
+        setGamesResults(
+            result.filter(el => {
+                return el.type === results[0].type
+            })
+        )
+
     }, [])
 
     return (
@@ -117,42 +149,29 @@ function RecentGames() {
 
                         <DivWrapperScrollList>
                             {/* <ScrollList> */}
-                            <DivListGames >
-                                {/* <DivDivisorElement color={props.color}> */}
-                                <DivDivisorElement>
-                                </DivDivisorElement>
-                                <DivGameDescription>
-                                    {/* <SpanNumberList>{(props.bets).join(", ")}</SpanNumberList> */}
-                                    <SpanNumberList>1, 2, 3, 4</SpanNumberList>
-                                    <SpanInfos>30/11/2020 - (R$ 2,50)</SpanInfos>
-                                    {/* <SpanType color={props.color}>{props.type}</SpanType> */}
-                                    <SpanType>Lotofácil</SpanType>
-                                </DivGameDescription>
-                            </DivListGames>
-                            <DivListGames >
-                                {/* <DivDivisorElement color={props.color}> */}
-                                <DivDivisorElement>
-                                </DivDivisorElement>
-                                <DivGameDescription>
-                                    {/* <SpanNumberList>{(props.bets).join(", ")}</SpanNumberList> */}
-                                    <SpanNumberList>1, 2, 3, 4</SpanNumberList>
-                                    <SpanInfos>30/11/2020 - (R$ 2,50)</SpanInfos>
-                                    {/* <SpanType color={props.color}>{props.type}</SpanType> */}
-                                    <SpanType>Lotofácil</SpanType>
-                                </DivGameDescription>
-                            </DivListGames>
-                            <DivListGames >
-                                {/* <DivDivisorElement color={props.color}> */}
-                                <DivDivisorElement>
-                                </DivDivisorElement>
-                                <DivGameDescription>
-                                    {/* <SpanNumberList>{(props.bets).join(", ")}</SpanNumberList> */}
-                                    <SpanNumberList>1, 2, 3, 4</SpanNumberList>
-                                    <SpanInfos>30/11/2020 - (R$ 2,50)</SpanInfos>
-                                    {/* <SpanType color={props.color}>{props.type}</SpanType> */}
-                                    <SpanType>Lotofácil</SpanType>
-                                </DivGameDescription>
-                            </DivListGames>
+                            {
+                                gameResults.length > 0 ?
+                                    gameResults.map((item, index: number) => {
+                                        return (
+                                            <DivListGames key={index}>
+                                                <DivDivisorElement color={item.color}>
+                                                    {/* <DivDivisorElement> */}
+                                                </DivDivisorElement>
+                                                <DivGameDescription>
+                                                    <SpanNumberList>{(item.bets).join(", ")}</SpanNumberList>
+                                                    {/* <SpanNumberList>1, 2, 3, 4</SpanNumberList> */}
+                                                    <SpanInfos>30/11/2020 - (R$ {item.price})</SpanInfos>
+                                                    <SpanType color={item.color}>{item.type}</SpanType>
+                                                    {/* <SpanType>Lotofácil</SpanType> */}
+                                                </DivGameDescription>
+                                            </DivListGames>
+                                        )
+                                    }) :
+                                    <>
+                                        <h3>Sem games marcados!</h3>
+                                    </>
+                            }
+
                         </DivWrapperScrollList>
 
                         {/* </div> */}

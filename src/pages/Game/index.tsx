@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
+import { useSelector, useDispatch } from "react-redux";
+import { ArrayObjects } from "../../store/Carts/Carts.types"
+import { Dispatch } from "redux";
+import { addCart } from "../../store/Carts/Carts.actions";
+
 import dataJson from "../../mock/games.json"
 import ButtonChooseBet from "../../components/ButtonChooseBet"
 import BallBet from "../../components/Ball"
@@ -72,6 +78,11 @@ interface Cart {
 }
 
 function Game() {
+
+    const result = useSelector((state: ArrayObjects) => state.cart);
+
+    const dispatch: Dispatch = useDispatch();
+
     const [openMenu, setOpenMenu] = useState(false);
     const [visibleCartMobile, setVisibleCartMobile] = useState(false);
 
@@ -193,6 +204,16 @@ function Game() {
         return total
     }
 
+    let itemCart: ArrayObjects = {
+        cart: cart
+    };
+
+    function addCartRedux() {
+        dispatch(addCart(itemCart));
+        console.log("Valores redux", result)
+        setCart([]);
+    }
+
     useEffect(() => {
         let results = dataJSON[0].filter(el => {
             return el.type
@@ -214,7 +235,7 @@ function Game() {
                     </BlockLeft>
                     <BlockRight>
                         <SpanAccount>
-                            <Link to="/register">Account</Link>
+                            <Link to="/recent-games">Account</Link>
                         </SpanAccount>
                         <SpanLogOut>
                             <Link to="/login">Log Out </Link>
@@ -364,7 +385,7 @@ function Game() {
                         <DivCartTotal>
                             <SpanCartTotal>cart <ValueTotal>TOTAL: R$ <SpanValueTotal>{cartValue()}</SpanValueTotal></ValueTotal></SpanCartTotal>
                         </DivCartTotal>
-                        <DivSaveButton>
+                        <DivSaveButton onClick={() => { addCartRedux() }}>
                             <SpanSaveButton>Save <i className="fas fa-arrow-right"></i></SpanSaveButton>
                         </DivSaveButton>
                     </ContentRight>
