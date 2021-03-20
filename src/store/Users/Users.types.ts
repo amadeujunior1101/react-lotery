@@ -1,3 +1,12 @@
+export interface UserLogin {
+    email: string;
+    password: string;
+}
+
+export interface UserResetPassword{
+    email: string;
+}
+
 export interface User {
     name: string;
     email: string;

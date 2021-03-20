@@ -1,33 +1,30 @@
-import React, { useState } from "react"
-import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router";
-import { Link } from "react-router-dom";
-import { Dispatch } from "redux";
-import { addUser } from "../../store/Users/Users.actions";
-import { UsersList, User, Users } from "../../store/Users/Users.types";
+import { useState } from "react"
+import { useSelector } from "react-redux"
+import { Link } from "react-router-dom"
+import { UserLogin, Users } from "../../store/Users/Users.types"
 import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxLeft, DivBoxRight, ContainerBoxLeft, DivTitleOne, SpanTitleOne,
-    DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormLogin, DivInputName, DivInputEmail,
+    DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormLogin, DivInputEmail,
     DivInputPassword, InputLogin, DivButtonLogin, DivForgot, SpanForgot, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp, ButtonForgot, Footer,
-} from "./register.style"
+} from "./login.style"
 import validateRegister from "./validate"
 
-function Register() {
-    const dispatch: Dispatch = useDispatch();
-
-    const result = useSelector((state: Users) => state.user.users);
-
-    const [error, setError] = useState<User>()
-
-    const [name, setName] = useState<string>("")
+function Login() {
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
 
+    const [error, setError] = useState<UserLogin>()
+
+    const result = useSelector((state: Users) => state.user.users);
+
     const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+    }
+
+    const handleLogin= (e: React.FormEvent) => {
         e.preventDefault()
 
         interface ItemsValidate {
-            name: string;
             email: string;
             password: string;
             changeError: Function;
@@ -35,7 +32,6 @@ function Register() {
         }
 
         let item: ItemsValidate = {
-            name: name,
             email: email,
             password: password,
             changeError: changeError,
@@ -44,32 +40,24 @@ function Register() {
         return validateRegister(item)
     }
 
-    function changeError(error: User) {
+    function changeError(error: UserLogin) {
         setError(error)
-        if (error.name.length > 0 && error.email.length > 0 && error.password.length > 0) {
-            let obj: User = {
-                name: name,
+        if (error.email.length > 0 && error.password.length > 0) {
+            let obj: UserLogin = {
                 email: email,
                 password: password,
             }
-            dispatch(addUser(obj));
 
             console.log("users do redux:", result)
 
             setError({
-                name: "",
                 email: "",
                 password: ""
             })
-            setName("")
             setEmail("")
             setPassword("")
         }
-        // < Redirect push
-        //     to="/login"
-        // />
     }
-
 
     function check_email(val: string) {
         if (!val.match(/\S+@\S+\.\S+/)) {
@@ -81,13 +69,10 @@ function Register() {
         return true;
     }
 
-    // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const handleChangeName = (e: React.FormEvent<HTMLInputElement>) => {
-        setName(e.currentTarget.value)
-    }
     const handleChangeEmail = (e: React.FormEvent<HTMLInputElement>) => {
         setEmail(e.currentTarget.value)
     }
+
     const handleChangePassword = (e: React.FormEvent<HTMLInputElement>) => {
         setPassword(e.currentTarget.value)
     }
@@ -116,23 +101,13 @@ function Register() {
                         <ContainerBoxRight>
                             <div>
                                 <SpanTitleAuthentication>
-                                    Registration
+                                    Authentication
                         </SpanTitleAuthentication>
                             </div>
                             <FormLogin onSubmit={handleSubmit}>
                                 <div style={{ boxShadow: "0px 3px 25px #00000014", borderRadius: 14 }}>
 
-                                    <DivInputName >
-                                        <InputLogin
-                                            type="text"
-                                            placeholder="Name"
-                                            value={name}
-                                            // onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e.currentTarget.value)}
-                                            onChange={handleChangeName}
-                                        />
-                                        <span style={{ display: "flex", position: "absolute", marginTop: 60, color: "#dc3545" }}>{error?.name}</span>
-                                    </DivInputName>
-                                    <DivInputEmail>
+                                    <DivInputEmail >
                                         <InputLogin
                                             type="text"
                                             placeholder="Email"
@@ -145,16 +120,23 @@ function Register() {
                                         <InputLogin
                                             type="password"
                                             placeholder="Password"
-                                            autoComplete="off"
+                                            autoComplete="on"
                                             value={password}
                                             onChange={handleChangePassword}
                                         />
                                         <span style={{ display: "flex", position: "absolute", marginTop: 60, color: "#dc3545" }}>{error?.password}</span>
                                     </DivInputPassword>
                                     <DivButtonLogin>
+                                        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                                            <DivForgot>
+                                                <ButtonForgot>
+                                                    <SpanForgot><Link to="/reset-password" style={{textDecoration: "none", color: "#707070"}}>I forget my password</Link></SpanForgot>
+                                                </ButtonForgot>
+                                            </DivForgot>
+                                        </div>
                                         <div>
-                                            <ButtonLogin>
-                                                <SpanLogin>Register <i className="fas fa-arrow-right"></i></SpanLogin>
+                                            <ButtonLogin onClick={handleLogin}>
+                                                <SpanLogin >Log In <i className="fas fa-arrow-right"></i></SpanLogin>
                                             </ButtonLogin>
                                         </div>
                                     </DivButtonLogin>
@@ -163,7 +145,7 @@ function Register() {
                             </FormLogin>
                             {/* <div> */}
                             <ButtonSigUp>
-                                <SpanSigUp><i className="fas fa-arrow-left"></i><Link to="/login" style={{ textDecoration: "none", color: "#707070" }}>Back</Link></SpanSigUp>
+                                <SpanSigUp>Sign Up <i className="fas fa-arrow-right"></i></SpanSigUp>
                             </ButtonSigUp>
                             {/* </div> */}
                         </ContainerBoxRight>
@@ -178,4 +160,4 @@ function Register() {
     )
 }
 
-export default Register;
+export default Login;

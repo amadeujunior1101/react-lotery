@@ -68,6 +68,7 @@ interface Item {
     ["max-number"]: number;
     range: number;
     price: number;
+    ["min-cart-value"]: number;
 }
 
 interface Cart {
@@ -85,6 +86,7 @@ function Game() {
 
     const [openMenu, setOpenMenu] = useState(false);
     const [visibleCartMobile, setVisibleCartMobile] = useState(false);
+    const [visibleInfoCart, setVisibleInfoCart] = useState(false);
 
     const [dataJSON] = useState([dataJson.types])
     const [activeId, setActiveId] = useState(1)
@@ -188,17 +190,17 @@ function Game() {
     function cartValue() {
         let total;
         if (cart.length === 0) {
-            total = "0,00"
+            total = 0
 
         } else {
             total = cart.reduce((accumulator: any, currentValue) => {
                 return Number(accumulator) + currentValue.price;
             }, [0]);
 
-            return total
-                .toFixed(2)
-                .replace(".", ",")
-                .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+            // return total
+            //     .toFixed(2)
+            //     .replace(".", ",")
+            //     .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
         }
 
         return total
@@ -209,9 +211,18 @@ function Game() {
     };
 
     function addCartRedux() {
-        dispatch(addCart(itemCart));
-        console.log("Valores redux", result)
-        setCart([]);
+        if (cartValue() < Number(game?.["min-cart-value"])) {
+            console.log("Aposta com valor mínimo de 30,00")
+            setVisibleInfoCart(true)
+            setTimeout(() => {
+                setVisibleInfoCart(false)
+            }, 4000);
+        } else {
+            dispatch(addCart(itemCart));
+            console.log("Valores redux", result)
+            setVisibleInfoCart(false)
+            setCart([]);
+        }
     }
 
     useEffect(() => {
@@ -297,11 +308,26 @@ function Game() {
                                                 </div>
                                             </DivCardBase>
                                             <DivCartTotal>
-                                                <SpanCartTotal>cart <ValueTotal>TOTAL: R$ <SpanValueTotal>{cartValue()}</SpanValueTotal></ValueTotal></SpanCartTotal>
+                                                <SpanCartTotal>cart <ValueTotal>TOTAL: R$ <SpanValueTotal>{cartValue().toFixed(2)
+                                                    .replace(".", ",")
+                                                    .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}</SpanValueTotal></ValueTotal></SpanCartTotal>
                                             </DivCartTotal>
-                                            <DivSaveButton>
+                                            <DivSaveButton onClick={() => { addCartRedux() }}>
                                                 <SpanSaveButton>Save <i className="fas fa-arrow-right"></i></SpanSaveButton>
                                             </DivSaveButton>
+                                            {
+                                                visibleInfoCart ?
+                                                    <div style={{
+                                                        margin: "10px 0 0 10px", height: 50, background: "#f8d7da", display: "flex", justifyContent: "center", alignItems: "center",
+                                                        color: "#721c24", borderColor: "#f5c6cb", border: "1px solid transparent",
+                                                    }}>
+                                                        <span>{`O valor mínimo das apostas é ${Number(game?.["min-cart-value"]).toFixed(2)
+                                                            .replace(".", ",")
+                                                            .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`}</span>
+                                                    </div>
+                                                    :
+                                                    null
+                                            }
                                         </div>
                                         : null
                                 }
@@ -383,11 +409,26 @@ function Game() {
                             </div>
                         </DivCardBase>
                         <DivCartTotal>
-                            <SpanCartTotal>cart <ValueTotal>TOTAL: R$ <SpanValueTotal>{cartValue()}</SpanValueTotal></ValueTotal></SpanCartTotal>
+                            <SpanCartTotal>cart <ValueTotal>TOTAL: R$ <SpanValueTotal>{cartValue().toFixed(2)
+                                .replace(".", ",")
+                                .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}</SpanValueTotal></ValueTotal></SpanCartTotal>
                         </DivCartTotal>
                         <DivSaveButton onClick={() => { addCartRedux() }}>
                             <SpanSaveButton>Save <i className="fas fa-arrow-right"></i></SpanSaveButton>
                         </DivSaveButton>
+                        {
+                            visibleInfoCart ?
+                                <div style={{
+                                    margin: "10px 0 0 10px", height: 50, background: "#f8d7da", display: "flex", justifyContent: "center", alignItems: "center",
+                                    color: "#721c24", borderColor: "#f5c6cb", border: "1px solid transparent",
+                                }}>
+                                    <span>{`O valor mínimo das apostas é ${Number(game?.["min-cart-value"]).toFixed(2)
+                                        .replace(".", ",")
+                                        .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`}</span>
+                                </div>
+                                :
+                                null
+                        }
                     </ContentRight>
                 </Main>
             </Container>
