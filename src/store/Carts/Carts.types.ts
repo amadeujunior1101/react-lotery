@@ -25,6 +25,7 @@ export interface ItemCart {
     price: number;
     bets: Array<String>;
     color: string;
+    date:string;
 }
 
 export interface ArrayObjects {

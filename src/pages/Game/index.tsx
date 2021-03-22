@@ -50,6 +50,7 @@ import {
     DivTitleCard,
     SpanInformationCartEmpty,
     ScrollList,
+    DivAlert,
 
     DivCartTotal,
     SpanCartTotal,
@@ -74,6 +75,7 @@ interface Item {
 interface Cart {
     type: string;
     price: number;
+    date: string;
     bets: Array<String>;
     color: string;
 }
@@ -160,9 +162,6 @@ function Game() {
     function addToCart() {
         if (selectedBalls.length < Number(game?.["max-number"])) return;
 
-        setCartTemporary([])
-        setSelectedBalls([])
-
         selectedBalls.map(item => {
             let newNumber: string = "";
             item < 10
@@ -174,10 +173,35 @@ function Game() {
         cart?.push({
             type: String(game?.type),
             price: Number(game?.price),
+            date: getDate(),
             bets: cartTemporary,
             color: String(game?.color),
         });
         console.log("Itens no carinho:", cart);
+
+        setCartTemporary([])
+        setSelectedBalls([])
+    }
+
+    function getDate() {
+        const date = new Date();
+
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+
+        let modifiedDay: string = "";
+        day < 10
+            ? (modifiedDay = `${"0" + String(day)}`)
+            : (modifiedDay = String(day));
+
+        let modifiedMonth: string = "";
+        month < 10
+            ? (modifiedMonth = `${"0" + String(month)}`)
+            : (modifiedMonth = String(month));
+
+
+        return String(`${modifiedDay}/${modifiedMonth}/${year}`)
     }
 
     function removeItemCart(indexRemove: number) {
@@ -196,11 +220,6 @@ function Game() {
             total = cart.reduce((accumulator: any, currentValue) => {
                 return Number(accumulator) + currentValue.price;
             }, [0]);
-
-            // return total
-            //     .toFixed(2)
-            //     .replace(".", ",")
-            //     .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
         }
 
         return total
@@ -210,16 +229,16 @@ function Game() {
         cart: cart
     };
 
-    function addCartRedux() {
+    function saveCartRedux() {
         if (cartValue() < Number(game?.["min-cart-value"])) {
-            console.log("Aposta com valor mínimo de 30,00")
+            // console.log("Aposta com valor mínimo de 30,00")
             setVisibleInfoCart(true)
             setTimeout(() => {
                 setVisibleInfoCart(false)
             }, 4000);
         } else {
             dispatch(addCart(itemCart));
-            console.log("Valores redux", result)
+            // console.log("Valores redux", result)
             setVisibleInfoCart(false)
             setCart([]);
         }
@@ -312,19 +331,16 @@ function Game() {
                                                     .replace(".", ",")
                                                     .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}</SpanValueTotal></ValueTotal></SpanCartTotal>
                                             </DivCartTotal>
-                                            <DivSaveButton onClick={() => { addCartRedux() }}>
+                                            <DivSaveButton onClick={() => { saveCartRedux() }}>
                                                 <SpanSaveButton>Save <i className="fas fa-arrow-right"></i></SpanSaveButton>
                                             </DivSaveButton>
                                             {
                                                 visibleInfoCart ?
-                                                    <div style={{
-                                                        margin: "10px 0 0 10px", height: 50, background: "#f8d7da", display: "flex", justifyContent: "center", alignItems: "center",
-                                                        color: "#721c24", borderColor: "#f5c6cb", border: "1px solid transparent",
-                                                    }}>
+                                                    <DivAlert>
                                                         <span>{`O valor mínimo das apostas é ${Number(game?.["min-cart-value"]).toFixed(2)
                                                             .replace(".", ",")
                                                             .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`}</span>
-                                                    </div>
+                                                    </DivAlert>
                                                     :
                                                     null
                                             }
@@ -413,19 +429,16 @@ function Game() {
                                 .replace(".", ",")
                                 .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}</SpanValueTotal></ValueTotal></SpanCartTotal>
                         </DivCartTotal>
-                        <DivSaveButton onClick={() => { addCartRedux() }}>
+                        <DivSaveButton onClick={() => { saveCartRedux() }}>
                             <SpanSaveButton>Save <i className="fas fa-arrow-right"></i></SpanSaveButton>
                         </DivSaveButton>
                         {
                             visibleInfoCart ?
-                                <div style={{
-                                    margin: "10px 0 0 10px", height: 50, background: "#f8d7da", display: "flex", justifyContent: "center", alignItems: "center",
-                                    color: "#721c24", borderColor: "#f5c6cb", border: "1px solid transparent",
-                                }}>
+                                <DivAlert>
                                     <span>{`O valor mínimo das apostas é ${Number(game?.["min-cart-value"]).toFixed(2)
                                         .replace(".", ",")
                                         .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`}</span>
-                                </div>
+                                </DivAlert>
                                 :
                                 null
                         }

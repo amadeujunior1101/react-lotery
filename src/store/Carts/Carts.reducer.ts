@@ -15,9 +15,9 @@ export default function (state: Array<Object> = [], action: Action) {
       action.payload.cart.map((item, index, obj) => {
         state.push(item);
         // state.cart.push(item);
-        console.log("map item reducer:", item);
+        // console.log("map item reducer:", item);
       })
-      console.log("passando no reducer", state);
+      // console.log("passando no reducer", state);
 
       return state;
 

@@ -137,16 +137,17 @@ margin-top: 70px;
   }
 @media ${device.tablet}{
     width: 768px;
-    display: flex;
+    display: grid;
   }
 
 @media ${device.laptop}{
     width: 1200px;
+    display: flex;
   }
 `;
 
 const DivBlockLeft = styled.div`
-width: 65%;
+/* width: 65%; */
 margin-bottom: 10px;
 /* display: flex; */
 `;
@@ -188,7 +189,7 @@ align-items: flex-start;
   }
 @media ${device.tablet}{
     /* justify-content:  */
-    width: 35%;
+    width: 100%;
   }
 `;
 const SpanTitleRecentGame = styled.span`
@@ -254,7 +255,13 @@ const DivWrapperScrollList = styled.div`
 `;
 const ScrollList = styled.div`
  overflow-y: scroll;
- max-height: 500px;
+
+ @media ${device.mobileS}{
+  max-height: 300px;
+  }
+ @media ${device.tablet}{
+  max-height: 500px;
+  }
 `;
 
 const DivListGames = styled.div`
@@ -298,32 +305,32 @@ color: #868686;
 `;
 
 export {
-    WrapperTopbar,
-    TopBar,
-    BlockLeft,
-    SpanLogo,
-    DivBarLogo,
-    BlockRight,
-    SpanAccount,
-    SpanLogOut,
-    DivFooter,
-    SpanTextFooter,
-    Container,
-    Main,
-    DivBlockLeft,
-    DivBlockRight,
-    SpanTitleRecentGame,
-    SpanTitleFilters,
-    DivButtonGames,
-    // ButtonChoose,
-    SpanNewBet,
-    DivWrapperScrollList,
-    ScrollList,
-    DivListGames,
-    DivDivisorElement,
-    DivGameDescription,
-    SpanNumberList,
-    SpanType,
-    SpanInfos,
-    DivWrapperRecentGame,
+  WrapperTopbar,
+  TopBar,
+  BlockLeft,
+  SpanLogo,
+  DivBarLogo,
+  BlockRight,
+  SpanAccount,
+  SpanLogOut,
+  DivFooter,
+  SpanTextFooter,
+  Container,
+  Main,
+  DivBlockLeft,
+  DivBlockRight,
+  SpanTitleRecentGame,
+  SpanTitleFilters,
+  DivButtonGames,
+  // ButtonChoose,
+  SpanNewBet,
+  DivWrapperScrollList,
+  ScrollList,
+  DivListGames,
+  DivDivisorElement,
+  DivGameDescription,
+  SpanNumberList,
+  SpanType,
+  SpanInfos,
+  DivWrapperRecentGame,
 }

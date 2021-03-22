@@ -15,8 +15,8 @@ export default function (state: UsersList = INITIAL_STATE, action: Action) {
       if (existEmail.length === 0) {
         state.users.push(action.payload)
       }
-      console.log("Fora do reducer", state.users);
-      console.log("já existe: ", existEmail);
+      // console.log("Fora do reducer", state.users);
+      // console.log("já existe: ", existEmail);
 
       return state
 

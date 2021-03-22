@@ -5,7 +5,8 @@ import { UserLogin, Users } from "../../store/Users/Users.types"
 import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxLeft, DivBoxRight, ContainerBoxLeft, DivTitleOne, SpanTitleOne,
     DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormLogin, DivInputEmail,
-    DivInputPassword, InputLogin, DivButtonLogin, DivForgot, SpanForgot, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp, ButtonForgot, Footer,
+    DivInputPassword, InputLogin, DivButtonLogin, DivForgot, SpanForgot, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp, ButtonForgot,
+    Footer, DivAlert,
 } from "./login.style"
 import validateRegister from "./validate"
 
@@ -14,6 +15,7 @@ function Login() {
     const [password, setPassword] = useState<string>("")
 
     const [error, setError] = useState<UserLogin>()
+    const [visibleInfoLogin, setVisibleInfoLogin] = useState(false)
 
     const result = useSelector((state: Users) => state.user.users);
 
@@ -21,7 +23,7 @@ function Login() {
         e.preventDefault()
     }
 
-    const handleLogin= (e: React.FormEvent) => {
+    const handleLogin = (e: React.FormEvent) => {
         e.preventDefault()
 
         interface ItemsValidate {
@@ -48,12 +50,27 @@ function Login() {
                 password: password,
             }
 
-            console.log("users do redux:", result)
+            let existUser = result.filter(element => {
+                return element.email === obj.email && element.password === obj.password
+            })
 
             setError({
                 email: "",
                 password: ""
             })
+
+            if (existUser.length === 0) {
+                setVisibleInfoLogin(true);
+
+                setTimeout(() => {
+                    setVisibleInfoLogin(false);
+                }, 4000);
+
+            } else {
+                setVisibleInfoLogin(false);
+                console.log("Dados do user: ", existUser)
+            }
+
             setEmail("")
             setPassword("")
         }
@@ -130,7 +147,7 @@ function Login() {
                                         <div style={{ display: "flex", justifyContent: "flex-end" }}>
                                             <DivForgot>
                                                 <ButtonForgot>
-                                                    <SpanForgot><Link to="/reset-password" style={{textDecoration: "none", color: "#707070"}}>I forget my password</Link></SpanForgot>
+                                                    <SpanForgot><Link to="/reset-password" style={{ textDecoration: "none", color: "#707070" }}>I forget my password</Link></SpanForgot>
                                                 </ButtonForgot>
                                             </DivForgot>
                                         </div>
@@ -141,13 +158,18 @@ function Login() {
                                         </div>
                                     </DivButtonLogin>
                                 </div>
+                                {
+                                    visibleInfoLogin ?
+                                        <DivAlert>
+                                            <span>Login ou senha invalidos!</span>
+                                        </DivAlert>
+                                        : null
+                                }
 
                             </FormLogin>
-                            {/* <div> */}
                             <ButtonSigUp>
                                 <SpanSigUp>Sign Up <i className="fas fa-arrow-right"></i></SpanSigUp>
                             </ButtonSigUp>
-                            {/* </div> */}
                         </ContainerBoxRight>
 
                     </DivBoxRight>
