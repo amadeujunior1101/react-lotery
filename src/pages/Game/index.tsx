@@ -76,7 +76,7 @@ interface Cart {
     type: string;
     price: number;
     date: string;
-    bets: Array<String>;
+    numbers: Array<String>;
     color: string;
 }
 
@@ -144,13 +144,14 @@ function Game() {
             let number = Math.floor(Math.random() * Number(game?.range) + 1);
             const found = selectedBalls.some((element) => element === Number(number));
             if (!found) {
-                let newNumber = "";
-                number < 10
-                    ? (newNumber = `${"0" + String(number)}`)
-                    : (newNumber = String(number));
+                // let newNumber = "";
+                // number < 10
+                //     ? (newNumber = `${"0" + String(number)}`)
+                //     : (newNumber = String(number));
 
-                selectedNumber(number)
-                selectedBalls.push(Number(newNumber));
+                selectedNumber(number);
+                selectedBalls.push(number);
+                // selectedBalls.push(Number(newNumber));
             }
         }
     }
@@ -162,7 +163,10 @@ function Game() {
     function addToCart() {
         if (selectedBalls.length < Number(game?.["max-number"])) return;
 
-        selectedBalls.map(item => {
+        let sortSelectedBalls = selectedBalls.sort(function (a, b) {
+            return a - b;
+        })
+        sortSelectedBalls.map(item => {
             let newNumber: string = "";
             item < 10
                 ? (newNumber = `${"0" + String(item)}`)
@@ -174,7 +178,7 @@ function Game() {
             type: String(game?.type),
             price: Number(game?.price),
             date: getDate(),
-            bets: cartTemporary,
+            numbers: cartTemporary,
             color: String(game?.color),
         });
         console.log("Itens no carinho:", cart);
@@ -231,17 +235,37 @@ function Game() {
 
     function saveCartRedux() {
         if (cartValue() < Number(game?.["min-cart-value"])) {
-            // console.log("Aposta com valor mínimo de 30,00")
             setVisibleInfoCart(true)
             setTimeout(() => {
                 setVisibleInfoCart(false)
             }, 4000);
         } else {
             dispatch(addCart(itemCart));
-            // console.log("Valores redux", result)
+            console.log("Valores redux", result)
             setVisibleInfoCart(false)
             setCart([]);
         }
+    }
+
+    function seeCart() {
+        let arrGame: Object[] = []
+
+        cart.map(item => {
+            arrGame.push({
+                numbers: String(item.numbers),
+                color: item.color,
+                date: item.date,
+                price: item.price,
+                type: item.type,
+            })
+        })
+
+        let cartObj = {
+            user_id: 1,
+            date: "24/03/2021",
+            games: arrGame
+        }
+        console.log("Objeto Cart: ", cartObj)
     }
 
     useEffect(() => {
@@ -313,7 +337,7 @@ function Game() {
                                                                         return (
                                                                             <CartItem
                                                                                 key={index}
-                                                                                bets={item.bets}
+                                                                                numbers={item.numbers}
                                                                                 type={item.type}
                                                                                 color={item.color}
                                                                                 index={index}
@@ -411,7 +435,7 @@ function Game() {
                                                     return (
                                                         <CartItem
                                                             key={index}
-                                                            bets={item.bets}
+                                                            numbers={item.numbers}
                                                             type={item.type}
                                                             color={item.color}
                                                             index={index}
@@ -432,6 +456,7 @@ function Game() {
                         <DivSaveButton onClick={() => { saveCartRedux() }}>
                             <SpanSaveButton>Save <i className="fas fa-arrow-right"></i></SpanSaveButton>
                         </DivSaveButton>
+                        {/* <button onClick={() => seeCart()}>See cart</button> */}
                         {
                             visibleInfoCart ?
                                 <DivAlert>

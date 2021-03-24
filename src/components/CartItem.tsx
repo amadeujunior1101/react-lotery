@@ -3,7 +3,7 @@ import { DivListGames, DivGameIcon, DivDivisorElement, DivGameDescription, SpanN
 interface Props {
     removeItemCart: Function;
     index: number;
-    bets: Array<String>;
+    numbers: Array<String>;
     type: string;
     color: string;
 }
@@ -17,7 +17,7 @@ function CartItem(props: Props) {
             <DivDivisorElement color={props.color}>
             </DivDivisorElement>
             <DivGameDescription>
-                <SpanNumberList>{(props.bets).join(", ")}</SpanNumberList>
+                <SpanNumberList>{(props.numbers).join(", ")}</SpanNumberList>
                 <SpanType color={props.color}>{props.type}</SpanType>
             </DivGameDescription>
         </DivListGames>

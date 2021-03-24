@@ -130,7 +130,7 @@ function RecentGames() {
                                                     <DivDivisorElement color={item.color}>
                                                     </DivDivisorElement>
                                                     <DivGameDescription>
-                                                        <SpanNumberList>{(item.bets).join(", ")}</SpanNumberList>
+                                                        <SpanNumberList>{(item.numbers).join(", ")}</SpanNumberList>
                                                         <SpanInfos>{item.date} - (R$ {item.price})</SpanInfos>
                                                         <SpanType color={item.color}>{item.type}</SpanType>
                                                     </DivGameDescription>

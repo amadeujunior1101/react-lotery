@@ -23,7 +23,7 @@ export interface Item {
 export interface ItemCart {
     type: string;
     price: number;
-    bets: Array<String>;
+    numbers: Array<String>;
     color: string;
     date:string;
 }
