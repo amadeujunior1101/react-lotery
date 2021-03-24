@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import api from "../../services/api";
 import { ArrayObjects } from "../../store/Carts/Carts.types"
 
 import dataJson from "../../mock/games.json"
@@ -38,7 +39,8 @@ import {
 
 function RecentGames() {
     const result = useSelector((state: ArrayObjects) => state.cart);
-    const [gameResults, setGamesResults] = useState(result)
+    // const [gameResults, setGamesResults] = useState(result);
+    const [gameResults, setGamesResults] = useState(result);
 
     const [dataJSON] = useState([dataJson.types])
     const [activeId, setActiveId] = useState(1)
@@ -56,6 +58,12 @@ function RecentGames() {
 
     }
 
+    async function findBets() {
+        const data = await api.get("/show-bet?user_id=1");
+
+        // console.log("data:", data.data.data)
+    }
+
     useEffect(() => {
         let results = dataJSON[0].filter(el => {
             return el.type
@@ -68,6 +76,7 @@ function RecentGames() {
             })
         )
 
+        findBets()
     }, [])
 
     return (
