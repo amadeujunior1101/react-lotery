@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useSelector } from "react-redux"
-import { Link } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 import { UserLogin, Users } from "../../store/Users/Users.types"
 import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxLeft, DivBoxRight, ContainerBoxLeft, DivTitleOne, SpanTitleOne,
@@ -18,6 +18,7 @@ function Login() {
     const [visibleInfoLogin, setVisibleInfoLogin] = useState(false)
 
     const result = useSelector((state: Users) => state.user.users);
+    const history = useHistory();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -69,10 +70,12 @@ function Login() {
             } else {
                 setVisibleInfoLogin(false);
                 console.log("Dados do user: ", existUser)
+                history.push("/");
+                
+                setEmail("")
+                setPassword("")
             }
 
-            setEmail("")
-            setPassword("")
         }
     }
 
@@ -168,7 +171,9 @@ function Login() {
 
                             </FormLogin>
                             <ButtonSigUp>
-                                <SpanSigUp>Sign Up <i className="fas fa-arrow-right"></i></SpanSigUp>
+                                <SpanSigUp>
+                                    <Link to="/register" style={{ textDecoration: "none", color: "#707070" }}>Sign Up </Link>
+                                    <i className="fas fa-arrow-right"></i></SpanSigUp>
                             </ButtonSigUp>
                         </ContainerBoxRight>
 

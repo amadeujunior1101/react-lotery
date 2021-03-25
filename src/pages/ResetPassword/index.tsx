@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxLeft, DivBoxRight, ContainerBoxLeft, DivTitleOne, SpanTitleOne,
     DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormResetPassword, DivInputEmail,
@@ -11,6 +12,8 @@ function ResetPassword() {
     const [error, setError] = useState<UserResetPassword>()
 
     const [email, setEmail] = useState<string>("")
+
+    const history = useHistory();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -42,9 +45,9 @@ function ResetPassword() {
                 email: "",
             })
             setEmail("")
+            history.push("/login");
         }
     }
-
 
     function check_email(val: string) {
         if (!val.match(/\S+@\S+\.\S+/)) {
@@ -58,6 +61,10 @@ function ResetPassword() {
 
     const handleChangeEmail = (e: React.FormEvent<HTMLInputElement>) => {
         setEmail(e.currentTarget.value)
+    }
+
+    function returnGoBack() {
+        history.goBack();
     }
 
     return (
@@ -110,7 +117,7 @@ function ResetPassword() {
                             </FormResetPassword>
                             {/* <div> */}
                             <ButtonSigUp>
-                                <SpanSigUp><i className="fas fa-arrow-left"></i>Back</SpanSigUp>
+                                <SpanSigUp onClick={() => { returnGoBack() }}><i className="fas fa-arrow-left"></i>Back</SpanSigUp>
                             </ButtonSigUp>
                             {/* </div> */}
                         </ContainerBoxRight>

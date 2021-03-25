@@ -16,5 +16,6 @@ export default createGlobalStyle`
   :root{
   --footer-login: 80px;
   --content-recent-game: 33vh;
+  --footer-account: 17%;
   }
 `;

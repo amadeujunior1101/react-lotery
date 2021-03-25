@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 import { ArrayObjects } from "../../store/Carts/Carts.types"
@@ -8,24 +8,17 @@ import { addCart } from "../../store/Carts/Carts.actions";
 
 import dataJson from "../../mock/games.json"
 import ButtonChooseBet from "../../components/ButtonChooseBet"
+import TopBarMain from "../../components/TopBar"
 import BallBet from "../../components/Ball"
 import CartItem from "../../components/CartItem"
 
 import {
     DivButtonsChoose,
     ParagraphDescription,
-    WrapperTopbar,
+
     DivMenuMobile,
     UlMenuMobile,
-    TopBar,
-    BlockLeft,
-    SpanLogo,
-    DivMenu,
-    DivBarLogo,
-    SpanHome,
-    BlockRight,
-    SpanAccount,
-    SpanLogOut,
+
     Container,
     Main,
     ContentLeft,
@@ -81,6 +74,7 @@ interface Cart {
 }
 
 function Game() {
+    const history = useHistory();
 
     const result = useSelector((state: ArrayObjects) => state.cart);
 
@@ -88,7 +82,8 @@ function Game() {
 
     const [openMenu, setOpenMenu] = useState(false);
     const [visibleCartMobile, setVisibleCartMobile] = useState(false);
-    const [visibleInfoCart, setVisibleInfoCart] = useState(false);
+    const [visibleInfoMinimumValueBet, SetVisibleInfoMinimumValueBet] = useState(false);
+    const [visibleInfoValueQuantityBalls, SetVisibleInfoValueQuantityBalls] = useState(false);
 
     const [dataJSON] = useState([dataJson.types])
     const [activeId, setActiveId] = useState(1)
@@ -161,7 +156,13 @@ function Game() {
     }
 
     function addToCart() {
-        if (selectedBalls.length < Number(game?.["max-number"])) return;
+        if (selectedBalls.length < Number(game?.["max-number"])) {
+            SetVisibleInfoValueQuantityBalls(true);
+            setTimeout(() => {
+                SetVisibleInfoValueQuantityBalls(false);
+            }, 4000);
+            return
+        }
 
         let sortSelectedBalls = selectedBalls.sort(function (a, b) {
             return a - b;
@@ -235,15 +236,16 @@ function Game() {
 
     function saveCartRedux() {
         if (cartValue() < Number(game?.["min-cart-value"])) {
-            setVisibleInfoCart(true)
+            SetVisibleInfoMinimumValueBet(true)
             setTimeout(() => {
-                setVisibleInfoCart(false)
+                SetVisibleInfoMinimumValueBet(false)
             }, 4000);
         } else {
             dispatch(addCart(itemCart));
             console.log("Valores redux", result)
-            setVisibleInfoCart(false)
+            SetVisibleInfoMinimumValueBet(false)
             setCart([]);
+            history.push("/");
         }
     }
 
@@ -278,31 +280,14 @@ function Game() {
 
     return (
         <>
-            <WrapperTopbar>
-                <TopBar>
-                    <BlockLeft>
-                        <div>
-                            <SpanLogo>TGL</SpanLogo>
-                            <DivBarLogo></DivBarLogo>
-                        </div>
-                        <SpanHome>Home</SpanHome>
-                    </BlockLeft>
-                    <BlockRight>
-                        <SpanAccount>
-                            <Link to="/recent-games">Account</Link>
-                        </SpanAccount>
-                        <SpanLogOut>
-                            <Link to="/login">Log Out </Link>
-                            <i className="fas fa-arrow-right"></i></SpanLogOut>
-                        <DivMenu onClick={() => { setOpenMenu(!openMenu) }}><i className="fas fa-bars"></i></DivMenu>
-                    </BlockRight>
-                </TopBar>
-            </WrapperTopbar>
+            <TopBarMain
+                openMenu={ ()=>{setOpenMenu(!openMenu)}}
+            />
             {
                 openMenu ?
                     <DivMenuMobile>
                         <UlMenuMobile>
-                            <Link to="/register">Account</Link>
+                            <Link to="/account">Account</Link>
                             <Link to="/login">Log Out</Link>
                         </UlMenuMobile>
                     </DivMenuMobile>
@@ -359,11 +344,19 @@ function Game() {
                                                 <SpanSaveButton>Save <i className="fas fa-arrow-right"></i></SpanSaveButton>
                                             </DivSaveButton>
                                             {
-                                                visibleInfoCart ?
+                                                visibleInfoMinimumValueBet ?
                                                     <DivAlert>
                                                         <span>{`O valor mínimo das apostas é ${Number(game?.["min-cart-value"]).toFixed(2)
                                                             .replace(".", ",")
                                                             .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`}</span>
+                                                    </DivAlert>
+                                                    :
+                                                    null
+                                            }
+                                            {
+                                                visibleInfoValueQuantityBalls ?
+                                                    <DivAlert>
+                                                        <span>{`Você deve escolher ${Number(game?.["max-number"])} bolas para esse jogo`}</span>
                                                     </DivAlert>
                                                     :
                                                     null
@@ -458,11 +451,19 @@ function Game() {
                         </DivSaveButton>
                         {/* <button onClick={() => seeCart()}>See cart</button> */}
                         {
-                            visibleInfoCart ?
+                            visibleInfoMinimumValueBet ?
                                 <DivAlert>
                                     <span>{`O valor mínimo das apostas é ${Number(game?.["min-cart-value"]).toFixed(2)
                                         .replace(".", ",")
                                         .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`}</span>
+                                </DivAlert>
+                                :
+                                null
+                        }
+                        {
+                            visibleInfoValueQuantityBalls ?
+                                <DivAlert>
+                                    <span>{`Você deve escolher ${Number(game?.["max-number"])} bolas para esse jogo`}</span>
                                 </DivAlert>
                                 :
                                 null

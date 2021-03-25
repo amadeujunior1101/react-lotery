@@ -92,7 +92,7 @@ const SpanLogOut = styled.span`
     color: #707070;
     margin-left: 80px;
     display: flex;
-    /* margin-right: 10px;  */
+    margin-right: 10px; 
 `;
 
 const DivFooter = styled.div`
@@ -255,6 +255,15 @@ const DivWrapperScrollList = styled.div`
 `;
 const ScrollList = styled.div`
  overflow-y: scroll;
+
+ /* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 
  @media ${device.mobileS}{
   max-height: 300px;

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom"
 import { useSelector } from "react-redux";
 import api from "../../services/api";
 import { ArrayObjects } from "../../store/Carts/Carts.types"
@@ -35,48 +36,57 @@ import {
     SpanType,
     SpanInfos,
     DivWrapperRecentGame,
-} from "./recent-games.style";
+} from "./home.style";
 
-function RecentGames() {
+function Home() {
     const result = useSelector((state: ArrayObjects) => state.cart);
     // const [gameResults, setGamesResults] = useState(result);
     const [gameResults, setGamesResults] = useState(result);
 
     const [dataJSON] = useState([dataJson.types])
-    const [activeId, setActiveId] = useState(1)
+    const [activeId, setActiveId] = useState(0)
 
     function changeState(id: number, item: string) {
-        setActiveId(id)
         let results = dataJSON[0].filter(el => {
             return el.type === item
         })
-        setGamesResults(
-            result.filter(el => {
-                return el.type === results[0].type
-            })
-        )
 
+        if (activeId === id) {
+            setActiveId(0)
+            setGamesResults(
+                result.filter(el => {
+                    return el
+                })
+            )
+        } else {
+            setActiveId(id)
+            setGamesResults(
+                result.filter(el => {
+                    return el.type === results[0].type
+                })
+            )
+        }
     }
 
     async function findBets() {
-        const data = await api.get("/show-bet?user_id=1");
+        // const data = await api.get("/show-bet?user_id=1");
 
         // console.log("data:", data.data.data)
     }
 
     useEffect(() => {
-        let results = dataJSON[0].filter(el => {
-            return el.type
-        })
-        changeState(1, results[0].type)
+        // let results = dataJSON[0].filter(el => {
+        //     return el.type
+        // })
+        // changeState(1, results[0].type)
 
         setGamesResults(
             result.filter(el => {
-                return el.type === results[0].type
+                return el
             })
         )
 
-        findBets()
+        // findBets()
     }, [])
 
     return (
@@ -85,14 +95,20 @@ function RecentGames() {
                 <TopBar>
                     <BlockLeft>
                         <div>
-                            <SpanLogo>TGL</SpanLogo>
+                            <SpanLogo>
+                                <Link to="/" style={{ color: "#707070", textDecoration: "none" }}>TGL</Link>
+                            </SpanLogo>
                             <DivBarLogo></DivBarLogo>
                         </div>
                     </BlockLeft>
                     <BlockRight>
-                        <SpanAccount>Account</SpanAccount>
-                        <SpanLogOut>Sair </SpanLogOut>
-                        <i className="fas fa-arrow-right"></i>
+                        <SpanAccount>
+                            <Link to="/account" style={{ color: "#707070", textDecoration: "none" }}>Account</Link>
+                        </SpanAccount>
+                        <SpanLogOut>
+                            <Link to="/login" style={{ color: "#707070", textDecoration: "none" }}>Sair </Link>
+                        </SpanLogOut>
+                        <i className="fas fa-arrow-right" style={{ color: "#707070" }}></i>
                     </BlockRight>
                 </TopBar>
             </WrapperTopbar>
@@ -147,7 +163,7 @@ function RecentGames() {
                                             )
                                         }) :
                                         <>
-                                            <h3>Sem games marcados!</h3>
+                                            <h3>Não há apostas realizadas!</h3>
                                         </>
                                 }
                             </ScrollList>
@@ -156,7 +172,9 @@ function RecentGames() {
                         {/* </div> */}
                     </DivBlockLeft>
                     <DivBlockRight>
-                        <SpanNewBet>New Bet <i className="fas fa-arrow-right"></i></SpanNewBet>
+                        <SpanNewBet>
+                            <Link to="/game" style={{ color: "#B5C401", textDecoration: "none" }}>New Bet </Link>
+                            <i className="fas fa-arrow-right"></i></SpanNewBet>
                     </DivBlockRight>
                 </Main>
             </Container>
@@ -168,4 +186,4 @@ function RecentGames() {
     )
 }
 
-export default RecentGames;
+export default Home;

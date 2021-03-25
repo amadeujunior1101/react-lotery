@@ -1,24 +1,24 @@
 import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router";
-import { Link } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { Dispatch } from "redux";
 import { addUser } from "../../store/Users/Users.actions";
-import { UsersList, User, Users } from "../../store/Users/Users.types";
+import { User, Users } from "../../store/Users/Users.types";
 import {
-    Wrapper, ContainerFluid, BoxGeneral, DivBoxLeft, DivBoxRight, ContainerBoxLeft, DivTitleOne, SpanTitleOne,
-    DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormLogin, DivInputName, DivInputEmail,
-    DivInputPassword, InputLogin, DivButtonLogin, DivForgot, SpanForgot, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp, ButtonForgot, Footer,
-} from "./register.style"
-import validateRegister from "./validate"
+    Wrapper, DivMenuMobile, UlMenuMobile, ContainerFluid, BoxGeneral, DivBoxRight, SpanTitleAuthentication, ContainerBoxRight, FormLogin, DivInputName, DivInputEmail,
+    DivInputPassword, InputLogin, DivButtonLogin, ButtonLogin, SpanLogin, Footer,
+} from "./account.style"
+import validateAccount from "./validate";
+import TopBarMain from "../../components/TopBar";
 
-function Register() {
+function Account() {
     const dispatch: Dispatch = useDispatch();
     const history = useHistory();
 
     const result = useSelector((state: Users) => state.user.users);
 
     const [error, setError] = useState<User>()
+    const [openMenu, setOpenMenu] = useState(false);
 
     const [name, setName] = useState<string>("")
     const [email, setEmail] = useState<string>("")
@@ -42,7 +42,7 @@ function Register() {
             changeError: changeError,
             check_email: check_email,
         }
-        return validateRegister(item)
+        return validateAccount(item)
     }
 
     function changeError(error: User) {
@@ -92,12 +92,30 @@ function Register() {
         setPassword(e.currentTarget.value)
     }
 
+    function returnGoBack() {
+        history.goBack();
+    }
+
     return (
         <Wrapper>
 
+            <TopBarMain
+                openMenu={() => { setOpenMenu(!openMenu) }}
+            />
+            {
+                openMenu ?
+                    <DivMenuMobile>
+                        <UlMenuMobile>
+                            <Link to="/account">Account</Link>
+                            <Link to="/login">Log Out</Link>
+                        </UlMenuMobile>
+                    </DivMenuMobile>
+                    : null
+            }
+
             <ContainerFluid>
                 <BoxGeneral>
-                    <DivBoxLeft>
+                    {/* <DivBoxLeft>
                         <ContainerBoxLeft>
                             <div style={{ display: "flex", justifyContent: "center" }}>
                                 <DivTitleOne>
@@ -111,12 +129,12 @@ function Register() {
                                 <SpanLotery>Lottery</SpanLotery>
                             </div>
                         </ContainerBoxLeft>
-                    </DivBoxLeft>
+                    </DivBoxLeft> */}
                     <DivBoxRight>
                         <ContainerBoxRight>
                             <div>
                                 <SpanTitleAuthentication>
-                                    Registration
+                                    Account Update
                         </SpanTitleAuthentication>
                             </div>
                             <FormLogin onSubmit={handleSubmit}>
@@ -154,18 +172,14 @@ function Register() {
                                     <DivButtonLogin>
                                         <div>
                                             <ButtonLogin>
-                                                <SpanLogin>Register <i className="fas fa-arrow-right"></i></SpanLogin>
+                                                <SpanLogin>Save <i className="fas fa-arrow-right"></i></SpanLogin>
                                             </ButtonLogin>
                                         </div>
                                     </DivButtonLogin>
                                 </div>
 
                             </FormLogin>
-                            {/* <div> */}
-                            <ButtonSigUp>
-                                <SpanSigUp><i className="fas fa-arrow-left"></i><Link to="/login" style={{ textDecoration: "none", color: "#707070" }}>Back</Link></SpanSigUp>
-                            </ButtonSigUp>
-                            {/* </div> */}
+
                         </ContainerBoxRight>
 
                     </DivBoxRight>
@@ -178,4 +192,4 @@ function Register() {
     )
 }
 
-export default Register;
+export default Account;
