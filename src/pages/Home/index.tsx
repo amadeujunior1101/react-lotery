@@ -40,38 +40,59 @@ import {
 
 function Home() {
     const result = useSelector((state: ArrayObjects) => state.cart);
-    // const [gameResults, setGamesResults] = useState(result);
-    const [gameResults, setGamesResults] = useState(result);
+    // const [gamesResults, setGamesResults] = useState(result);
+
+    const [games, setGames] = useState<Game[]>([]);
+    const [loadGames, setLoadGames] = useState(true)
+    const [gamesResults, setGamesResults] = useState<GameResults[]>([]);
+
 
     const [dataJSON] = useState([dataJson.types])
     const [activeId, setActiveId] = useState(0)
 
-    function changeState(id: number, item: string) {
-        let results = dataJSON[0].filter(el => {
-            return el.type === item
+    function changeState(id: number, type: string) {
+        let results = gamesResults.filter(el => {
+            return el.type === type
         })
+
+        // return console.log("Jogos", results)
 
         if (activeId === id) {
             setActiveId(0)
             setGamesResults(
-                result.filter(el => {
+                gamesResults.filter(el => {
                     return el
                 })
             )
         } else {
             setActiveId(id)
             setGamesResults(
-                result.filter(el => {
-                    return el.type === results[0].type
+                gamesResults.filter(el => {
+                    return el.type == results[0].type
                 })
             )
         }
     }
 
-    async function findBets() {
-        // const data = await api.get("/show-bet?user_id=1");
+    async function showBets() {
+        const bets = await api.get("/show-bet", {
+            headers: {
+                'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjQsImlhdCI6MTYxNzEwNzk5OCwiZXhwIjoxNjE3MTk0Mzk4fQ.XjjaqBcAbYU2Wo73Y9SXgxij8WzzJPth131VzzZYI2Y`
+            }
+        });
 
-        // console.log("data:", data.data.data)
+        console.log("data:", bets.data.data)
+        setGamesResults(bets.data.data)
+    }
+    async function listGames() {
+        const listGames = await api.get("/list-games?page=1&limit=3", {
+            headers: {
+                'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjQsImlhdCI6MTYxNzEwNzk5OCwiZXhwIjoxNjE3MTk0Mzk4fQ.XjjaqBcAbYU2Wo73Y9SXgxij8WzzJPth131VzzZYI2Y`
+            }
+        });
+
+        setGames(listGames.data.data.data)
+        setLoadGames(false)
     }
 
     useEffect(() => {
@@ -81,13 +102,40 @@ function Home() {
         // changeState(1, results[0].type)
 
         setGamesResults(
-            result.filter(el => {
+            gamesResults.filter(el => {
                 return el
             })
         )
 
-        // findBets()
+        showBets()
+        listGames()
     }, [])
+    interface Game {
+        type: string;
+        description: string;
+        range: number;
+        price: number;
+        "max-number": number;
+        color: string;
+        "min-cart-value": number;
+        id: string;
+        func: Function
+        active: number;
+    }
+    interface GameResults {
+        type: string;
+        color: string;
+        numbers: string;
+        date: string;
+        price: number;
+    }
+
+    // interface Props {
+    //     item: Game;
+    //     id: string;
+    //     func: Function
+    //     active: number;
+    // }
 
     return (
         <>
@@ -128,7 +176,8 @@ function Home() {
                                     Lotofácil
                                 </ButtonChoose> */}
                                 {
-                                    dataJSON[0].map((item, index, object) => {
+                                    loadGames !== true &&
+                                    games.map((item, index, object) => {
                                         index += 1;
                                         return (
                                             <ButtonChooseBet
@@ -148,14 +197,14 @@ function Home() {
                         <DivWrapperScrollList>
                             <ScrollList>
                                 {
-                                    gameResults.length > 0 ?
-                                        gameResults.map((item, index: number) => {
+                                    gamesResults.length > 0 ?
+                                        gamesResults.map((item, index: number) => {
                                             return (
                                                 <DivListGames key={index}>
                                                     <DivDivisorElement color={item.color}>
                                                     </DivDivisorElement>
                                                     <DivGameDescription>
-                                                        <SpanNumberList>{(item.numbers).join(", ")}</SpanNumberList>
+                                                        <SpanNumberList>{[(item.numbers)].join(",").replaceAll(",", ", ")}</SpanNumberList>
                                                         <SpanInfos>{item.date} - (R$ {item.price})</SpanInfos>
                                                         <SpanType color={item.color}>{item.type}</SpanType>
                                                     </DivGameDescription>

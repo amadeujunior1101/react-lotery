@@ -20,7 +20,7 @@ interface Props {
 function ButtonChooseBet(props: Props) {
   return (
     <ButtonChoose
-    // style={{marginBottom: 10}}
+      // style={{marginBottom: 10}}
       background={Number(props.id) === props.active ? `${props.item.color}` : "#FFF"}
       color={Number(props.id) !== props.active ? `${props.item.color}` : "#FFF"}
       border={`2px solid ${props.item.color}`}
