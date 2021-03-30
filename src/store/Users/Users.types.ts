@@ -25,6 +25,10 @@ export interface Action {
     type: string;
     payload: User
 };
+export interface ActionToken {
+    type: string;
+    payload: string
+};
 
 
 

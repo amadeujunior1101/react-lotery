@@ -7,3 +7,9 @@ export function addUser(item: User) {
     payload: item,
   };
 }
+export function addToken(item: string) {
+  return {
+    type: "ADD_TOKEN",
+    payload: item,
+  };
+}

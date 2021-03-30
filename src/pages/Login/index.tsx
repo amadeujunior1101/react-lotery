@@ -1,7 +1,10 @@
 import { useState } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
+import { Dispatch } from "redux";
+import { addToken } from "../../store/Users/Users.actions";
 import { Link, useHistory } from "react-router-dom"
 import { UserLogin, Users } from "../../store/Users/Users.types"
+import api from "../../services/api";
 import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxLeft, DivBoxRight, ContainerBoxLeft, DivTitleOne, SpanTitleOne,
     DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormLogin, DivInputEmail,
@@ -9,30 +12,67 @@ import {
     Footer, DivAlert,
 } from "./login.style"
 import validateRegister from "./validate"
+interface ItemsValidate {
+    email: string;
+    password: string;
+    changeError: Function;
+    check_email: Function;
+}
 
 function Login() {
+    const dispatch: Dispatch = useDispatch();
+    const result = useSelector((state: Users) => state.user.users);
+
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
 
     const [error, setError] = useState<UserLogin>()
     const [visibleInfoLogin, setVisibleInfoLogin] = useState(false)
 
-    const result = useSelector((state: Users) => state.user.users);
     const history = useHistory();
+
+    async function login() {
+        try {
+            const response = await api.post("/auth", {
+                email: email,
+                password: password,
+            }
+            )
+
+            console.log(response.data.data.token)
+            dispatch(addToken(response.data.data.token));
+            history.push("/");
+
+        } catch (error) {
+
+            if (error.response.statusText) {
+                setVisibleInfoLogin(true);
+                setTimeout(() => {
+                    setVisibleInfoLogin(false);
+                }, 4000);
+
+            } else {
+                setVisibleInfoLogin(false);
+                setEmail("")
+                setPassword("")
+            }
+
+            return console.log({
+                status: error.response.statusText,
+                error: error.response.data.user_message,
+                message: "Falha na autenticação"
+            })
+        }
+
+    }
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
+
     }
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault()
-
-        interface ItemsValidate {
-            email: string;
-            password: string;
-            changeError: Function;
-            check_email: Function;
-        }
 
         let item: ItemsValidate = {
             email: email,
@@ -46,35 +86,12 @@ function Login() {
     function changeError(error: UserLogin) {
         setError(error)
         if (error.email.length > 0 && error.password.length > 0) {
-            let obj: UserLogin = {
-                email: email,
-                password: password,
-            }
-
-            let existUser = result.filter(element => {
-                return element.email === obj.email && element.password === obj.password
-            })
-
             setError({
                 email: "",
                 password: ""
             })
 
-            if (existUser.length === 0) {
-                setVisibleInfoLogin(true);
-
-                setTimeout(() => {
-                    setVisibleInfoLogin(false);
-                }, 4000);
-
-            } else {
-                setVisibleInfoLogin(false);
-                console.log("Dados do user: ", existUser)
-                history.push("/");
-                
-                setEmail("")
-                setPassword("")
-            }
+            login()
 
         }
     }
@@ -141,6 +158,7 @@ function Login() {
                                             type="password"
                                             placeholder="Password"
                                             autoComplete="on"
+                                            security="true"
                                             value={password}
                                             onChange={handleChangePassword}
                                         />

@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import api from "../../services/api";
 import { ArrayObjects } from "../../store/Carts/Carts.types"
 
-import dataJson from "../../mock/games.json"
 import ButtonChooseBet from "../../components/ButtonChooseBet"
 
 import {
@@ -38,56 +37,78 @@ import {
     DivWrapperRecentGame,
 } from "./home.style";
 
+interface Game {
+    type: string;
+    description: string;
+    range: number;
+    price: number;
+    "max-number": number;
+    color: string;
+    "min-cart-value": number;
+    id: string;
+    func: Function
+    active: number;
+}
+interface GameResults {
+    type: string;
+    color: string;
+    numbers: string;
+    date: string;
+    price: number;
+}
+interface TokenModel {
+    userToken: string;
+};
+
 function Home() {
-    const result = useSelector((state: ArrayObjects) => state.cart);
-    // const [gamesResults, setGamesResults] = useState(result);
+    const tokenRedux = useSelector((state: TokenModel) => state.userToken);
 
     const [games, setGames] = useState<Game[]>([]);
     const [loadGames, setLoadGames] = useState(true)
     const [gamesResults, setGamesResults] = useState<GameResults[]>([]);
+    const [itemsGamesResults, setItemsGamesResults] = useState<GameResults[]>([]);
 
-
-    const [dataJSON] = useState([dataJson.types])
     const [activeId, setActiveId] = useState(0)
 
     function changeState(id: number, type: string) {
-        let results = gamesResults.filter(el => {
-            return el.type === type
-        })
-
-        // return console.log("Jogos", results)
-
         if (activeId === id) {
             setActiveId(0)
-            setGamesResults(
-                gamesResults.filter(el => {
-                    return el
-                })
-            )
+            setGamesResults(itemsGamesResults)
         } else {
             setActiveId(id)
             setGamesResults(
-                gamesResults.filter(el => {
-                    return el.type == results[0].type
+                itemsGamesResults.filter(el => {
+                    return el.type === type
                 })
             )
         }
     }
 
+    async function getUser() {
+        const getUser = await api.get("/show-user", {
+            headers: {
+                'Authorization': `Bearer ${tokenRedux}`
+            }
+        });
+
+        console.log(getUser)
+    }
+
     async function showBets() {
         const bets = await api.get("/show-bet", {
             headers: {
-                'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjQsImlhdCI6MTYxNzEwNzk5OCwiZXhwIjoxNjE3MTk0Mzk4fQ.XjjaqBcAbYU2Wo73Y9SXgxij8WzzJPth131VzzZYI2Y`
+                'Authorization': `Bearer ${tokenRedux}`
             }
         });
 
         console.log("data:", bets.data.data)
         setGamesResults(bets.data.data)
+        setItemsGamesResults(bets.data.data)
     }
     async function listGames() {
         const listGames = await api.get("/list-games?page=1&limit=3", {
             headers: {
-                'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjQsImlhdCI6MTYxNzEwNzk5OCwiZXhwIjoxNjE3MTk0Mzk4fQ.XjjaqBcAbYU2Wo73Y9SXgxij8WzzJPth131VzzZYI2Y`
+                'Authorization': `Bearer ${tokenRedux}`
             }
         });
 
@@ -96,46 +117,15 @@ function Home() {
     }
 
     useEffect(() => {
-        // let results = dataJSON[0].filter(el => {
-        //     return el.type
-        // })
-        // changeState(1, results[0].type)
-
         setGamesResults(
             gamesResults.filter(el => {
                 return el
             })
         )
-
+        getUser()
         showBets()
         listGames()
     }, [])
-    interface Game {
-        type: string;
-        description: string;
-        range: number;
-        price: number;
-        "max-number": number;
-        color: string;
-        "min-cart-value": number;
-        id: string;
-        func: Function
-        active: number;
-    }
-    interface GameResults {
-        type: string;
-        color: string;
-        numbers: string;
-        date: string;
-        price: number;
-    }
-
-    // interface Props {
-    //     item: Game;
-    //     id: string;
-    //     func: Function
-    //     active: number;
-    // }
 
     return (
         <>
