@@ -55,34 +55,7 @@ import {
     SpanTextFooter,
 } from "./game.style"
 
-interface Item {
-    type: string;
-    color: string;
-    description: string;
-    ["max-number"]: number;
-    range: number;
-    price: number;
-    ["min-cart-value"]: number;
-}
-interface Cart {
-    type: string;
-    price: number;
-    date: string;
-    numbers: Array<String>;
-    color: string;
-}
-interface Game {
-    type: string;
-    description: string;
-    range: number;
-    price: number;
-    "max-number": number;
-    color: string;
-    "min-cart-value": number;
-    id: string;
-    func: Function
-    active: number;
-}
+import { GameType, Item, Cart } from "./game.types"
 
 function Game() {
     const history = useHistory();
@@ -91,10 +64,10 @@ function Game() {
 
     const dispatch: Dispatch = useDispatch();
 
-    const [games, setGames] = useState<Game[]>([]);
+    const [games, setGames] = useState<GameType[]>([]);
+    const [selectedGame, setSelectedGame] = useState<Item>()
     const [loadGames, setLoadGames] = useState(true)
 
-    const [selectedGame, setSelectedGame] = useState<Item>()
 
     const [openMenu, setOpenMenu] = useState(false);
     const [visibleCartMobile, setVisibleCartMobile] = useState(false);
@@ -115,27 +88,17 @@ function Game() {
             }
         });
 
-        // interface ListNumbers {
-        //     type: string
-        // }
-
-        // type Items = {
-        //     item: [ListNumbers]
-        // }
-
         setGames(listGames.data.data.data)
-        setLoadGames(false)
-       let listNumbers: [Item] = listGames.data.data.data;
-        
+        let listNumbers: [Item] = listGames.data.data.data;
+
         let results = listNumbers.filter(el => {
             return el.type
         })
-        console.log("setSelectedGame:", results[0])
-        console.log("changeState:", results[0].type)
-        setSelectedGame(results[0])
-        changeState(1, results[0].type)
 
-        // gameInitial()
+        changeState(1, results[0].type)
+        setSelectedGame(listNumbers[0])
+
+        setLoadGames(false)
     }
 
     function selectedNumber(id: number) {
@@ -146,7 +109,7 @@ function Game() {
 
         if (result) setSelectedBalls(result)
 
-        if (selectedBalls.length > Number(selectedGame?.["max-number"]) - 1) return;
+        if (selectedBalls.length > Number(selectedGame?.max_number) - 1) return;
 
         setSelectedBalls([...selectedBalls, id])
     }
@@ -168,7 +131,6 @@ function Game() {
 
     function loadBalls() {
         return Array.apply(0, Array(selectedGame?.range)).map(function (x, i) {
-            console.log("Range no loadBalls: ", selectedGame?.range)
             return (
                 <BallBet
                     key={i}
@@ -182,18 +144,12 @@ function Game() {
     }
 
     function completeGame() {
-        while (selectedBalls.length < Number(selectedGame?.["max-number"])) {
+        while (selectedBalls.length < Number(selectedGame?.max_number)) {
             let number = Math.floor(Math.random() * Number(selectedGame?.range) + 1);
             const found = selectedBalls.some((element) => element === Number(number));
             if (!found) {
-                // let newNumber = "";
-                // number < 10
-                //     ? (newNumber = `${"0" + String(number)}`)
-                //     : (newNumber = String(number));
-
                 selectedNumber(number);
                 selectedBalls.push(number);
-                // selectedBalls.push(Number(newNumber));
             }
         }
     }
@@ -203,7 +159,7 @@ function Game() {
     }
 
     function addToCart() {
-        if (selectedBalls.length < Number(selectedGame?.["max-number"])) {
+        if (selectedBalls.length < Number(selectedGame?.max_number)) {
             SetVisibleInfoValueQuantityBalls(true);
             setTimeout(() => {
                 SetVisibleInfoValueQuantityBalls(false);
@@ -225,6 +181,7 @@ function Game() {
         cart?.push({
             type: String(selectedGame?.type),
             price: Number(selectedGame?.price),
+            game_id: selectedGame?.id,
             date: getDate(),
             numbers: cartTemporary,
             color: String(selectedGame?.color),
@@ -251,7 +208,6 @@ function Game() {
         month < 10
             ? (modifiedMonth = `${"0" + String(month)}`)
             : (modifiedMonth = String(month));
-
 
         return String(`${modifiedDay}/${modifiedMonth}/${year}`)
     }
@@ -281,18 +237,36 @@ function Game() {
         cart: cart
     };
 
-    function saveCartRedux() {
-        if (cartValue() < Number(selectedGame?.["min-cart-value"])) {
+    async function saveCartRedux() {
+        if (cartValue() < Number(selectedGame?.min_cart_value)) {
             SetVisibleInfoMinimumValueBet(true)
             setTimeout(() => {
                 SetVisibleInfoMinimumValueBet(false)
             }, 4000);
         } else {
-            dispatch(addCart(itemCart));
-            // console.log("Valores redux", result)
-            SetVisibleInfoMinimumValueBet(false)
-            setCart([]);
-            history.push("/");
+            try {
+                const betSave = await api.post("/create-bet", {
+                    date: "2020-08-02T09:00:00",
+                    games: itemCart.cart
+                },
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${tokenRedux}`
+                        }
+                    }
+                );
+
+                if (betSave.status === 200) {
+                    SetVisibleInfoMinimumValueBet(false)
+                    setCart([]);
+                    history.push("/");
+                }
+
+                // console.log(betSave)
+
+            } catch (error) {
+                console.log(error.response)
+            }
         }
     }
 
@@ -317,32 +291,8 @@ function Game() {
         console.log("Objeto Cart: ", cartObj)
     }
 
-    function gameInitial() {
-        let results = games.filter(el => {
-            return el.type
-        })
-        console.log("useERffects: ", results)
-        setSelectedGame(results[0])
-        changeState(1, results[0].type)
-    }
-
     useEffect(() => {
         listGames()
-
-        // let results = games.filter(el => {
-        //     return el.type
-        // })
-        // console.log("useERffects: ", results)
-        // setSelectedGame(results[0])
-        // changeState(1, results[0].type)
-
-        // setGamesResults(
-        //     gamesResults.filter(el => {
-        //         return el
-        //     })
-        // )
-        // getUser()
-        // showBets()
 
     }, [])
 
@@ -414,7 +364,7 @@ function Game() {
                                             {
                                                 visibleInfoMinimumValueBet ?
                                                     <DivAlert>
-                                                        <span>{`O valor mínimo das apostas é ${Number(selectedGame?.["min-cart-value"]).toFixed(2)
+                                                        <span>{`O valor mínimo das apostas é ${Number(selectedGame?.min_cart_value).toFixed(2)
                                                             .replace(".", ",")
                                                             .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`}</span>
                                                     </DivAlert>
@@ -424,7 +374,7 @@ function Game() {
                                             {
                                                 visibleInfoValueQuantityBalls ?
                                                     <DivAlert>
-                                                        <span>{`Você deve escolher ${Number(selectedGame?.["max-number"])} bolas para esse jogo`}</span>
+                                                        <span>{`Você deve escolher ${Number(selectedGame?.max_number)} bolas para esse jogo`}</span>
                                                     </DivAlert>
                                                     :
                                                     null
@@ -525,7 +475,7 @@ function Game() {
                         {
                             visibleInfoMinimumValueBet ?
                                 <DivAlert>
-                                    <span>{`O valor mínimo das apostas é ${Number(selectedGame?.["min-cart-value"]).toFixed(2)
+                                    <span>{`O valor mínimo das apostas é ${Number(selectedGame?.min_cart_value).toFixed(2)
                                         .replace(".", ",")
                                         .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`}</span>
                                 </DivAlert>
@@ -535,7 +485,7 @@ function Game() {
                         {
                             visibleInfoValueQuantityBalls ?
                                 <DivAlert>
-                                    <span>{`Você deve escolher ${Number(selectedGame?.["max-number"])} bolas para esse jogo`}</span>
+                                    <span>{`Você deve escolher ${Number(selectedGame?.max_number)} bolas para esse jogo`}</span>
                                 </DivAlert>
                                 :
                                 null
