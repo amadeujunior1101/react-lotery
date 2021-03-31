@@ -39,8 +39,10 @@ function Login() {
             }
             )
 
-            console.log(response.data.data.token)
-            dispatch(addToken(response.data.data.token));
+            // console.log(response.data.data.token)
+            // dispatch(addToken(response.data.data.token));
+
+            localStorage.setItem('auth:token', response.data.data.token)
             history.push("/");
 
         } catch (error) {

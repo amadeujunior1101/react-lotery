@@ -61,7 +61,9 @@ interface TokenModel {
 };
 
 function Home() {
-    const tokenRedux = useSelector((state: TokenModel) => state.userToken);
+    // const tokenRedux = useSelector((state: TokenModel) => state.userToken);
+
+    const tokenRedux = localStorage.getItem('auth:token')
 
     const [games, setGames] = useState<Game[]>([]);
     const [loadGames, setLoadGames] = useState(true)

@@ -5,8 +5,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { ArrayObjects } from "../../store/Carts/Carts.types"
 import { Dispatch } from "redux";
 import { addCart } from "../../store/Carts/Carts.actions";
+import api from "../../services/api";
 
-import dataJson from "../../mock/games.json"
 import ButtonChooseBet from "../../components/ButtonChooseBet"
 import TopBarMain from "../../components/TopBar"
 import BallBet from "../../components/Ball"
@@ -64,7 +64,6 @@ interface Item {
     price: number;
     ["min-cart-value"]: number;
 }
-
 interface Cart {
     type: string;
     price: number;
@@ -72,25 +71,72 @@ interface Cart {
     numbers: Array<String>;
     color: string;
 }
+interface Game {
+    type: string;
+    description: string;
+    range: number;
+    price: number;
+    "max-number": number;
+    color: string;
+    "min-cart-value": number;
+    id: string;
+    func: Function
+    active: number;
+}
 
 function Game() {
     const history = useHistory();
 
-    const result = useSelector((state: ArrayObjects) => state.cart);
+    // const result = useSelector((state: ArrayObjects) => state.cart);
 
     const dispatch: Dispatch = useDispatch();
+
+    const [games, setGames] = useState<Game[]>([]);
+    const [loadGames, setLoadGames] = useState(true)
+
+    const [selectedGame, setSelectedGame] = useState<Item>()
 
     const [openMenu, setOpenMenu] = useState(false);
     const [visibleCartMobile, setVisibleCartMobile] = useState(false);
     const [visibleInfoMinimumValueBet, SetVisibleInfoMinimumValueBet] = useState(false);
     const [visibleInfoValueQuantityBalls, SetVisibleInfoValueQuantityBalls] = useState(false);
 
-    const [dataJSON] = useState([dataJson.types])
     const [activeId, setActiveId] = useState(1)
-    const [game, setGames] = useState<Item>()
     const [selectedBalls, setSelectedBalls] = useState<Array<number>>([])
     const [cart, setCart] = useState<Cart[]>([])
     const [cartTemporary, setCartTemporary] = useState<Array<string>>([])
+
+    const tokenRedux = localStorage.getItem('auth:token')
+    // console.log("Token:", tokenRedux)
+    async function listGames() {
+        const listGames = await api.get("/list-games?page=1&limit=3", {
+            headers: {
+                'Authorization': `Bearer ${tokenRedux}`
+            }
+        });
+
+        // interface ListNumbers {
+        //     type: string
+        // }
+
+        // type Items = {
+        //     item: [ListNumbers]
+        // }
+
+        setGames(listGames.data.data.data)
+        setLoadGames(false)
+       let listNumbers: [Item] = listGames.data.data.data;
+        
+        let results = listNumbers.filter(el => {
+            return el.type
+        })
+        console.log("setSelectedGame:", results[0])
+        console.log("changeState:", results[0].type)
+        setSelectedGame(results[0])
+        changeState(1, results[0].type)
+
+        // gameInitial()
+    }
 
     function selectedNumber(id: number) {
 
@@ -100,17 +146,17 @@ function Game() {
 
         if (result) setSelectedBalls(result)
 
-        if (selectedBalls.length > Number(game?.["max-number"]) - 1) return;
+        if (selectedBalls.length > Number(selectedGame?.["max-number"]) - 1) return;
 
         setSelectedBalls([...selectedBalls, id])
     }
 
     function changeState(id: number, item: string) {
         setActiveId(id)
-        let results = dataJSON[0].filter(el => {
+        let results = games.filter(el => {
             return el.type === item
         })
-        setGames(results[0]);
+        setSelectedGame(results[0]);
         setSelectedBalls([])
     }
 
@@ -121,12 +167,13 @@ function Game() {
     }
 
     function loadBalls() {
-        return Array.apply(0, Array(game?.range)).map(function (x, i) {
+        return Array.apply(0, Array(selectedGame?.range)).map(function (x, i) {
+            console.log("Range no loadBalls: ", selectedGame?.range)
             return (
                 <BallBet
                     key={i}
                     numberBall={i}
-                    color={verifyColor(i).length !== 0 ? String(game?.color) : "#adc0c4"}
+                    color={verifyColor(i).length !== 0 ? String(selectedGame?.color) : "#adc0c4"}
                     selectedNumber={(e: number) => { selectedNumber(e) }}
                     arrBalls={selectedBalls}
                 />
@@ -135,8 +182,8 @@ function Game() {
     }
 
     function completeGame() {
-        while (selectedBalls.length < Number(game?.["max-number"])) {
-            let number = Math.floor(Math.random() * Number(game?.range) + 1);
+        while (selectedBalls.length < Number(selectedGame?.["max-number"])) {
+            let number = Math.floor(Math.random() * Number(selectedGame?.range) + 1);
             const found = selectedBalls.some((element) => element === Number(number));
             if (!found) {
                 // let newNumber = "";
@@ -156,7 +203,7 @@ function Game() {
     }
 
     function addToCart() {
-        if (selectedBalls.length < Number(game?.["max-number"])) {
+        if (selectedBalls.length < Number(selectedGame?.["max-number"])) {
             SetVisibleInfoValueQuantityBalls(true);
             setTimeout(() => {
                 SetVisibleInfoValueQuantityBalls(false);
@@ -176,11 +223,11 @@ function Game() {
         })
 
         cart?.push({
-            type: String(game?.type),
-            price: Number(game?.price),
+            type: String(selectedGame?.type),
+            price: Number(selectedGame?.price),
             date: getDate(),
             numbers: cartTemporary,
-            color: String(game?.color),
+            color: String(selectedGame?.color),
         });
         console.log("Itens no carinho:", cart);
 
@@ -235,14 +282,14 @@ function Game() {
     };
 
     function saveCartRedux() {
-        if (cartValue() < Number(game?.["min-cart-value"])) {
+        if (cartValue() < Number(selectedGame?.["min-cart-value"])) {
             SetVisibleInfoMinimumValueBet(true)
             setTimeout(() => {
                 SetVisibleInfoMinimumValueBet(false)
             }, 4000);
         } else {
             dispatch(addCart(itemCart));
-            console.log("Valores redux", result)
+            // console.log("Valores redux", result)
             SetVisibleInfoMinimumValueBet(false)
             setCart([]);
             history.push("/");
@@ -270,18 +317,39 @@ function Game() {
         console.log("Objeto Cart: ", cartObj)
     }
 
-    useEffect(() => {
-        let results = dataJSON[0].filter(el => {
+    function gameInitial() {
+        let results = games.filter(el => {
             return el.type
         })
-        setGames(results[0])
+        console.log("useERffects: ", results)
+        setSelectedGame(results[0])
         changeState(1, results[0].type)
+    }
+
+    useEffect(() => {
+        listGames()
+
+        // let results = games.filter(el => {
+        //     return el.type
+        // })
+        // console.log("useERffects: ", results)
+        // setSelectedGame(results[0])
+        // changeState(1, results[0].type)
+
+        // setGamesResults(
+        //     gamesResults.filter(el => {
+        //         return el
+        //     })
+        // )
+        // getUser()
+        // showBets()
+
     }, [])
 
     return (
         <>
             <TopBarMain
-                openMenu={ ()=>{setOpenMenu(!openMenu)}}
+                openMenu={() => { setOpenMenu(!openMenu) }}
             />
             {
                 openMenu ?
@@ -346,7 +414,7 @@ function Game() {
                                             {
                                                 visibleInfoMinimumValueBet ?
                                                     <DivAlert>
-                                                        <span>{`O valor mínimo das apostas é ${Number(game?.["min-cart-value"]).toFixed(2)
+                                                        <span>{`O valor mínimo das apostas é ${Number(selectedGame?.["min-cart-value"]).toFixed(2)
                                                             .replace(".", ",")
                                                             .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`}</span>
                                                     </DivAlert>
@@ -356,7 +424,7 @@ function Game() {
                                             {
                                                 visibleInfoValueQuantityBalls ?
                                                     <DivAlert>
-                                                        <span>{`Você deve escolher ${Number(game?.["max-number"])} bolas para esse jogo`}</span>
+                                                        <span>{`Você deve escolher ${Number(selectedGame?.["max-number"])} bolas para esse jogo`}</span>
                                                     </DivAlert>
                                                     :
                                                     null
@@ -367,13 +435,13 @@ function Game() {
                             </DivCardMobile>
 
                             <BlockTitlesTop>
-                                <SpanTitleOne><SpanPatch> new bet</SpanPatch> for {game?.type}</SpanTitleOne>
+                                <SpanTitleOne><SpanPatch> new bet</SpanPatch> for {selectedGame?.type}</SpanTitleOne>
                                 <SpanTitleTwo>Choose a game</SpanTitleTwo>
                             </BlockTitlesTop>
                             <DivScrollButtonsChoose>
                                 <DivButtonsChoose>
                                     {
-                                        dataJSON[0].map((item, index, object) => {
+                                        games.map((item, index, object) => {
                                             index += 1;
                                             return (
                                                 <ButtonChooseBet
@@ -393,13 +461,17 @@ function Game() {
                             <div className="text-information">
                                 <SpanTitleGame>Fill your bet</SpanTitleGame>
                                 <ParagraphDescription>
-                                    {game?.description}
+                                    {selectedGame?.description}
                                 </ParagraphDescription>
                             </div>
                         </DivBox2>
                         <DivBox3>
                             <ContainerBalls>
-                                {loadBalls()}
+                                {
+                                    loadGames === false ?
+                                        loadBalls()
+                                        : null
+                                }
                             </ContainerBalls>
                             <DivButtonsOptions>
                                 <div>
@@ -453,7 +525,7 @@ function Game() {
                         {
                             visibleInfoMinimumValueBet ?
                                 <DivAlert>
-                                    <span>{`O valor mínimo das apostas é ${Number(game?.["min-cart-value"]).toFixed(2)
+                                    <span>{`O valor mínimo das apostas é ${Number(selectedGame?.["min-cart-value"]).toFixed(2)
                                         .replace(".", ",")
                                         .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`}</span>
                                 </DivAlert>
@@ -463,7 +535,7 @@ function Game() {
                         {
                             visibleInfoValueQuantityBalls ?
                                 <DivAlert>
-                                    <span>{`Você deve escolher ${Number(game?.["max-number"])} bolas para esse jogo`}</span>
+                                    <span>{`Você deve escolher ${Number(selectedGame?.["max-number"])} bolas para esse jogo`}</span>
                                 </DivAlert>
                                 :
                                 null
