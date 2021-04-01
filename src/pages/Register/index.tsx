@@ -8,9 +8,11 @@ import { UsersList, User, Users } from "../../store/Users/Users.types";
 import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxLeft, DivBoxRight, ContainerBoxLeft, DivTitleOne, SpanTitleOne,
     DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormLogin, DivInputName, DivInputEmail,
-    DivInputPassword, InputLogin, DivButtonLogin, DivForgot, SpanForgot, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp, ButtonForgot, Footer,
+    DivInputPassword, InputLogin, DivButtonLogin, DivForgot, SpanForgot, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp, ButtonForgot,
+    DivAlert, Footer,
 } from "./register.style"
 import validateRegister from "./validate"
+import api from "../../services/api";
 
 function Register() {
     const dispatch: Dispatch = useDispatch();
@@ -20,6 +22,7 @@ function Register() {
 
     const [error, setError] = useState<User>()
 
+    const [infoRegister, setInfoRegister] = useState<string>("")
     const [name, setName] = useState<string>("")
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
@@ -45,28 +48,15 @@ function Register() {
         return validateRegister(item)
     }
 
-    function changeError(error: User) {
-        setError(error)
-        if (error.name.length > 0 && error.email.length > 0 && error.password.length > 0) {
-            let obj: User = {
-                name: name,
-                email: email,
-                password: password,
-            }
-            dispatch(addUser(obj));
-
-            console.log("users do redux:", result)
-
+    function changeError(errorInfo: User) {
+        setError(errorInfo)
+        if (errorInfo.name.length > 0 && errorInfo.email.length > 0 && errorInfo.password.length > 0) {
+            userRegister()
             setError({
                 name: "",
                 email: "",
                 password: ""
             })
-            setName("")
-            setEmail("")
-            setPassword("")
-
-            history.push("/login");
         }
     }
 
@@ -90,6 +80,44 @@ function Register() {
     }
     const handleChangePassword = (e: React.FormEvent<HTMLInputElement>) => {
         setPassword(e.currentTarget.value)
+    }
+
+    async function userRegister() {
+        try {
+            const response = await api.post("/create-user", {
+                full_name: name,
+                email: email,
+                password: password,
+            }
+            )
+
+            // console.log("create user", response.data)
+            if (response.data.user_message === "E-mail já cadastrado.")
+                return setInfoRegister(response.data.user_message)
+
+            history.push("/login");
+
+        } catch (error) {
+
+            // if (error.response.statusText) {
+            //     setVisible(true);
+            //     setTimeout(() => {
+            //         setVisibleInfoLogin(false);
+            //     }, 4000);
+
+            // } else {
+            //     setVisibleInfoLogin(false);
+            //     setEmail("")
+            //     setPassword("")
+            // }
+
+            return console.log({
+                status: error.response.statusText,
+                error: error.response.data.user_message,
+                message: "Falha ao registrar novo usuário."
+            })
+        }
+
     }
 
     return (
@@ -160,6 +188,13 @@ function Register() {
                                     </DivButtonLogin>
                                 </div>
 
+                                {
+                                    infoRegister === "E-mail já cadastrado." ?
+                                        <DivAlert>
+                                            <span>E-mail já cadastrado!</span>
+                                        </DivAlert>
+                                        : null
+                                }
                             </FormLogin>
                             {/* <div> */}
                             <ButtonSigUp>
@@ -167,6 +202,7 @@ function Register() {
                             </ButtonSigUp>
                             {/* </div> */}
                         </ContainerBoxRight>
+
 
                     </DivBoxRight>
                 </BoxGeneral>

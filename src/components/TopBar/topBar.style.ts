@@ -93,8 +93,9 @@ const SpanLogOut = styled.span`
     font: italic normal bold 20px Helvetica Neue;
     margin-left: 80px;
     display: none;
+    cursor: pointer;
 
-    a{
+    span{
     color: #707070;
     text-decoration: none;
     }

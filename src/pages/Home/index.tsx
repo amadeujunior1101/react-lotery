@@ -36,6 +36,7 @@ import {
     SpanInfos,
     DivWrapperRecentGame,
 } from "./home.style";
+import { isAuthenticated, logout } from "../../auth/authentication";
 
 interface Game {
     type: string;
@@ -87,13 +88,29 @@ function Home() {
     }
 
     async function getUser() {
-        const getUser = await api.get("/show-user", {
-            headers: {
-                'Authorization': `Bearer ${tokenRedux}`
-            }
-        });
+        try {
+            const getUser = await api.get("/show-user", {
+                headers: {
+                    'Authorization': `Bearer ${tokenRedux}`
+                }
+            });
 
-        console.log(getUser)
+            // console.log("response:", getUser)
+
+        } catch (error) {
+            if (error.response.status === 403) {
+                return logout()
+            } else if (error.response.status === 401) {
+                return logout()
+            }
+
+            // return console.log({
+            //     error: error.response.data.user_message,
+            //     message: "Falha na autenticação",
+            //     status: error.response.data.error
+            // })
+        }
+
     }
 
     async function showBets() {
@@ -116,6 +133,21 @@ function Home() {
 
         setGames(listGames.data.data.data)
         setLoadGames(false)
+    }
+
+    function formatDate(date: string) {
+        let dataUniversal = new Date(date);
+        let convert_date = dataUniversal.toJSON();
+
+        let dateReplaceAll = convert_date.split("-").join("");
+
+        let arrayPartDate = [
+            dateReplaceAll.substring(0, 4),
+            dateReplaceAll.substring(4, 6),
+            dateReplaceAll.substring(6, 8),
+        ];
+        // console.log(date);
+        return `${arrayPartDate[2]}-${arrayPartDate[1]}-${arrayPartDate[0]}`;
     }
 
     useEffect(() => {
@@ -197,7 +229,9 @@ function Home() {
                                                     </DivDivisorElement>
                                                     <DivGameDescription>
                                                         <SpanNumberList>{[(item.numbers)].join(",").replaceAll(",", ", ")}</SpanNumberList>
-                                                        <SpanInfos>{item.date} - (R$ {item.price})</SpanInfos>
+                                                        <SpanInfos>{formatDate(item.date)} - (R$ {(item.price).toFixed(2)
+                                                            .replace(".", ",")
+                                                            .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")})</SpanInfos>
                                                         <SpanType color={item.color}>{item.type}</SpanType>
                                                     </DivGameDescription>
                                                 </DivListGames>

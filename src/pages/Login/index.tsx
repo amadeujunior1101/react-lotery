@@ -5,6 +5,7 @@ import { addToken } from "../../store/Users/Users.actions";
 import { Link, useHistory } from "react-router-dom"
 import { UserLogin, Users } from "../../store/Users/Users.types"
 import api from "../../services/api";
+// import { signIn } from "../../auth/authentication"
 import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxLeft, DivBoxRight, ContainerBoxLeft, DivTitleOne, SpanTitleOne,
     DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormLogin, DivInputEmail,
@@ -20,9 +21,11 @@ interface ItemsValidate {
 }
 
 function Login() {
+    localStorage.removeItem('auth:token');
     const dispatch: Dispatch = useDispatch();
     const result = useSelector((state: Users) => state.user.users);
 
+    const [visibleInfoUserConfirmed, setVisibleInfoUserConfirmed] = useState<string>("")
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
 
@@ -31,7 +34,7 @@ function Login() {
 
     const history = useHistory();
 
-    async function login() {
+    async function auth() {
         try {
             const response = await api.post("/auth", {
                 email: email,
@@ -39,8 +42,8 @@ function Login() {
             }
             )
 
-            // console.log(response.data.data.token)
-            // dispatch(addToken(response.data.data.token));
+            if (response.data.user_message === "Acesse sua caixa de emails e confirme seu usuário.")
+                return setVisibleInfoUserConfirmed(response.data.user_message)
 
             localStorage.setItem('auth:token', response.data.data.token)
             history.push("/");
@@ -93,7 +96,7 @@ function Login() {
                 password: ""
             })
 
-            login()
+            auth()
 
         }
     }
@@ -185,6 +188,13 @@ function Login() {
                                     visibleInfoLogin ?
                                         <DivAlert>
                                             <span>Login ou senha invalidos!</span>
+                                        </DivAlert>
+                                        : null
+                                }
+                                {
+                                    visibleInfoUserConfirmed !== "" ?
+                                        <DivAlert style={{ background: "#d4edda", color: "#155724" }}>
+                                            <span>{visibleInfoUserConfirmed}</span>
                                         </DivAlert>
                                         : null
                                 }

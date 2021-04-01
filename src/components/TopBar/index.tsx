@@ -12,6 +12,7 @@ import {
 } from "./topBar.style"
 
 import { Link } from "react-router-dom"
+import { logout } from "../../auth/authentication";
 
 interface MenuState {
     openMenu: Function
@@ -35,8 +36,9 @@ function TopBarMain(props: MenuState) {
                         <Link to="/account">Account</Link>
                     </SpanAccount>
                     <SpanLogOut>
-                        <Link to="/login">Log Out </Link>
-                        <i className="fas fa-arrow-right"></i></SpanLogOut>
+                        <span onClick={() => logout()}>Log Out </span>
+                        <i className="fas fa-arrow-right"></i>
+                    </SpanLogOut>
                     <DivMenu onClick={() => { props.openMenu() }}><i className="fas fa-bars"></i></DivMenu>
                 </BlockRight>
             </TopBar>

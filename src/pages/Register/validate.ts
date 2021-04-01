@@ -40,6 +40,13 @@ function validate(props: User) {
             email: "",
             password: "insira uma senha!",
         })
+    } else if (props.password.length < 6) {
+        // console.log("Insira uma senha!")
+        return props.changeError({
+            name: "",
+            email: "",
+            password: "Minimo de 6 caracteres!",
+        })
     } else {
         return props.changeError({
             name: props.name,

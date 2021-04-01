@@ -11,6 +11,7 @@ import ButtonChooseBet from "../../components/ButtonChooseBet"
 import TopBarMain from "../../components/TopBar"
 import BallBet from "../../components/Ball"
 import CartItem from "../../components/CartItem"
+import { logout } from "../../auth/authentication";
 
 import {
     DivButtonsChoose,
@@ -68,7 +69,6 @@ function Game() {
     const [selectedGame, setSelectedGame] = useState<Item>()
     const [loadGames, setLoadGames] = useState(true)
 
-
     const [openMenu, setOpenMenu] = useState(false);
     const [visibleCartMobile, setVisibleCartMobile] = useState(false);
     const [visibleInfoMinimumValueBet, SetVisibleInfoMinimumValueBet] = useState(false);
@@ -80,25 +80,33 @@ function Game() {
     const [cartTemporary, setCartTemporary] = useState<Array<string>>([])
 
     const tokenRedux = localStorage.getItem('auth:token')
-    // console.log("Token:", tokenRedux)
+
     async function listGames() {
-        const listGames = await api.get("/list-games?page=1&limit=3", {
-            headers: {
-                'Authorization': `Bearer ${tokenRedux}`
+        try {
+            const listGames = await api.get("/list-games?page=1&limit=3", {
+                headers: {
+                    'Authorization': `Bearer ${tokenRedux}`
+                }
+            });
+
+            setGames(listGames.data.data.data)
+            let listNumbers: [Item] = listGames.data.data.data;
+
+            let results = listNumbers.filter(el => {
+                return el.type
+            })
+
+            changeState(1, results[0].type)
+            setSelectedGame(listNumbers[0])
+
+            setLoadGames(false)
+        } catch (error) {
+            if (error.response.status === 403) {
+                return logout()
+            } else if (error.response.status === 401) {
+                return logout()
             }
-        });
-
-        setGames(listGames.data.data.data)
-        let listNumbers: [Item] = listGames.data.data.data;
-
-        let results = listNumbers.filter(el => {
-            return el.type
-        })
-
-        changeState(1, results[0].type)
-        setSelectedGame(listNumbers[0])
-
-        setLoadGames(false)
+        }
     }
 
     function selectedNumber(id: number) {
@@ -246,7 +254,7 @@ function Game() {
         } else {
             try {
                 const betSave = await api.post("/create-bet", {
-                    date: "2020-08-02T09:00:00",
+                    date: new Date().toISOString().slice(0, 19).replace('T', ' '),
                     games: itemCart.cart
                 },
                     {
@@ -262,33 +270,10 @@ function Game() {
                     history.push("/");
                 }
 
-                // console.log(betSave)
-
             } catch (error) {
                 console.log(error.response)
             }
         }
-    }
-
-    function seeCart() {
-        let arrGame: Object[] = []
-
-        cart.map(item => {
-            arrGame.push({
-                numbers: String(item.numbers),
-                color: item.color,
-                date: item.date,
-                price: item.price,
-                type: item.type,
-            })
-        })
-
-        let cartObj = {
-            user_id: 1,
-            date: "24/03/2021",
-            games: arrGame
-        }
-        console.log("Objeto Cart: ", cartObj)
     }
 
     useEffect(() => {
@@ -493,8 +478,6 @@ function Game() {
                     </ContentRight>
                 </Main>
             </Container>
-
-
             <DivFooter>
                 <SpanTextFooter>Copyright 2021 Luby Software</SpanTextFooter>
             </DivFooter>
