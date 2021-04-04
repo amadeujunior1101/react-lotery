@@ -2,10 +2,10 @@ import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch } from "redux";
 import { addToken } from "../../store/Users/Users.actions";
-import { Link, useHistory } from "react-router-dom"
+import { Link, useHistory, Redirect, Route } from "react-router-dom"
 import { UserLogin, Users } from "../../store/Users/Users.types"
 import api from "../../services/api";
-// import { signIn } from "../../auth/authentication"
+import LoadingComponent from '../../components/loading';
 import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxLeft, DivBoxRight, ContainerBoxLeft, DivTitleOne, SpanTitleOne,
     DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormLogin, DivInputEmail,
@@ -21,7 +21,7 @@ interface ItemsValidate {
 }
 
 function Login() {
-    localStorage.removeItem('auth:token');
+    // localStorage.removeItem('auth:token');
     const dispatch: Dispatch = useDispatch();
     const result = useSelector((state: Users) => state.user.users);
 
@@ -30,11 +30,13 @@ function Login() {
     const [password, setPassword] = useState<string>("")
 
     const [error, setError] = useState<UserLogin>()
+    const [visibleLoading, setVisibleLoading] = useState(false)
     const [visibleInfoLogin, setVisibleInfoLogin] = useState(false)
 
     const history = useHistory();
 
     async function auth() {
+        setVisibleLoading(true);
         try {
             const response = await api.post("/auth", {
                 email: email,
@@ -46,7 +48,8 @@ function Login() {
                 return setVisibleInfoUserConfirmed(response.data.user_message)
 
             localStorage.setItem('auth:token', response.data.data.token)
-            history.push("/");
+            setVisibleLoading(false);
+            history.replace("/");
 
         } catch (error) {
 
@@ -61,6 +64,8 @@ function Login() {
                 setEmail("")
                 setPassword("")
             }
+
+            setVisibleLoading(false);
 
             return console.log({
                 status: error.response.statusText,
@@ -121,7 +126,11 @@ function Login() {
 
     return (
         <Wrapper>
-
+            {
+                visibleLoading ?
+                    <LoadingComponent />
+                    : null
+            }
             <ContainerFluid>
                 <BoxGeneral>
                     <DivBoxLeft>

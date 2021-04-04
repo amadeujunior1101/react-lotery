@@ -6,6 +6,7 @@ import { ArrayObjects } from "../../store/Carts/Carts.types"
 import { Dispatch } from "redux";
 import { addCart } from "../../store/Carts/Carts.actions";
 import api from "../../services/api";
+import LoadingComponent from '../../components/loading';
 
 import ButtonChooseBet from "../../components/ButtonChooseBet"
 import TopBarMain from "../../components/TopBar"
@@ -68,6 +69,7 @@ function Game() {
     const [games, setGames] = useState<GameType[]>([]);
     const [selectedGame, setSelectedGame] = useState<Item>()
     const [loadGames, setLoadGames] = useState(true)
+    const [visibleLoading, setVisibleLoading] = useState(false)
 
     const [openMenu, setOpenMenu] = useState(false);
     const [visibleCartMobile, setVisibleCartMobile] = useState(false);
@@ -252,6 +254,7 @@ function Game() {
                 SetVisibleInfoMinimumValueBet(false)
             }, 4000);
         } else {
+            setVisibleLoading(true);
             try {
                 const betSave = await api.post("/create-bet", {
                     date: new Date().toISOString().slice(0, 19).replace('T', ' '),
@@ -267,11 +270,13 @@ function Game() {
                 if (betSave.status === 200) {
                     SetVisibleInfoMinimumValueBet(false)
                     setCart([]);
+                    setVisibleLoading(false);
                     history.push("/");
                 }
 
             } catch (error) {
                 console.log(error.response)
+                setVisibleLoading(false);
             }
         }
     }
@@ -283,6 +288,11 @@ function Game() {
 
     return (
         <>
+            {
+                visibleLoading ?
+                    <LoadingComponent />
+                    : null
+            }
             <TopBarMain
                 openMenu={() => { setOpenMenu(!openMenu) }}
             />

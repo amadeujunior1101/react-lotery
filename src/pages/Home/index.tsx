@@ -3,8 +3,10 @@ import { Link } from "react-router-dom"
 import { useSelector } from "react-redux";
 import api from "../../services/api";
 import { ArrayObjects } from "../../store/Carts/Carts.types"
+import LoadingComponent from '../../components/loading';
 
 import ButtonChooseBet from "../../components/ButtonChooseBet"
+import TopBarMain from "../../components/TopBar"
 
 import {
     WrapperTopbar,
@@ -66,6 +68,7 @@ function Home() {
 
     const tokenRedux = localStorage.getItem('auth:token')
 
+    const [openMenu, setOpenMenu] = useState(false);
     const [games, setGames] = useState<Game[]>([]);
     const [loadGames, setLoadGames] = useState(true)
     const [gamesResults, setGamesResults] = useState<GameResults[]>([]);
@@ -163,8 +166,16 @@ function Home() {
 
     return (
         <>
+            {/* <div>
+                <div style={{ position: "absolute", width: "100vw", height: "100vh", zIndex: 3, display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <LoadingComponent type={"spin"} color={"#fff"} />
+                </div>
+                <div style={{ background: "#000", opacity: "0.9", position: "absolute", width: "100vw", height: "100vh", zIndex: 2 }}>
+
+                </div>
+            </div> */}
             <WrapperTopbar>
-                <TopBar>
+                {/* <TopBar>
                     <BlockLeft>
                         <div>
                             <SpanLogo>
@@ -182,7 +193,10 @@ function Home() {
                         </SpanLogOut>
                         <i className="fas fa-arrow-right" style={{ color: "#707070" }}></i>
                     </BlockRight>
-                </TopBar>
+                </TopBar> */}
+                <TopBarMain
+                    openMenu={() => { setOpenMenu(!openMenu) }}
+                />
             </WrapperTopbar>
 
             <Container>
