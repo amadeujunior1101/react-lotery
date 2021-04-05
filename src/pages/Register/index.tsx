@@ -13,6 +13,7 @@ import {
 } from "./register.style"
 import validateRegister from "./validate"
 import api from "../../services/api";
+import LoadingComponent from '../../components/loading';
 
 function Register() {
     const dispatch: Dispatch = useDispatch();
@@ -21,6 +22,7 @@ function Register() {
     const result = useSelector((state: Users) => state.user.users);
 
     const [error, setError] = useState<User>()
+    const [visibleLoading, setVisibleLoading] = useState(false)
 
     const [infoRegister, setInfoRegister] = useState<string>("")
     const [name, setName] = useState<string>("")
@@ -83,6 +85,7 @@ function Register() {
     }
 
     async function userRegister() {
+        setVisibleLoading(true);
         try {
             const response = await api.post("/create-user", {
                 full_name: name,
@@ -92,8 +95,10 @@ function Register() {
             )
 
             // console.log("create user", response.data)
-            if (response.data.user_message === "E-mail já cadastrado.")
+            if (response.data.user_message === "E-mail já cadastrado.") {
+                setVisibleLoading(false);
                 return setInfoRegister(response.data.user_message)
+            }
 
             history.push("/login");
 
@@ -110,7 +115,7 @@ function Register() {
             //     setEmail("")
             //     setPassword("")
             // }
-
+            setVisibleLoading(false);
             return console.log({
                 status: error.response.statusText,
                 error: error.response.data.user_message,
@@ -122,7 +127,11 @@ function Register() {
 
     return (
         <Wrapper>
-
+            {
+                visibleLoading ?
+                    <LoadingComponent />
+                    : null
+            }
             <ContainerFluid>
                 <BoxGeneral>
                     <DivBoxLeft>

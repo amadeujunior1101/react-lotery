@@ -44,11 +44,12 @@ function Login() {
             }
             )
 
-            if (response.data.user_message === "Acesse sua caixa de emails e confirme seu usuário.")
+            if (response.data.user_message === "Acesse sua caixa de emails e confirme seu usuário.") {
+                setVisibleLoading(false);
                 return setVisibleInfoUserConfirmed(response.data.user_message)
+            }
 
             localStorage.setItem('auth:token', response.data.data.token)
-            setVisibleLoading(false);
             history.replace("/");
 
         } catch (error) {

@@ -4,6 +4,7 @@ import { BrowserRouter, Switch, Route, Redirect, RouteProps } from 'react-router
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
 import Register from "./pages/Register";
+import Confirmation from "./pages/Confirmation";
 import Account from "./pages/Account";
 import Game from "./pages/Game";
 import Home from "./pages/Home";
@@ -56,8 +57,9 @@ function Routes() {
                 <PrivateRoute exact path="/" component={Home} />
                 <PrivateRoute path="/home" component={Home} />
                 <PrivateRoute exact path="/game" component={Game} />
-                <PrivateRoute path="/reset-password" component={ResetPassword} />
+                <Route path="/reset-password" component={ResetPassword} />
                 <Route path="/register" component={Register} />
+                <Route path="/confirmation-user" component={Confirmation} />
                 <PrivateRoute path="/account" component={Account} />
 
                 {window.location.pathname === "/login" && isAuthenticated() === true ? (
