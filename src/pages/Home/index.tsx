@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { useSelector } from "react-redux";
 import api from "../../services/api";
 import { ArrayObjects } from "../../store/Carts/Carts.types"
-import LoadingComponent from '../../components/loading';
+import LoadingComponent from '../../components/Loading';
 
 import ButtonChooseBet from "../../components/ButtonChooseBet"
 import TopBarMain from "../../components/TopBar"

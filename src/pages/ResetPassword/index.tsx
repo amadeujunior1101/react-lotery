@@ -1,17 +1,24 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import api from "../../services/api"
+import LoadingComponent from "../../components/Loading"
+import Alert from "../../components/Alert"
+
 import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxLeft, DivBoxRight, ContainerBoxLeft, DivTitleOne, SpanTitleOne,
     DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormResetPassword, DivInputEmail,
-    DivInputPassword, InputEmail, DivButtonLogin, DivForgot, SpanForgot, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp, ButtonForgot, Footer,
+    DivInputPassword, InputEmail, DivButtonLogin, DivForgot, SpanForgot, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp, Footer,
 } from "./resetPassword.style";
 import validateResetPassword from "./validate"
 import { UserResetPassword } from "../../store/Users/Users.types"
+import { findAllByPlaceholderText } from "@testing-library/dom";
 
 function ResetPassword() {
     const [error, setError] = useState<UserResetPassword>()
-
-    const [email, setEmail] = useState<string>("")
+    const [email, setEmail] = useState<string>("amadeujunior@gmail.com")
+    const [visibleLoading, setVisibleLoading] = useState(false)
+    const [visibleMessageReset, setVisibleMessageReset] = useState(false)
+    const [infoReset, setInfoReset] = useState("")
 
     const history = useHistory();
 
@@ -35,17 +42,14 @@ function ResetPassword() {
     function changeError(error: UserResetPassword) {
         setError(error)
         if (error.email === "ok") {
-            let obj: UserResetPassword = {
-                email: email,
-            }
 
-            console.log(obj)
+            sendEmailResetPassword()
 
             setError({
                 email: "",
             })
-            setEmail("")
-            history.push("/login");
+            // setEmail("")
+            // history.push("/login");
         }
     }
 
@@ -67,8 +71,50 @@ function ResetPassword() {
         history.goBack();
     }
 
+    async function sendEmailResetPassword() {
+        setVisibleLoading(true);
+        try {
+            const response = await api.post("/confirmation-forgot-password", {
+                email: email
+            }
+            )
+
+            if (response.data.user_message === "Email enviado com sucesso.") {
+                setVisibleLoading(false);
+                setVisibleMessageReset(true);
+                setInfoReset("Email enviado com sucesso, redirecionando...");
+                setTimeout(() => {
+                    return history.replace("/login");
+                }, 4000);
+            }
+            if (response.data.user_message === "Email não cadastrado.") {
+                setVisibleLoading(false);
+                setVisibleMessageReset(true);
+                setInfoReset("Email não cadastrado.");
+            }
+
+            // localStorage.setItem('auth:token', response.data.data.token)
+            // history.replace("/");
+
+        } catch (error) {
+            setVisibleLoading(false);
+
+            return console.log({
+                status: error.response.statusText,
+                error: error.response.data.user_message,
+                message: "Falha na autenticação"
+            })
+
+        }
+    }
+
     return (
         <Wrapper>
+            {
+                visibleLoading ?
+                    <LoadingComponent />
+                    : null
+            }
             <ContainerFluid>
                 <BoxGeneral>
                     <DivBoxLeft>
@@ -113,6 +159,14 @@ function ResetPassword() {
                                         </div>
                                     </DivButtonLogin>
                                 </div>
+                                {
+                                    visibleMessageReset ?
+                                        infoReset === "Email enviado com sucesso, redirecionando..." ?
+                                            <Alert title={infoReset} color={"#d4edda"} />
+                                            :
+                                            <Alert title={infoReset} color={"#f8d7da"} />
+                                        : null
+                                }
 
                             </FormResetPassword>
                             {/* <div> */}

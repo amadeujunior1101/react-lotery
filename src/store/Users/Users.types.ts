@@ -6,9 +6,13 @@ export interface UserLogin {
 export interface UserResetPassword{
     email: string;
 }
+export interface UserUpdatePassword{
+    newPassword: string;
+    repeatPassword: string;
+}
 
 export interface User {
-    name: string;
+    fullName: string;
     email: string;
     password: string;
 }

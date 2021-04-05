@@ -178,12 +178,31 @@ const FormResetPassword = styled.form`
     margin-top: 25px;
 `;
 
-const DivInputEmail = styled.div`
-    
+const DivInputNewPassword = styled.div`
      height: 80px; 
      background: #FFFFFF;
      border-top-left-radius: 10px; 
      border-top-right-radius: 10px; 
+     border: 1px solid #EBEBEB;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+    
+     @media ${device.mobileL && device.mobileM && device.mobileS}{
+        width: 300px; 
+     }
+     @media ${device.tablet}{
+        width: 350px; 
+     }
+     @media ${device.laptop}{
+        width: 350px; 
+     }
+`;
+const DivInputConfirmPassword = styled.div`
+     height: 80px; 
+     background: #FFFFFF;
+     /* border-top-left-radius: 10px; 
+     border-top-right-radius: 10px;  */
      border: 1px solid #EBEBEB;
      display: flex;
      justify-content: center;
@@ -221,15 +240,21 @@ const DivInputPassword = styled.div`
      }
 `;
 
-const InputEmail = styled.input`
+const InputNewPassword = styled.input`
     width: 100%;
     height: 30px;
     border: none;
     margin: auto 20px auto 20px;
     font: italic normal bold 18px Helvetica Neue;
-    color: #9D9D9D;
-
-    
+    color: #9D9D9D;   
+`;
+const InputConfirmPassword = styled.input`
+    width: 100%;
+    height: 30px;
+    border: none;
+    margin: auto 20px auto 20px;
+    font: italic normal bold 18px Helvetica Neue;
+    color: #9D9D9D;   
 `;
 
 const DivButtonLogin = styled.div`
@@ -381,9 +406,11 @@ export {
     ContainerBoxRight,
     SpanTitleAuthentication,
     FormResetPassword,
-    DivInputEmail,
+    DivInputNewPassword,
+    DivInputConfirmPassword,
     DivInputPassword,
-    InputEmail,
+    InputNewPassword,
+    InputConfirmPassword,
     DivButtonLogin,
     DivForgot,
     SpanForgot,

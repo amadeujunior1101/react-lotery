@@ -6,7 +6,7 @@ import { ArrayObjects } from "../../store/Carts/Carts.types"
 import { Dispatch } from "redux";
 import { addCart } from "../../store/Carts/Carts.actions";
 import api from "../../services/api";
-import LoadingComponent from '../../components/loading';
+import LoadingComponent from '../../components/Loading';
 
 import ButtonChooseBet from "../../components/ButtonChooseBet"
 import TopBarMain from "../../components/TopBar"

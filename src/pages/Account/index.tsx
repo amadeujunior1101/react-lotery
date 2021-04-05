@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
 import { Dispatch } from "redux";
@@ -10,17 +10,26 @@ import {
 } from "./account.style"
 import validateAccount from "./validate";
 import TopBarMain from "../../components/TopBar";
+import api from "../../services/api";
+import Alert from "../../components/Alert"
+import LoadingComponent from "../../components/Loading";
+import { logout } from "../../auth/authentication"
 
 function Account() {
     const dispatch: Dispatch = useDispatch();
     const history = useHistory();
 
+    const tokenRedux = localStorage.getItem('auth:token')
+
     const result = useSelector((state: Users) => state.user.users);
 
-    const [error, setError] = useState<User>()
+    const [visibleLoading, setVisibleLoading] = useState(false)
+    const [visibleInfo, setVisibleInfo] = useState(false)
     const [openMenu, setOpenMenu] = useState(false);
+    const [messageUser, setMessageUser] = useState("");
 
-    const [name, setName] = useState<string>("")
+    const [error, setError] = useState<User>()
+    const [fullName, setFullName] = useState<string>("")
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
 
@@ -28,7 +37,7 @@ function Account() {
         e.preventDefault()
 
         interface ItemsValidate {
-            name: string;
+            fullName: string;
             email: string;
             password: string;
             changeError: Function;
@@ -36,7 +45,7 @@ function Account() {
         }
 
         let item: ItemsValidate = {
-            name: name,
+            fullName: fullName,
             email: email,
             password: password,
             changeError: changeError,
@@ -47,26 +56,21 @@ function Account() {
 
     function changeError(error: User) {
         setError(error)
-        if (error.name.length > 0 && error.email.length > 0 && error.password.length > 0) {
-            let obj: User = {
-                name: name,
-                email: email,
-                password: password,
-            }
-            dispatch(addUser(obj));
+        if (error.fullName.length > 0 && error.email.length > 0 && error.password.length > 0) {
+            updateUser()
 
             console.log("users do redux:", result)
 
             setError({
-                name: "",
+                fullName: "",
                 email: "",
                 password: ""
             })
-            setName("")
-            setEmail("")
+            // setFullName("")
+            // setEmail("")
             setPassword("")
 
-            history.push("/login");
+            // history.push("/login");
         }
     }
 
@@ -81,9 +85,8 @@ function Account() {
         return true;
     }
 
-    // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const handleChangeName = (e: React.FormEvent<HTMLInputElement>) => {
-        setName(e.currentTarget.value)
+    const handleChangeFullName = (e: React.FormEvent<HTMLInputElement>) => {
+        setFullName(e.currentTarget.value)
     }
     const handleChangeEmail = (e: React.FormEvent<HTMLInputElement>) => {
         setEmail(e.currentTarget.value)
@@ -92,12 +95,86 @@ function Account() {
         setPassword(e.currentTarget.value)
     }
 
-    function returnGoBack() {
-        history.goBack();
+    async function getUser() {
+        try {
+            const response = await api.get("/show-user", {
+                headers: {
+                    'Authorization': `Bearer ${tokenRedux}`
+                }
+            });
+            setFullName(response.data.user.full_name)
+            setEmail(response.data.user.email)
+
+            console.log("response:", response)
+
+        } catch (error) {
+
+            if (error.response.status === 403) {
+                return logout()
+            } else if (error.response.status === 401) {
+                return logout()
+            }
+            return console.log({
+                error: error,
+                message: "Falha na autenticação",
+                status: error.response.data.error
+            })
+        }
+
     }
+
+    async function updateUser() {
+        setVisibleLoading(true);
+        try {
+            const response = await api.put("/update-user", {
+                full_name: fullName,
+                email: email,
+                password: password,
+            },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${tokenRedux}`
+                    }
+                }
+            );
+
+            if (response.data.user_message === "Usuário atualizado com sucesso.") {
+                setVisibleLoading(false);
+                setVisibleInfo(true);
+                console.log("Response Update=> ", response)
+                return setMessageUser(response.data.user_message)
+            }
+            else if (response.data.user_message === "Senha obrigatória.") {
+                setVisibleLoading(false);
+                setVisibleInfo(true);
+                console.log("Response Update senha=> ", response)
+                return setMessageUser(response.data.user_message)
+            } else {
+                setVisibleLoading(false);
+                setVisibleInfo(true);
+                console.log("Response Update else=> ", response)
+                return setMessageUser(response.data.user_message)
+            }
+
+        } catch (error) {
+            console.log(error.response)
+            setVisibleLoading(false);
+            return setMessageUser(error.data)
+        }
+    }
+
+    useEffect(() => {
+        getUser()
+    }, [])
 
     return (
         <Wrapper>
+
+            {
+                visibleLoading ?
+                    <LoadingComponent />
+                    : null
+            }
 
             <TopBarMain
                 openMenu={() => { setOpenMenu(!openMenu) }}
@@ -115,21 +192,6 @@ function Account() {
 
             <ContainerFluid>
                 <BoxGeneral>
-                    {/* <DivBoxLeft>
-                        <ContainerBoxLeft>
-                            <div style={{ display: "flex", justifyContent: "center" }}>
-                                <DivTitleOne>
-                                    <SpanTitleOne>The Geatest App</SpanTitleOne>
-                                </DivTitleOne>
-                            </div>
-                            <DivButtonFor>
-                                <SpanButtonFor>for</SpanButtonFor>
-                            </DivButtonFor>
-                            <div>
-                                <SpanLotery>Lottery</SpanLotery>
-                            </div>
-                        </ContainerBoxLeft>
-                    </DivBoxLeft> */}
                     <DivBoxRight>
                         <ContainerBoxRight>
                             <div>
@@ -144,11 +206,11 @@ function Account() {
                                         <InputLogin
                                             type="text"
                                             placeholder="Name"
-                                            value={name}
+                                            value={fullName}
                                             // onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e.currentTarget.value)}
-                                            onChange={handleChangeName}
+                                            onChange={handleChangeFullName}
                                         />
-                                        <span style={{ display: "flex", position: "absolute", marginTop: 60, color: "#dc3545" }}>{error?.name}</span>
+                                        <span style={{ display: "flex", position: "absolute", marginTop: 60, color: "#dc3545" }}>{error?.fullName}</span>
                                     </DivInputName>
                                     <DivInputEmail>
                                         <InputLogin
@@ -177,6 +239,14 @@ function Account() {
                                         </div>
                                     </DivButtonLogin>
                                 </div>
+                                {
+                                    visibleInfo ?
+                                        messageUser === "Usuário atualizado com sucesso." ?
+                                            <Alert title={messageUser} color={"#d4edda"} />
+                                            :
+                                            <Alert title={messageUser} color={"#f8d7da"} />
+                                        : null
+                                }
 
                             </FormLogin>
 

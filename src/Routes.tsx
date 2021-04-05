@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route, Redirect, RouteProps } from 'react-router
 
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
+import UpdatePassword from "./pages/UpdatePassword";
 import Register from "./pages/Register";
 import Confirmation from "./pages/Confirmation";
 import Account from "./pages/Account";
@@ -56,8 +57,9 @@ function Routes() {
             <Switch>
                 <PrivateRoute exact path="/" component={Home} />
                 <PrivateRoute path="/home" component={Home} />
-                <PrivateRoute exact path="/game" component={Game} />
+                <PrivateRoute path="/game" component={Game} />
                 <Route path="/reset-password" component={ResetPassword} />
+                <Route path="/update-password" component={UpdatePassword} />
                 <Route path="/register" component={Register} />
                 <Route path="/confirmation-user" component={Confirmation} />
                 <PrivateRoute path="/account" component={Account} />

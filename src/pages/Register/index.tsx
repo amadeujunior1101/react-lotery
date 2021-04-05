@@ -13,7 +13,7 @@ import {
 } from "./register.style"
 import validateRegister from "./validate"
 import api from "../../services/api";
-import LoadingComponent from '../../components/loading';
+import LoadingComponent from '../../components/Loading';
 
 function Register() {
     const dispatch: Dispatch = useDispatch();
@@ -52,10 +52,10 @@ function Register() {
 
     function changeError(errorInfo: User) {
         setError(errorInfo)
-        if (errorInfo.name.length > 0 && errorInfo.email.length > 0 && errorInfo.password.length > 0) {
+        if (errorInfo.fullName.length > 0 && errorInfo.email.length > 0 && errorInfo.password.length > 0) {
             userRegister()
             setError({
-                name: "",
+                fullName: "",
                 email: "",
                 password: ""
             })
@@ -167,7 +167,7 @@ function Register() {
                                             // onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e.currentTarget.value)}
                                             onChange={handleChangeName}
                                         />
-                                        <span style={{ display: "flex", position: "absolute", marginTop: 60, color: "#dc3545" }}>{error?.name}</span>
+                                        <span style={{ display: "flex", position: "absolute", marginTop: 60, color: "#dc3545" }}>{error?.fullName}</span>
                                     </DivInputName>
                                     <DivInputEmail>
                                         <InputLogin
