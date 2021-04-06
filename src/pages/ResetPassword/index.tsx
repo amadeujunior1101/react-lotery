@@ -8,14 +8,13 @@ import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxLeft, DivBoxRight, ContainerBoxLeft, DivTitleOne, SpanTitleOne,
     DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormResetPassword, DivInputEmail,
     DivInputPassword, InputEmail, DivButtonLogin, DivForgot, SpanForgot, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp, Footer,
-} from "./resetPassword.style";
+} from "./style";
 import validateResetPassword from "./validate"
-import { UserResetPassword } from "../../store/Users/Users.types"
-import { findAllByPlaceholderText } from "@testing-library/dom";
+import { ItemsValidate, UserResetPassword } from "./types";
 
 function ResetPassword() {
     const [error, setError] = useState<UserResetPassword>()
-    const [email, setEmail] = useState<string>("amadeujunior@gmail.com")
+    const [email, setEmail] = useState<string>("")
     const [visibleLoading, setVisibleLoading] = useState(false)
     const [visibleMessageReset, setVisibleMessageReset] = useState(false)
     const [infoReset, setInfoReset] = useState("")
@@ -24,12 +23,6 @@ function ResetPassword() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-
-        interface ItemsValidate {
-            email: string;
-            changeError: Function;
-            check_email: Function;
-        }
 
         let item: ItemsValidate = {
             email: email,

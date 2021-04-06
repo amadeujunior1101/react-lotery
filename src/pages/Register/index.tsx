@@ -4,16 +4,18 @@ import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { Dispatch } from "redux";
 import { addUser } from "../../store/Users/Users.actions";
-import { UsersList, User, Users } from "../../store/Users/Users.types";
+import { UsersList, Users } from "../../store/Users/Users.types";
 import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxLeft, DivBoxRight, ContainerBoxLeft, DivTitleOne, SpanTitleOne,
     DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormLogin, DivInputName, DivInputEmail,
     DivInputPassword, InputLogin, DivButtonLogin, DivForgot, SpanForgot, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp, ButtonForgot,
-    DivAlert, Footer,
-} from "./register.style"
+    Footer,
+} from "./style"
 import validateRegister from "./validate"
 import api from "../../services/api";
 import LoadingComponent from '../../components/Loading/Loading';
+import Alert from "../../components/Alert";
+import { ItemsValidate, User } from "./types";
 
 function Register() {
     const dispatch: Dispatch = useDispatch();
@@ -25,23 +27,15 @@ function Register() {
     const [visibleLoading, setVisibleLoading] = useState(false)
 
     const [infoRegister, setInfoRegister] = useState<string>("")
-    const [name, setName] = useState<string>("")
+    const [full_name, setName] = useState<string>("")
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
 
-        interface ItemsValidate {
-            name: string;
-            email: string;
-            password: string;
-            changeError: Function;
-            check_email: Function;
-        }
-
         let item: ItemsValidate = {
-            name: name,
+            full_name: full_name,
             email: email,
             password: password,
             changeError: changeError,
@@ -52,10 +46,10 @@ function Register() {
 
     function changeError(errorInfo: User) {
         setError(errorInfo)
-        if (errorInfo.fullName.length > 0 && errorInfo.email.length > 0 && errorInfo.password.length > 0) {
+        if (full_name.length > 0 && email.length > 0 && password.length >= 6) {
             userRegister()
             setError({
-                fullName: "",
+                full_name: "",
                 email: "",
                 password: ""
             })
@@ -73,7 +67,6 @@ function Register() {
         return true;
     }
 
-    // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const handleChangeName = (e: React.FormEvent<HTMLInputElement>) => {
         setName(e.currentTarget.value)
     }
@@ -88,13 +81,12 @@ function Register() {
         setVisibleLoading(true);
         try {
             const response = await api.post("/create-user", {
-                full_name: name,
+                full_name: full_name,
                 email: email,
                 password: password,
             }
             )
 
-            // console.log("create user", response.data)
             if (response.data.user_message === "E-mail já cadastrado.") {
                 setVisibleLoading(false);
                 return setInfoRegister(response.data.user_message)
@@ -104,17 +96,6 @@ function Register() {
 
         } catch (error) {
 
-            // if (error.response.statusText) {
-            //     setVisible(true);
-            //     setTimeout(() => {
-            //         setVisibleInfoLogin(false);
-            //     }, 4000);
-
-            // } else {
-            //     setVisibleInfoLogin(false);
-            //     setEmail("")
-            //     setPassword("")
-            // }
             setVisibleLoading(false);
             return console.log({
                 status: error.response.statusText,
@@ -163,11 +144,10 @@ function Register() {
                                         <InputLogin
                                             type="text"
                                             placeholder="Name"
-                                            value={name}
-                                            // onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e.currentTarget.value)}
+                                            value={full_name}
                                             onChange={handleChangeName}
                                         />
-                                        <span style={{ display: "flex", position: "absolute", marginTop: 60, color: "#dc3545" }}>{error?.fullName}</span>
+                                        <span style={{ display: "flex", position: "absolute", marginTop: 60, color: "#dc3545" }}>{error?.full_name}</span>
                                     </DivInputName>
                                     <DivInputEmail>
                                         <InputLogin
@@ -199,9 +179,7 @@ function Register() {
 
                                 {
                                     infoRegister === "E-mail já cadastrado." ?
-                                        <DivAlert>
-                                            <span>E-mail já cadastrado!</span>
-                                        </DivAlert>
+                                        <Alert title={"E-mail já cadastrado!"} color={"#f8d7da"} />
                                         : null
                                 }
                             </FormLogin>
@@ -211,7 +189,6 @@ function Register() {
                             </ButtonSigUp>
                             {/* </div> */}
                         </ContainerBoxRight>
-
 
                     </DivBoxRight>
                 </BoxGeneral>

@@ -58,11 +58,11 @@ function Routes() {
                 <PrivateRoute exact path="/" component={Home} />
                 <PrivateRoute path="/home" component={Home} />
                 <PrivateRoute path="/game" component={Game} />
+                <PrivateRoute path="/account" component={Account} />
                 <Route path="/reset-password" component={ResetPassword} />
                 <Route path="/update-password" component={UpdatePassword} />
                 <Route path="/register" component={Register} />
                 <Route path="/confirmation-user" component={Confirmation} />
-                <PrivateRoute path="/account" component={Account} />
 
                 {window.location.pathname === "/login" && isAuthenticated() === true ? (
                     <Redirect to="/" />

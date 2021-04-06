@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import api from "../../services/api";
 import { useHistory } from "react-router-dom"
-import LoadingComponent from "../../components/Loading/Loading";
 
 import {
     Wrapper,
@@ -11,14 +10,14 @@ import {
     SpanTitleAuthentication,
     ContainerBoxRight,
     Footer,
-} from "./confirmation.style";
+} from "./style";
 
 function Confirmation() {
     const [information, setInformation] = useState<String>("Aguarde...")
 
     const history = useHistory();
 
-    async function userConfirmation() {
+    async function userConfirmation() { 
         try {
             const search = window.location.search;
             const params = new URLSearchParams(search);

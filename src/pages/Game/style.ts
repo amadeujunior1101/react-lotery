@@ -113,11 +113,12 @@ const ContentLeft = styled.div`
 const DivBox1 = styled.div`
  display: grid;
 `;
-const DivBox2 = styled.div`
-`;
-const DivBox3 = styled.div`
 
-`;
+// const DivBox2 = styled.div`
+// `;
+// const DivBox3 = styled.div`
+// `;
+
 const SpanTitleGame = styled.span`
 font: italic normal bold 17px/24px Helvetica Neue;
 color: #868686;
@@ -338,8 +339,8 @@ export {
     Main,
     ContentLeft,
     DivBox1,
-    DivBox2,
-    DivBox3,
+    // DivBox2,
+    // DivBox3,
     SpanTitleGame,
     ContainerBalls,
     DivButtonsOptions,

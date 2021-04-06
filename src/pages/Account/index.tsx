@@ -3,23 +3,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
 import { Dispatch } from "redux";
 import { addUser } from "../../store/Users/Users.actions";
-import { User, Users } from "../../store/Users/Users.types";
+import { Users } from "../../store/Users/Users.types";
 import {
     Wrapper, DivMenuMobile, UlMenuMobile, ContainerFluid, BoxGeneral, DivBoxRight, SpanTitleAuthentication, ContainerBoxRight, FormLogin, DivInputName, DivInputEmail,
     DivInputPassword, InputLogin, DivButtonLogin, ButtonLogin, SpanLogin, Footer,
-} from "./account.style"
+} from "./style"
 import validateAccount from "./validate";
 import TopBarMain from "../../components/TopBar";
 import api from "../../services/api";
 import Alert from "../../components/Alert"
 import LoadingComponent from "../../components/Loading/Loading";
 import { logout } from "../../auth/authentication"
+import { ItemsValidate, User } from "./types"
 
 function Account() {
-    const dispatch: Dispatch = useDispatch();
-    const history = useHistory();
-
-    const tokenRedux = localStorage.getItem('auth:token')
+    // const dispatch: Dispatch = useDispatch();
+    // const history = useHistory();
 
     const result = useSelector((state: Users) => state.user.users);
 
@@ -33,24 +32,21 @@ function Account() {
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
 
+    useEffect(() => {
+        getUser()
+    }, [])
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
 
-        interface ItemsValidate {
-            fullName: string;
-            email: string;
-            password: string;
-            changeError: Function;
-            check_email: Function;
-        }
-
         let item: ItemsValidate = {
-            fullName: fullName,
-            email: email,
-            password: password,
+            fullName: fullName.trim(),
+            email: email.trim(),
+            password: password.trim(),
             changeError: changeError,
             check_email: check_email,
         }
+        // return console.log("User:", item)
         return validateAccount(item)
     }
 
@@ -97,23 +93,13 @@ function Account() {
 
     async function getUser() {
         try {
-            const response = await api.get("/show-user", {
-                headers: {
-                    'Authorization': `Bearer ${tokenRedux}`
-                }
-            });
+            const response = await api.get("/show-user");
             setFullName(response.data.user.full_name)
             setEmail(response.data.user.email)
 
-            console.log("response:", response)
+            // console.log("response:", response)
 
         } catch (error) {
-
-            if (error.response.status === 403) {
-                return logout()
-            } else if (error.response.status === 401) {
-                return logout()
-            }
             return console.log({
                 error: error,
                 message: "Falha na autenticação",
@@ -130,29 +116,23 @@ function Account() {
                 full_name: fullName,
                 email: email,
                 password: password,
-            },
-                {
-                    headers: {
-                        'Authorization': `Bearer ${tokenRedux}`
-                    }
-                }
-            );
+            });
 
             if (response.data.user_message === "Usuário atualizado com sucesso.") {
                 setVisibleLoading(false);
                 setVisibleInfo(true);
-                console.log("Response Update=> ", response)
+  
                 return setMessageUser(response.data.user_message)
             }
             else if (response.data.user_message === "Senha obrigatória.") {
                 setVisibleLoading(false);
                 setVisibleInfo(true);
-                console.log("Response Update senha=> ", response)
+
                 return setMessageUser(response.data.user_message)
             } else {
                 setVisibleLoading(false);
                 setVisibleInfo(true);
-                console.log("Response Update else=> ", response)
+
                 return setMessageUser(response.data.user_message)
             }
 
@@ -162,10 +142,6 @@ function Account() {
             return setMessageUser(error.data)
         }
     }
-
-    useEffect(() => {
-        getUser()
-    }, [])
 
     return (
         <Wrapper>

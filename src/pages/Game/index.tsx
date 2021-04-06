@@ -26,8 +26,8 @@ import {
     Main,
     ContentLeft,
     DivBox1,
-    DivBox2,
-    DivBox3,
+    // DivBox2,
+    // DivBox3,
     SpanTitleGame,
     ContainerBalls,
     DivScrollButtonsChoose,
@@ -56,9 +56,9 @@ import {
     SpanSaveButton,
     DivFooter,
     SpanTextFooter,
-} from "./game.style"
+} from "./style"
 
-import { GameType, Item, Cart } from "./game.types"
+import { GameType, Item, Cart } from "./types"
 
 function Game() {
     const history = useHistory();
@@ -71,6 +71,7 @@ function Game() {
     const [selectedGame, setSelectedGame] = useState<Item>()
     const [loadGames, setLoadGames] = useState(true)
     const [visibleLoading, setVisibleLoading] = useState(false)
+    const [errorConnection, setErrorConnection] = useState(false)
 
     const [openMenu, setOpenMenu] = useState(false);
     const [visibleCartMobile, setVisibleCartMobile] = useState(false);
@@ -82,19 +83,13 @@ function Game() {
     const [cart, setCart] = useState<Cart[]>([])
     const [cartTemporary, setCartTemporary] = useState<Array<string>>([])
 
-    const tokenRedux = localStorage.getItem('auth:token')
-
     useEffect(() => {
         listGames()
     }, [])
 
     async function listGames() {
         try {
-            const listGames = await api.get("/list-games?page=1&limit=3", {
-                headers: {
-                    'Authorization': `Bearer ${tokenRedux}`
-                }
-            });
+            const listGames = await api.get("/list-games?page=1&limit=3");
 
             setGames(listGames.data.data.data)
             // console.log(listGames.data.data.data)
@@ -107,13 +102,21 @@ function Game() {
             changeState(1, results[0].type)
             setSelectedGame(listNumbers[0])
 
-
         } catch (error) {
-            if (error.response.status === 403) {
-                return logout()
-            } else if (error.response.status === 401) {
-                return logout()
-            }
+
+            if (!error.response) return;
+            //     // network error
+            //     this.errorStatus = 'Error: Network Error';
+            // } else {
+            //     this.errorStatus = error.response.data.message;
+            // }
+
+            //    if (error == "Error: Network Error") return "Desculpe, houve um erro, impossivel registrar sua aposta."
+            return console.log({
+                status: error.response.statusText,
+                error: error.response.data.user_message,
+                message: "Falha na autenticação"
+            })
         }
     }
 
@@ -254,7 +257,8 @@ function Game() {
         cart: cart
     };
 
-    async function saveCartRedux() {
+    async function saveCart() {
+        // return console.log("Click save")
         if (cartValue() < Number(selectedGame?.min_cart_value)) {
             SetVisibleInfoMinimumValueBet(true)
             setTimeout(() => {
@@ -266,13 +270,7 @@ function Game() {
                 const betSave = await api.post("/create-bet", {
                     date: new Date().toISOString().slice(0, 19).replace('T', ' '),
                     games: itemCart.cart
-                },
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${tokenRedux}`
-                        }
-                    }
-                );
+                });
 
                 if (betSave.status === 200) {
                     SetVisibleInfoMinimumValueBet(false)
@@ -282,8 +280,17 @@ function Game() {
                 }
 
             } catch (error) {
-                console.log(error.response)
                 setVisibleLoading(false);
+
+                if (!error.response) {
+                    return setErrorConnection(true);
+                }
+
+                return console.log({
+                    status: error.response.statusText,
+                    error: error.response.data.user_message,
+                    message: "Falha na autenticação"
+                })
             }
         }
     }
@@ -355,7 +362,7 @@ function Game() {
                                                     .replace(".", ",")
                                                     .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}</SpanValueTotal></ValueTotal></SpanCartTotal>
                                             </DivCartTotal>
-                                            <DivSaveButton onClick={() => { saveCartRedux() }}>
+                                            <DivSaveButton onClick={() => { saveCart() }}>
                                                 <SpanSaveButton>Save <i className="fas fa-arrow-right"></i></SpanSaveButton>
                                             </DivSaveButton>
                                             {
@@ -367,6 +374,11 @@ function Game() {
                                                     </DivAlert>
                                                     :
                                                     null
+                                            }
+                                            {
+                                                errorConnection ?
+                                                    <Alert title={"Desculpe! houve um erro, impossivel registrar sua aposta."} color={"#f8d7da"} />
+                                                    : null
                                             }
                                             {
                                                 visibleInfoValueQuantityBalls ?
@@ -404,15 +416,15 @@ function Game() {
                                 </DivButtonsChoose>
                             </DivScrollButtonsChoose>
                         </DivBox1>
-                        <DivBox2>
+                        <>
                             <div className="text-information">
                                 <SpanTitleGame>Fill your bet</SpanTitleGame>
                                 <ParagraphDescription>
                                     {selectedGame?.description}
                                 </ParagraphDescription>
                             </div>
-                        </DivBox2>
-                        <DivBox3>
+                        </>
+                        <>
                             <ContainerBalls>
                                 {
                                     loadGames === false ?
@@ -429,7 +441,7 @@ function Game() {
                                     <ButtonAddToCard onClick={() => { addToCart() }}><i className="fas fa-cart-plus"> </i>Add to cart</ButtonAddToCard>
                                 </div>
                             </DivButtonsOptions>
-                        </DivBox3>
+                        </>
                     </ContentLeft>
                     <ContentRight style={{}}>
                         <DivCardBase>
@@ -465,7 +477,7 @@ function Game() {
                                 .replace(".", ",")
                                 .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}</SpanValueTotal></ValueTotal></SpanCartTotal>
                         </DivCartTotal>
-                        <DivSaveButton onClick={() => { saveCartRedux() }}>
+                        <DivSaveButton onClick={() => { saveCart() }}>
                             <SpanSaveButton>Save <i className="fas fa-arrow-right"></i></SpanSaveButton>
                         </DivSaveButton>
                         {/* <button onClick={() => seeCart()}>See cart</button> */}
@@ -478,6 +490,11 @@ function Game() {
                                 </DivAlert>
                                 :
                                 null
+                        }
+                        {
+                            errorConnection ?
+                                <Alert title={"Desculpe! houve um erro, impossivel registrar sua aposta."} color={"#f8d7da"} />
+                                : null
                         }
                         {
                             visibleInfoValueQuantityBalls ?

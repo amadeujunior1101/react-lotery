@@ -10,9 +10,10 @@ import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxLeft, DivBoxRight, ContainerBoxLeft, DivTitleOne, SpanTitleOne,
     DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormLogin, DivInputEmail,
     DivInputPassword, InputLogin, DivButtonLogin, DivForgot, SpanForgot, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp, ButtonForgot,
-    Footer, DivAlert,
-} from "./login.style"
+    Footer
+} from "./style"
 import validateRegister from "./validate"
+import Alert from "../../components/Alert";
 interface ItemsValidate {
     email: string;
     password: string;
@@ -196,16 +197,12 @@ function Login() {
                                 </div>
                                 {
                                     visibleInfoLogin ?
-                                        <DivAlert>
-                                            <span>Login ou senha invalidos!</span>
-                                        </DivAlert>
+                                        <Alert title={"Login ou senha invalidos!"} color={"#f8d7da"} />
                                         : null
                                 }
                                 {
                                     visibleInfoUserConfirmed !== "" ?
-                                        <DivAlert style={{ background: "#d4edda", color: "#155724" }}>
-                                            <span>{visibleInfoUserConfirmed}</span>
-                                        </DivAlert>
+                                        <Alert title={visibleInfoUserConfirmed} color={"#d4edda"} />
                                         : null
                                 }
 

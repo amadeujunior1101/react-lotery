@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import api from "../../services/api"
 import LoadingComponent from "../../components/Loading/Loading"
@@ -6,11 +6,10 @@ import Alert from "../../components/Alert"
 
 import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxRight, SpanTitleAuthentication, ContainerBoxRight, FormResetPassword, DivInputNewPassword,
-    DivInputConfirmPassword, InputNewPassword, InputConfirmPassword, DivButtonLogin, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp,
-    Footer,
-} from "./forgot_password";
+    DivInputConfirmPassword, InputNewPassword, InputConfirmPassword, DivButtonLogin, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp, Footer,
+} from "./style";
 import validateUpdatePassword from "./validate"
-import { UserUpdatePassword } from "../../store/Users/Users.types"
+import { ItemsValidate, UserUpdatePassword } from "./types";
 
 function UpdatePassword() {
     const [error, setError] = useState<UserUpdatePassword>()
@@ -19,17 +18,46 @@ function UpdatePassword() {
     const [visibleLoading, setVisibleLoading] = useState(false)
     const [visibleMessageReset, setVisibleMessageReset] = useState(false)
     const [infoReset, setInfoReset] = useState("")
+    const [information, setInformation] = useState<String>("Aguarde...")
 
     const history = useHistory();
 
+    useEffect(() => {
+        tokenVerify()
+    }, []);
+
+    async function tokenVerify() {
+        try {
+            const search = window.location.search;
+            const params = new URLSearchParams(search);
+            const token = params.get('token');
+
+            const response = await api.post(`/confirmation-user?token=${token}`)
+        //    return console.log("response=>", response)
+            if (response.data.user_message === "Token invalido.") {
+                setInformation("Token inválido, expirado ou revogado, você será redirecionado....");
+                setTimeout(() => {
+                    return history.replace("/login");
+                }, 4000);
+
+            }
+            else {
+                setInformation("");
+            }
+            // console.log("response=>", response)
+
+        } catch (error) {
+            console.log("response error");
+            return console.log({
+                status: error.response.statusText,
+                error: error.response.data.user_message,
+                message: "Falha na autenticação"
+            })
+        }
+    }
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-
-        interface ItemsValidate {
-            newPassword: string;
-            repeatPassword: string;
-            changeError: Function;
-        }
 
         let item: ItemsValidate = {
             newPassword: newPassword,
@@ -72,9 +100,9 @@ function UpdatePassword() {
         try {
             const search = window.location.search;
             const params = new URLSearchParams(search);
-            const token = params.get('token');
+            const tokenParams = params.get('token');
 
-            const response = await api.post(`/confirmation-reset-password?token=${token}`, {
+            const response = await api.post(`/confirmation-reset-password?token=${tokenParams}`, {
                 password: newPassword
             })
 
@@ -118,75 +146,72 @@ function UpdatePassword() {
             }
             <ContainerFluid>
                 <BoxGeneral>
-                    {/* <DivBoxLeft>
-                        <ContainerBoxLeft>
-                            <div style={{ display: "flex", justifyContent: "center" }}>
-                                <DivTitleOne>
-                                    <SpanTitleOne>The Geatest App</SpanTitleOne>
-                                </DivTitleOne>
-                            </div>
-                            <DivButtonFor>
-                                <SpanButtonFor>for</SpanButtonFor>
-                            </DivButtonFor>
-                            <div>
-                                <SpanLotery>Lottery</SpanLotery>
-                            </div>
-                        </ContainerBoxLeft>
-                    </DivBoxLeft> */}
+
                     <DivBoxRight>
-                        <ContainerBoxRight>
-                            <div>
-                                <SpanTitleAuthentication>
-                                    Reset Password
-                        </SpanTitleAuthentication>
-                            </div>
-                            <FormResetPassword onSubmit={handleSubmit}>
-                                <div style={{ boxShadow: "0px 3px 25px #00000014", borderRadius: 14 }}>
+                        {
+                            information === "" ?
+                                <ContainerBoxRight>
+                                    <div>
+                                        <SpanTitleAuthentication>
+                                            Reset Password
+                                        </SpanTitleAuthentication>
+                                    </div>
 
-                                    <DivInputNewPassword >
-                                        <InputNewPassword
-                                            type="password"
-                                            placeholder="New password"
-                                            value={newPassword}
-                                            autoComplete="true"
-                                            security="true"
-                                            onChange={handleChangeNewPassword}
-                                        />
-                                        <span style={{ display: "flex", position: "absolute", marginTop: 60, color: "#dc3545" }}>{error?.newPassword}</span>
-                                    </DivInputNewPassword>
-                                    <DivInputConfirmPassword >
-                                        <InputConfirmPassword
-                                            type="password"
-                                            placeholder="Repeat new password"
-                                            autoComplete="true"
-                                            security="true"
-                                            value={repeatPassword}
-                                            onChange={handleChangeConfirmPassword}
-                                        />
-                                        <span style={{ display: "flex", position: "absolute", marginTop: 60, color: "#dc3545" }}>{error?.repeatPassword}</span>
-                                    </DivInputConfirmPassword>
-                                    <DivButtonLogin>
-                                        <div>
-                                            <ButtonLogin>
-                                                <SpanLogin>Update <i className="fas fa-arrow-right"></i></SpanLogin>
-                                            </ButtonLogin>
+
+                                    <FormResetPassword onSubmit={handleSubmit}>
+                                        <div style={{ boxShadow: "0px 3px 25px #00000014", borderRadius: 14 }}>
+
+                                            <DivInputNewPassword >
+                                                <InputNewPassword
+                                                    type="password"
+                                                    placeholder="New password"
+                                                    value={newPassword}
+                                                    autoComplete="true"
+                                                    security="true"
+                                                    onChange={handleChangeNewPassword}
+                                                />
+                                                <span style={{ display: "flex", position: "absolute", marginTop: 60, color: "#dc3545" }}>{error?.newPassword}</span>
+                                            </DivInputNewPassword>
+                                            <DivInputConfirmPassword >
+                                                <InputConfirmPassword
+                                                    type="password"
+                                                    placeholder="Repeat new password"
+                                                    autoComplete="true"
+                                                    security="true"
+                                                    value={repeatPassword}
+                                                    onChange={handleChangeConfirmPassword}
+                                                />
+                                                <span style={{ display: "flex", position: "absolute", marginTop: 60, color: "#dc3545" }}>{error?.repeatPassword}</span>
+                                            </DivInputConfirmPassword>
+                                            <DivButtonLogin>
+                                                <div>
+                                                    <ButtonLogin>
+                                                        <SpanLogin>Update <i className="fas fa-arrow-right"></i></SpanLogin>
+                                                    </ButtonLogin>
+                                                </div>
+                                            </DivButtonLogin>
                                         </div>
-                                    </DivButtonLogin>
-                                </div>
-                                {
-                                    visibleMessageReset ?
-                                        infoReset === "Senhas diferentes." ?
-                                            <Alert title={infoReset} color={"#f8d7da"} />
-                                            :
-                                            <Alert title={infoReset} color={"#d4edda"} />
-                                        : null
-                                }
+                                        {
+                                            visibleMessageReset ?
+                                                infoReset === "Senhas diferentes." ?
+                                                    <Alert title={infoReset} color={"#f8d7da"} />
+                                                    :
+                                                    <Alert title={infoReset} color={"#d4edda"} />
+                                                : null
+                                        }
 
-                            </FormResetPassword>
-                            <ButtonSigUp>
-                                <SpanSigUp onClick={() => { returnGoBack() }}><i className="fas fa-arrow-left"></i>Back</SpanSigUp>
-                            </ButtonSigUp>
-                        </ContainerBoxRight>
+                                    </FormResetPassword>
+                                    <ButtonSigUp>
+                                        <SpanSigUp onClick={() => { returnGoBack() }}><i className="fas fa-arrow-left"></i>Back</SpanSigUp>
+                                    </ButtonSigUp>
+                                </ContainerBoxRight>
+                                :
+                                <ContainerBoxRight>
+                                    <SpanTitleAuthentication>
+                                        {information}
+                                    </SpanTitleAuthentication>
+                                </ContainerBoxRight>
+                        }
 
                     </DivBoxRight>
                 </BoxGeneral>
