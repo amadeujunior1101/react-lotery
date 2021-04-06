@@ -13,7 +13,7 @@ import {
 } from "./register.style"
 import validateRegister from "./validate"
 import api from "../../services/api";
-import LoadingComponent from '../../components/Loading';
+import LoadingComponent from '../../components/Loading/Loading';
 
 function Register() {
     const dispatch: Dispatch = useDispatch();

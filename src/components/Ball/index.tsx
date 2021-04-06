@@ -1,4 +1,4 @@
-import { Ball, SpanBall } from "../pages/Game/game.style";
+import { Ball, SpanBall } from "./style";
 
 interface PropsBall {
     numberBall: number;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import api from "../../services/api";
 import { useHistory } from "react-router-dom"
-import LoadingComponent from "../../components/Loading";
+import LoadingComponent from "../../components/Loading/Loading";
 
 import {
     Wrapper,

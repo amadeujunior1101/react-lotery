@@ -6,13 +6,14 @@ import { ArrayObjects } from "../../store/Carts/Carts.types"
 import { Dispatch } from "redux";
 import { addCart } from "../../store/Carts/Carts.actions";
 import api from "../../services/api";
-import LoadingComponent from '../../components/Loading';
+import LoadingComponent from '../../components/Loading/Loading';
 
 import ButtonChooseBet from "../../components/ButtonChooseBet"
 import TopBarMain from "../../components/TopBar"
 import BallBet from "../../components/Ball"
 import CartItem from "../../components/CartItem"
 import { logout } from "../../auth/authentication";
+import Alert from "../../components/Alert";
 
 import {
     DivButtonsChoose,
@@ -83,6 +84,10 @@ function Game() {
 
     const tokenRedux = localStorage.getItem('auth:token')
 
+    useEffect(() => {
+        listGames()
+    }, [])
+
     async function listGames() {
         try {
             const listGames = await api.get("/list-games?page=1&limit=3", {
@@ -92,6 +97,7 @@ function Game() {
             });
 
             setGames(listGames.data.data.data)
+            // console.log(listGames.data.data.data)
             let listNumbers: [Item] = listGames.data.data.data;
 
             let results = listNumbers.filter(el => {
@@ -101,7 +107,7 @@ function Game() {
             changeState(1, results[0].type)
             setSelectedGame(listNumbers[0])
 
-            setLoadGames(false)
+
         } catch (error) {
             if (error.response.status === 403) {
                 return logout()
@@ -131,6 +137,7 @@ function Game() {
         })
         setSelectedGame(results[0]);
         setSelectedBalls([])
+        setLoadGames(false)
     }
 
     function verifyColor(number: number) {
@@ -280,11 +287,6 @@ function Game() {
             }
         }
     }
-
-    useEffect(() => {
-        listGames()
-
-    }, [])
 
     return (
         <>
@@ -479,9 +481,10 @@ function Game() {
                         }
                         {
                             visibleInfoValueQuantityBalls ?
-                                <DivAlert>
-                                    <span>{`Você deve escolher ${Number(selectedGame?.max_number)} bolas para esse jogo`}</span>
-                                </DivAlert>
+                                // <DivAlert>
+                                //     <span>{`Você deve escolher ${Number(selectedGame?.max_number)} bolas para esse jogo`}</span>
+                                // </DivAlert>
+                                <Alert title={`Você deve escolher ${Number(selectedGame?.max_number)} bolas para esse jogo`} color={"#f8d7da"} />
                                 :
                                 null
                         }

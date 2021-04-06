@@ -1,55 +1,6 @@
 import styled from "styled-components";
 import { device } from "../mideaQuerysDefault"
 
-interface ButtonProps {
-    background: string;
-    color: string;
-    border: string;
-};
-
-interface DivBallProps {
-    bg: string;
-};
-
-interface TypeColorProps {
-    color: string;
-};
-
-const ButtonChoose = styled.button<ButtonProps>`
-    width: 113px;
-    height: 34px;
-    border-radius: 30px;
-    border-width: 0;
-    /* border: 2px solid #7f3992; */
-    cursor: pointer;
-    text-align: center;
-    font: italic normal bold 14px Helvetica Neue;
-    /* color: #7f3992; */
-    margin-right: 20px;
-
-    background: ${(p: ButtonProps) => p.background};
-    color: ${(p: ButtonProps) => p.color};
-    border: ${(p: ButtonProps) => p.border};
-    
-    outline: none;
-    box-shadow: none;
-`;
-
-const Ball = styled.div<DivBallProps>`
-    background: ${(p: DivBallProps) => p.bg === "#adc0c4" ? "#adc0c4" : p.bg};
-    /* background: #adc0c4; */
-    border-radius: 100%;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    cursor: pointer;
-    margin-bottom: 5px;
-`;
-
-const SpanBall = styled.span`
-   color: #FFF;
-`;
-
 const DivButtonsChoose = styled.div`
    margin: 20px 0 20px 0;
    display: flex;
@@ -364,39 +315,6 @@ const SpanTextFooter = styled.span`
     font: normal 15px Helvetica Neue;
     color: #707070;
 `;
-const DivListGames = styled.div`
-   display: flex;
-    margin-top: 35px;
-`;
-const DivGameIcon = styled.div`
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    width: 50px;
-`;
-
-const DivDivisorElement = styled.div<TypeColorProps>`
-   width: 5px;
-    height: auto;
-    background: ${(p) => p.color && p.color};
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-`;
-const DivGameDescription = styled.div`
-  margin: 10px 5px 10px 10px;
-    display: grid;
-    width: 280px;
-    word-wrap: break-word;
-`;
-const SpanNumberList = styled.span`
-  text-align: left;
-    font: italic bold 18px Helvetica Neue;
-    color: #868686;
-    width: 280px;
-`;
-const SpanType = styled.span<TypeColorProps>`
-  color: ${(p) => p.color && p.color};
-`;
 
 const DivAlert = styled.div`
  margin: 10px 0 0 10px;
@@ -411,9 +329,6 @@ border: 1px solid transparent;
 `;
 
 export {
-    ButtonChoose,
-    Ball,
-    SpanBall,
     DivScrollButtonsChoose,
     DivButtonsChoose,
     ParagraphDescription,
@@ -442,12 +357,6 @@ export {
     DivTitleCard,
     SpanInformationCartEmpty,
     ScrollList,
-    DivListGames,
-    DivGameIcon,
-    DivDivisorElement,
-    DivGameDescription,
-    SpanNumberList,
-    SpanType,
     DivAlert,
     DivCartTotal,
     SpanCartTotal,

@@ -12,7 +12,7 @@ import validateAccount from "./validate";
 import TopBarMain from "../../components/TopBar";
 import api from "../../services/api";
 import Alert from "../../components/Alert"
-import LoadingComponent from "../../components/Loading";
+import LoadingComponent from "../../components/Loading/Loading";
 import { logout } from "../../auth/authentication"
 
 function Account() {

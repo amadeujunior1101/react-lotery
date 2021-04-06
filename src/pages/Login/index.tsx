@@ -5,7 +5,7 @@ import { addToken } from "../../store/Users/Users.actions";
 import { Link, useHistory, Redirect, Route } from "react-router-dom"
 import { UserLogin, Users } from "../../store/Users/Users.types"
 import api from "../../services/api";
-import LoadingComponent from '../../components/Loading';
+import LoadingComponent from '../../components/Loading/Loading';
 import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxLeft, DivBoxRight, ContainerBoxLeft, DivTitleOne, SpanTitleOne,
     DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormLogin, DivInputEmail,

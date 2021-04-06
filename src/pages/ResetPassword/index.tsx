@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import api from "../../services/api"
-import LoadingComponent from "../../components/Loading"
+import LoadingComponent from "../../components/Loading/Loading"
 import Alert from "../../components/Alert"
 
 import {

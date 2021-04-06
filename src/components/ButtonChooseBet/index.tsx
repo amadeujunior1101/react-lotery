@@ -1,4 +1,4 @@
-import { ButtonChoose } from "../pages/Game/game.style"
+import { ButtonChoose } from "./style"
 
 interface Item {
   type: string;
