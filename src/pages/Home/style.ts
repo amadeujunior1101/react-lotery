@@ -97,13 +97,13 @@ const SpanLogOut = styled.span`
 
 const DivFooter = styled.div`
    width: 100%;
-    height: 70px;
+    height: 80px;
 
     justify-content: center;
     align-items: center;
     border-top: 2px solid #ebebeb;
     display: flex;
-    margin-top: 150px;
+    /* margin-top: 150px; */
 `;
 const SpanTextFooter = styled.span`
    text-align: center;
@@ -116,7 +116,9 @@ const Container = styled.div`
 justify-content: center;
 display: grid;
 height: calc(100vh - var(--content-recent-game));
+margin-bottom: 140px;
 `;
+
 const Main = styled.main`
 width: 1200px;
 height: 100px;

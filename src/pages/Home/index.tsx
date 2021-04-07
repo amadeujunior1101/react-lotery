@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 
 import dayjs from 'dayjs';
 import api from "../../services/api";
@@ -31,8 +31,10 @@ import {
     DivWrapperRecentGame,
 } from "./style";
 import { Game, GameResults } from "./types";
+import Footer from "../../components/Footer";
 
 function Home() {
+    const history = useHistory();
 
     const [openMenu, setOpenMenu] = useState(false);
     const [games, setGames] = useState<Game[]>([]);
@@ -67,22 +69,6 @@ function Home() {
         }
     }
 
-    async function showBets() {
-        try {
-            const bets = await api.get("/show-bet");
-
-            setGamesResults(bets.data.data)
-            setItemsGamesResults(bets.data.data)
-
-        } catch (error) {
-            return console.log({
-                status: error.response.statusText,
-                error: error.response.data.user_message,
-                message: "Falha na autenticação"
-            })
-        }
-    }
-
     async function listGames() {
         try {
             const listGames = await api.get("/list-games?page=1&limit=3");
@@ -91,6 +77,29 @@ function Home() {
             setLoadGames(false)
 
         } catch (error) {
+            if (!error.response) {
+                return history.replace("/login")
+            }
+            return console.log({
+                status: error.response.statusText,
+                error: error.response.data.user_message,
+                message: "Falha na autenticação"
+            })
+        }
+    }
+
+    async function showBets() {
+        try {
+            const bets = await api.get("/show-bet");
+
+            setGamesResults(bets.data.data)
+            setItemsGamesResults(bets.data.data)
+
+        } catch (error) {
+            if (!error.response) {
+                return history.replace("/login")
+            }
+
             return console.log({
                 status: error.response.statusText,
                 error: error.response.data.user_message,
@@ -176,9 +185,7 @@ function Home() {
                 </Main>
             </Container>
 
-            <DivFooter>
-                <SpanTextFooter>Copyright 2021 Luby Software</SpanTextFooter>
-            </DivFooter>
+            <Footer />
         </>
     )
 }

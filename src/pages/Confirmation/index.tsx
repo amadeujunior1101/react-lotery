@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import api from "../../services/api";
 import { useHistory } from "react-router-dom"
+import api from "../../services/api";
 
 import {
     Wrapper,
@@ -17,7 +17,11 @@ function Confirmation() {
 
     const history = useHistory();
 
-    async function userConfirmation() { 
+    useEffect(() => {
+        userConfirmation()
+    }, [])
+
+    async function userConfirmation() {
         try {
             const search = window.location.search;
             const params = new URLSearchParams(search);
@@ -39,7 +43,9 @@ function Confirmation() {
             }
 
         } catch (error) {
-            console.log("response error");
+            if (!error.response) {
+                return history.replace("/login")
+            }
             return console.log({
                 status: error.response.statusText,
                 error: error.response.data.user_message,
@@ -48,13 +54,8 @@ function Confirmation() {
         }
     }
 
-    useEffect(() => {
-        userConfirmation()
-    }, [])
-
     return (
         <Wrapper>
-
             <ContainerFluid>
                 <BoxGeneral>
                     <DivBoxRight>

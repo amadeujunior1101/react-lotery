@@ -1,35 +1,25 @@
-interface User {
-    fullName: string;
-    email: string;
-    password: string;
-    changeError: Function;
-    check_email: Function;
-}
+import { ItemsValidate } from "./types"
 
-function validate(props: User) {
-    if (props.fullName.length === 0) {
-        // console.log("Nome obrigatório!")
+function validate(props: ItemsValidate) {
+    if (props.full_name.length === 0) {
         return props.changeError({
             fullName: "Nome obrigatório!",
             email: "",
             password: "",
         })
     } else if (props.email.length === 0) {
-        // console.log("E-mail obrigatório!")
         return props.changeError({
             fullName: "",
             email: "E-mail obrigatório!",
             password: "",
         })
     } else if (!props.check_email(props.email)) {
-        // console.log("Formato do e-mail incorreto!")
         return props.changeError({
             fullName: "",
             email: "Formato do e-mail incorreto!",
             password: "",
         })
     } else if (props.password.length === 0) {
-        // console.log("Insira uma senha!")
         return props.changeError({
             fullName: "",
             email: "",
@@ -37,7 +27,7 @@ function validate(props: User) {
         })
     } else {
         return props.changeError({
-            fullName: props.fullName,
+            fullName: props.full_name,
             email: props.email,
             password: props.password,
         })

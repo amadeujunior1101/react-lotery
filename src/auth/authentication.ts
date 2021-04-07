@@ -6,6 +6,5 @@ export const isAuthenticated = () => {
 
 export const logout = () => {
     localStorage.removeItem("auth:token");
-    localStorage.removeItem("auth:token");
     window.location.reload();
 };

@@ -9,9 +9,7 @@ import Confirmation from "./pages/Confirmation";
 import Account from "./pages/Account";
 import Game from "./pages/Game";
 import Home from "./pages/Home";
-
-//Criar o componentes com as rotas
-// const history = createMemoryHistory(location)
+import ServerError from "./pages/ServerError";
 
 import { isAuthenticated } from "./auth/authentication"
 interface Element {
@@ -24,7 +22,6 @@ interface PrivateRouteProps {
     component: React.ComponentType<Element>;
     path: string;
     exact?: boolean;
-    // isAuthenticated: boolean;
 }
 
 function Routes() {
@@ -70,25 +67,11 @@ function Routes() {
                     <Route path="/login" component={Login} />
                 )}
 
+
+                {/* <Route path="/error-connection" component={ServerError} /> */}
                 <Route path="*" component={() => <h3>Page not found</h3>} />
             </Switch>
         </BrowserRouter>
-
-        // <BrowserRouter >
-        //     <Switch>
-        //         <Route path="/" exact component={Home} />
-        //         <Route path="/game" exact component={Game} />
-        //         <Route path="/login" component={Login} />
-        //         <Route path="/reset-password" component={ResetPassword} />
-        //         <Route path="/register" component={Register} />
-        //         <Route path="/account" component={Account} />
-        //         <Route path="/home" component={Home} />
-
-        //         {/* <Route path="/solicitar_emprestimo05/:id"  component={SolicitarEmprestimo05} /> */}
-
-        //         {/* <Route path="*" component={Page404} /> */}
-        //     </Switch>
-        // </BrowserRouter>
     );
 };
 

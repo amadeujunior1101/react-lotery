@@ -33,6 +33,7 @@ function Login() {
     const [error, setError] = useState<UserLogin>()
     const [visibleLoading, setVisibleLoading] = useState(false)
     const [visibleInfoLogin, setVisibleInfoLogin] = useState(false)
+    const [infoLogin, setInfoLogin] = useState("")
 
     const history = useHistory();
 
@@ -54,9 +55,20 @@ function Login() {
             history.replace("/");
 
         } catch (error) {
+            setVisibleLoading(false);
 
+            if (!error.response) {
+                setVisibleInfoLogin(true);
+                setInfoLogin("Houve uma falha na conexão cokm o servidor!");
+                setTimeout(() => {
+                    setVisibleInfoLogin(false);
+                }, 4000);
+                return;
+            }
+            
             if (error.response.statusText) {
                 setVisibleInfoLogin(true);
+                setInfoLogin("Login ou senha invalidos.");
                 setTimeout(() => {
                     setVisibleInfoLogin(false);
                 }, 4000);
@@ -66,8 +78,6 @@ function Login() {
                 setEmail("")
                 setPassword("")
             }
-
-            setVisibleLoading(false);
 
             return console.log({
                 status: error.response.statusText,
@@ -197,7 +207,7 @@ function Login() {
                                 </div>
                                 {
                                     visibleInfoLogin ?
-                                        <Alert title={"Login ou senha invalidos!"} color={"#f8d7da"} />
+                                        <Alert title={infoLogin} color={"#f8d7da"} />
                                         : null
                                 }
                                 {

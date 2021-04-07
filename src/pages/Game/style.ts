@@ -68,8 +68,9 @@ const Container = styled.div`
  background-color: "#F7F7F7";
 justify-content: center;
 display: grid;
-
+margin-bottom: 150px;
 `;
+
 const Main = styled.main`
 width: 1200px;
 display: flex;

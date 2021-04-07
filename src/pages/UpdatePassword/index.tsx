@@ -3,10 +3,11 @@ import { useHistory } from "react-router-dom";
 import api from "../../services/api"
 import LoadingComponent from "../../components/Loading/Loading"
 import Alert from "../../components/Alert"
+import Footer from "../../components/Footer"
 
 import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxRight, SpanTitleAuthentication, ContainerBoxRight, FormResetPassword, DivInputNewPassword,
-    DivInputConfirmPassword, InputNewPassword, InputConfirmPassword, DivButtonLogin, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp, Footer,
+    DivInputConfirmPassword, InputNewPassword, InputConfirmPassword, DivButtonLogin, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp,
 } from "./style";
 import validateUpdatePassword from "./validate"
 import { ItemsValidate, UserUpdatePassword } from "./types";
@@ -33,7 +34,7 @@ function UpdatePassword() {
             const token = params.get('token');
 
             const response = await api.post(`/confirmation-user?token=${token}`)
-        //    return console.log("response=>", response)
+            //    return console.log("response=>", response)
             if (response.data.user_message === "Token invalido.") {
                 setInformation("Token inválido, expirado ou revogado, você será redirecionado....");
                 setTimeout(() => {
@@ -47,7 +48,10 @@ function UpdatePassword() {
             // console.log("response=>", response)
 
         } catch (error) {
-            console.log("response error");
+            if (!error.response) {
+                return history.replace("/login")
+            }
+
             return console.log({
                 status: error.response.statusText,
                 error: error.response.data.user_message,
@@ -127,6 +131,9 @@ function UpdatePassword() {
 
         } catch (error) {
             setVisibleLoading(false);
+            if (!error.response) {
+                return history.replace("/login")
+            }
 
             return console.log({
                 status: error.response.statusText,
@@ -216,9 +223,7 @@ function UpdatePassword() {
                     </DivBoxRight>
                 </BoxGeneral>
             </ContainerFluid>
-            <Footer>
-                <span>Copyright 2020 Luby Software</span>
-            </Footer>
+            <Footer />
         </Wrapper>
     )
 }

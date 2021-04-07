@@ -97,6 +97,11 @@ function Register() {
         } catch (error) {
 
             setVisibleLoading(false);
+
+            if (!error.response) {
+                return history.replace("/login")
+            }
+
             return console.log({
                 status: error.response.statusText,
                 error: error.response.data.user_message,

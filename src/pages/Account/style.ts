@@ -2,14 +2,12 @@ import styled from "styled-components";
 import { device } from "../mideaQuerysDefault"
 
 const Wrapper = styled.div`
-background: #FFF;
-height: 100vh;
-/* align-items: stretch; */  
+    background: #FFF;
+    height: 100vh;
 `;
 
 const DivMenuMobile = styled.div`
     width: 100%;
-    /* height: 70px; */
     justify-content: center;
     border-bottom: 2px solid #ebebeb;
     display: flex;
@@ -25,9 +23,9 @@ const DivMenuMobile = styled.div`
 `;
 
 const UlMenuMobile = styled.div`
-justify-content: center;
-display: grid;
-list-style: none;
+    justify-content: center;
+    display: grid;
+    list-style: none;
     a{
             color: #707070;
             text-decoration: none;
@@ -35,12 +33,12 @@ list-style: none;
 `;
 
 const ContainerFluid = styled.div`
-  background-color: "#F7F7F7";
-  width: 100%;
- 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    background-color: "#F7F7F7";
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
    @media ${device.tablet && device.mobileL && device.mobileM && device.mobileS}{
         height: 100%;
@@ -53,8 +51,7 @@ const ContainerFluid = styled.div`
 `;
 
 const BoxGeneral = styled.div`
-  /* margin-top: 145px; */
-  justify-content: center;
+    justify-content: center;
 
   @media ${device.mobileS}{
     max-width: 320px;
@@ -80,7 +77,6 @@ const BoxGeneral = styled.div`
   @media ${device.tablet}{
     max-width: 768px;
     display: flex;
-    /* flex-wrap: wrap; */
     flex-direction: column;
     flex: 1;
   }
@@ -94,8 +90,6 @@ const BoxGeneral = styled.div`
 `;
 
 const DivBoxLeft = styled.div`
-    /* background: brown; */
-    /* flex: 1; */
     width: 100%;
     display: flex;
     justify-content: center;
@@ -105,7 +99,6 @@ const ContainerBoxLeft = styled.div`
     justify-content: center;
     flex-direction: column;
     text-align: center;
-    /* display: flex; */
 `;
 
 const DivTitleOne = styled.div`
@@ -117,7 +110,6 @@ const DivTitleOne = styled.div`
 
 const SpanTitleOne = styled.span`
     text-align: center;
-    /* font: italic normal bold 65px Helvetica Neue; */
     color: #707070;
 
     @media ${device.mobileL && device.mobileM && device.mobileS}{
@@ -145,13 +137,6 @@ const DivButtonFor = styled.button`
     align-items: center;
     cursor: pointer;
     border: none;
-/* 
-    text-align: center;
-    justify-content: center;
-    font-family: Helvetica Neue;
-    font-size: 22px;
-    font-weight: italic bold;
-    color: #FFFFFF; */
     margin: 30px auto 10px auto;
 `;
 
@@ -181,8 +166,6 @@ const SpanLotery = styled.span`
 
 
 const DivBoxRight = styled.div`
-    /* background: green; */
-    /* flex: 1; */
     width: 100%;
 `;
 
@@ -190,7 +173,6 @@ const ContainerBoxRight = styled.div`
     justify-content: center;
     flex-direction: column;
     text-align: center;
-    /* display: flex; */
 `;
 
 const SpanTitleAuthentication = styled.span`
@@ -203,6 +185,11 @@ const FormLogin = styled.form`
     justify-content: center;
     display: grid;
     margin-top: 25px;
+`;
+
+const DivBoxShadow = styled.div`
+box-shadow: 0px 3px 25px #00000014; 
+border-radius: 14px;
 `;
 
 const DivInputName = styled.div`
@@ -231,8 +218,6 @@ const DivInputEmail = styled.div`
     
      height: 80px; 
      background: #FFFFFF;
-     /* border-top-left-radius: 10px; 
-     border-top-right-radius: 10px;  */
      border: 1px solid #EBEBEB;
      display: flex;
      justify-content: center;
@@ -276,29 +261,27 @@ const InputLogin = styled.input`
     border: none;
     margin: auto 20px auto 20px;
     font: italic normal bold 18px Helvetica Neue;
-    color: #9D9D9D;
-
-    
+    color: #9D9D9D;    
 `;
 
 const DivButtonLogin = styled.div`
-   width: 350px; 
-   background: #fff; 
-   border: 1px solid #EBEBEB; 
-   border-bottom-left-radius: 10px; 
-   border-bottom-right-radius: 10px;
-   justify-content: center; 
-   display: grid;
+    width: 350px; 
+    background: #fff; 
+    border: 1px solid #EBEBEB; 
+    border-bottom-left-radius: 10px; 
+    border-bottom-right-radius: 10px;
+    justify-content: center; 
+    display: grid;
 
-   @media ${device.mobileL && device.mobileM && device.mobileS}{
+    @media ${device.mobileL && device.mobileM && device.mobileS}{
         width: 300px; 
-     }
-     @media ${device.tablet}{
-        width: 350px; 
-     }
-     @media ${device.laptop}{
-        width: 350px; 
-     }
+    }
+    @media ${device.tablet}{
+    width: 350px; 
+    }
+    @media ${device.laptop}{
+    width: 350px; 
+    }
 `;
 
 const DivForgot = styled.div`
@@ -308,10 +291,7 @@ const DivForgot = styled.div`
 
    @media ${device.mobileL && device.mobileM && device.mobileS}{
         width: 300px; 
-     }
-
-   /* cursor: pointer;
-    border: none; */
+    }
 `;
 
 const SpanForgot = styled.span`
@@ -322,15 +302,12 @@ const SpanForgot = styled.span`
 `;
 
 const ButtonLogin = styled.button.attrs({ type: 'submit' })`
-    /* width: 114px; */
-    /* height: 39px;    */
     background: #FFFFFF;
     border-radius: 100px;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     border: none;
-
     margin: 40px auto 40px auto;
 
     @media ${device.tablet && device.mobileL && device.mobileM && device.mobileS}{
@@ -358,9 +335,6 @@ const ButtonForgot = styled.button`
     cursor: pointer;
     border: none;
     margin-right: 10px;
-
-  
-    /* margin: 30px auto 30px auto;  */
 `;
 
 const ButtonSigUp = styled.button`
@@ -378,11 +352,7 @@ const ButtonSigUp = styled.button`
      }
      @media ${device.tablet}{
         margin: 20px auto 20px auto; 
-     }
-     /* @media ${device.laptop}{
-        margin: 20px auto 20px auto; 
-     } */
-   
+     }  
 `;
 
 const SpanSigUp = styled.span`
@@ -393,14 +363,6 @@ const SpanSigUp = styled.span`
      @media ${device.laptop}{
         font: italic normal bold 35px/70px Helvetica Neue;
      }
-`;
-
-const Footer = styled.div`
-   height: 80px;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   border-top: 1px solid #EBEBEB;
 `;
 
 export {
@@ -420,6 +382,7 @@ export {
     ContainerBoxRight,
     SpanTitleAuthentication,
     FormLogin,
+    DivBoxShadow,
     DivInputName,
     DivInputEmail,
     DivInputPassword,
@@ -432,5 +395,4 @@ export {
     SpanSigUp,
     ButtonSigUp,
     ButtonForgot,
-    Footer,
 }

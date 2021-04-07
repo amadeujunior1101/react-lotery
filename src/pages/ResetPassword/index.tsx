@@ -3,11 +3,12 @@ import { useHistory } from "react-router-dom";
 import api from "../../services/api"
 import LoadingComponent from "../../components/Loading/Loading"
 import Alert from "../../components/Alert"
+import Footer from "../../components/Footer"
 
 import {
     Wrapper, ContainerFluid, BoxGeneral, DivBoxLeft, DivBoxRight, ContainerBoxLeft, DivTitleOne, SpanTitleOne,
     DivButtonFor, SpanButtonFor, SpanLotery, SpanTitleAuthentication, ContainerBoxRight, FormResetPassword, DivInputEmail,
-    DivInputPassword, InputEmail, DivButtonLogin, DivForgot, SpanForgot, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp, Footer,
+    DivInputPassword, InputEmail, DivButtonLogin, DivForgot, SpanForgot, ButtonLogin, SpanLogin, SpanSigUp, ButtonSigUp
 } from "./style";
 import validateResetPassword from "./validate"
 import { ItemsValidate, UserResetPassword } from "./types";
@@ -91,6 +92,9 @@ function ResetPassword() {
 
         } catch (error) {
             setVisibleLoading(false);
+            if (!error.response) {
+                return history.replace("/login")
+            }
 
             return console.log({
                 status: error.response.statusText,
@@ -172,9 +176,7 @@ function ResetPassword() {
                     </DivBoxRight>
                 </BoxGeneral>
             </ContainerFluid>
-            <Footer>
-                <span>Copyright 2020 Luby Software</span>
-            </Footer>
+            <Footer />
         </Wrapper>
     )
 }

@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { device } from "../mideaQuerysDefault"
 
 const Wrapper = styled.div`
-background: #F7F7F7;
-height: 100vh;
+  background: #F7F7F7;
+  height: 100vh;
      
 `;
 const ContainerFluid = styled.div`
@@ -25,7 +25,6 @@ const ContainerFluid = styled.div`
 `;
 
 const BoxGeneral = styled.div`
-  /* margin-top: 145px; */
   justify-content: center;
 
   @media ${device.mobileS}{
@@ -52,7 +51,6 @@ const BoxGeneral = styled.div`
   @media ${device.tablet}{
     max-width: 768px;
     display: flex;
-    /* flex-wrap: wrap; */
     flex-direction: column;
     flex: 1;
   }
@@ -66,8 +64,6 @@ const BoxGeneral = styled.div`
 `;
 
 const DivBoxRight = styled.div`
-    /* background: green; */
-    /* flex: 1; */
     width: 100%;
 `;
 
@@ -75,7 +71,6 @@ const ContainerBoxRight = styled.div`
     justify-content: center;
     flex-direction: column;
     text-align: center;
-    /* display: flex; */
 `;
 
 const SpanTitleAuthentication = styled.span`

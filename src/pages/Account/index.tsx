@@ -5,20 +5,21 @@ import { Dispatch } from "redux";
 import { addUser } from "../../store/Users/Users.actions";
 import { Users } from "../../store/Users/Users.types";
 import {
-    Wrapper, DivMenuMobile, UlMenuMobile, ContainerFluid, BoxGeneral, DivBoxRight, SpanTitleAuthentication, ContainerBoxRight, FormLogin, DivInputName, DivInputEmail,
-    DivInputPassword, InputLogin, DivButtonLogin, ButtonLogin, SpanLogin, Footer,
+    Wrapper, DivMenuMobile, UlMenuMobile, ContainerFluid, BoxGeneral, DivBoxRight, SpanTitleAuthentication, ContainerBoxRight, FormLogin,
+    DivBoxShadow, DivInputName, DivInputEmail, DivInputPassword, InputLogin, DivButtonLogin, ButtonLogin, SpanLogin
 } from "./style"
 import validateAccount from "./validate";
 import TopBarMain from "../../components/TopBar";
 import api from "../../services/api";
 import Alert from "../../components/Alert"
 import LoadingComponent from "../../components/Loading/Loading";
+import Footer from "../../components/Footer";
 import { logout } from "../../auth/authentication"
 import { ItemsValidate, User } from "./types"
 
 function Account() {
     // const dispatch: Dispatch = useDispatch();
-    // const history = useHistory();
+    const history = useHistory();
 
     const result = useSelector((state: Users) => state.user.users);
 
@@ -40,7 +41,7 @@ function Account() {
         e.preventDefault()
 
         let item: ItemsValidate = {
-            fullName: fullName.trim(),
+            full_name: fullName.trim(),
             email: email.trim(),
             password: password.trim(),
             changeError: changeError,
@@ -52,13 +53,13 @@ function Account() {
 
     function changeError(error: User) {
         setError(error)
-        if (error.fullName.length > 0 && error.email.length > 0 && error.password.length > 0) {
+        if (error.full_name.length > 0 && error.email.length > 0 && error.password.length > 0) {
             updateUser()
 
             console.log("users do redux:", result)
 
             setError({
-                fullName: "",
+                full_name: "",
                 email: "",
                 password: ""
             })
@@ -97,9 +98,10 @@ function Account() {
             setFullName(response.data.user.full_name)
             setEmail(response.data.user.email)
 
-            // console.log("response:", response)
-
         } catch (error) {
+            if (!error.response) {
+                return history.replace("/login")
+            }
             return console.log({
                 error: error,
                 message: "Falha na autenticação",
@@ -121,7 +123,7 @@ function Account() {
             if (response.data.user_message === "Usuário atualizado com sucesso.") {
                 setVisibleLoading(false);
                 setVisibleInfo(true);
-  
+
                 return setMessageUser(response.data.user_message)
             }
             else if (response.data.user_message === "Senha obrigatória.") {
@@ -137,9 +139,19 @@ function Account() {
             }
 
         } catch (error) {
-            console.log(error.response)
             setVisibleLoading(false);
-            return setMessageUser(error.data)
+            if (!error.response) {
+                return history.replace("/login")
+            }
+
+            setMessageUser(error.data)
+
+            return console.log({
+                error: error,
+                message: "Falha na autenticação",
+                status: error.response.data.error
+            })
+
         }
     }
 
@@ -173,20 +185,19 @@ function Account() {
                             <div>
                                 <SpanTitleAuthentication>
                                     Account Update
-                        </SpanTitleAuthentication>
+                            </SpanTitleAuthentication>
                             </div>
                             <FormLogin onSubmit={handleSubmit}>
-                                <div style={{ boxShadow: "0px 3px 25px #00000014", borderRadius: 14 }}>
+                                <DivBoxShadow>
 
                                     <DivInputName >
                                         <InputLogin
                                             type="text"
                                             placeholder="Name"
                                             value={fullName}
-                                            // onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e.currentTarget.value)}
                                             onChange={handleChangeFullName}
                                         />
-                                        <span style={{ display: "flex", position: "absolute", marginTop: 60, color: "#dc3545" }}>{error?.fullName}</span>
+                                        <span style={{ display: "flex", position: "absolute", marginTop: 60, color: "#dc3545" }}>{error?.full_name}</span>
                                     </DivInputName>
                                     <DivInputEmail>
                                         <InputLogin
@@ -214,7 +225,7 @@ function Account() {
                                             </ButtonLogin>
                                         </div>
                                     </DivButtonLogin>
-                                </div>
+                                </DivBoxShadow>
                                 {
                                     visibleInfo ?
                                         messageUser === "Usuário atualizado com sucesso." ?
@@ -231,9 +242,7 @@ function Account() {
                     </DivBoxRight>
                 </BoxGeneral>
             </ContainerFluid>
-            <Footer>
-                <span>Copyright 2020 Luby Software</span>
-            </Footer>
+            <Footer />
         </Wrapper>
     )
 }

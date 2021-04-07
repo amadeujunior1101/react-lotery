@@ -26,8 +26,6 @@ import {
     Main,
     ContentLeft,
     DivBox1,
-    // DivBox2,
-    // DivBox3,
     SpanTitleGame,
     ContainerBalls,
     DivScrollButtonsChoose,
@@ -54,11 +52,10 @@ import {
     SpanValueTotal,
     DivSaveButton,
     SpanSaveButton,
-    DivFooter,
-    SpanTextFooter,
 } from "./style"
 
 import { GameType, Item, Cart } from "./types"
+import Footer from "../../components/Footer";
 
 function Game() {
     const history = useHistory();
@@ -104,14 +101,9 @@ function Game() {
 
         } catch (error) {
 
-            if (!error.response) return;
-            //     // network error
-            //     this.errorStatus = 'Error: Network Error';
-            // } else {
-            //     this.errorStatus = error.response.data.message;
-            // }
-
-            //    if (error == "Error: Network Error") return "Desculpe, houve um erro, impossivel registrar sua aposta."
+            if (!error.response) {
+                return history.replace("/login")
+            }
             return console.log({
                 status: error.response.statusText,
                 error: error.response.data.user_message,
@@ -508,9 +500,10 @@ function Game() {
                     </ContentRight>
                 </Main>
             </Container>
-            <DivFooter>
+            <Footer />
+            {/* <DivFooter>
                 <SpanTextFooter>Copyright 2021 Luby Software</SpanTextFooter>
-            </DivFooter>
+            </DivFooter> */}
         </>
     )
 }

@@ -383,14 +383,6 @@ border-color: #f5c6cb;
 border: 1px solid transparent;
 `;
 
-const Footer = styled.div`
-   height: 80px;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   border-top: 1px solid #EBEBEB;
-`;
-
 export {
     Wrapper,
     ContainerFluid,
@@ -419,6 +411,5 @@ export {
     SpanSigUp,
     ButtonSigUp,
     ButtonForgot,
-    DivAlert,
-    Footer,
+    DivAlert
 }

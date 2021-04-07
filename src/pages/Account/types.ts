@@ -1,13 +1,12 @@
 export interface ItemsValidate {
-    fullName: string;
+    full_name: string;
     email: string;
     password: string;
     changeError: Function;
     check_email: Function;
 }
-
 export interface User {
-    fullName: string;
+    full_name: string;
     email: string;
     password: string;
 }
