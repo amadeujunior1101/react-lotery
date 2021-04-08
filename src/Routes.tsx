@@ -9,7 +9,6 @@ import Confirmation from "./pages/Confirmation";
 import Account from "./pages/Account";
 import Game from "./pages/Game";
 import Home from "./pages/Home";
-import ServerError from "./pages/ServerError";
 
 import { isAuthenticated } from "./auth/authentication"
 interface Element {

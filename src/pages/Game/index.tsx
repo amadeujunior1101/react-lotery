@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { ArrayObjects } from "../../store/Carts/Carts.types"
 import { Dispatch } from "redux";
-import { addCart } from "../../store/Carts/Carts.actions";
 import api from "../../services/api";
 import LoadingComponent from '../../components/Loading/Loading';
 
@@ -12,7 +11,6 @@ import ButtonChooseBet from "../../components/ButtonChooseBet"
 import TopBarMain from "../../components/TopBar"
 import BallBet from "../../components/Ball"
 import CartItem from "../../components/CartItem"
-import { logout } from "../../auth/authentication";
 import Alert from "../../components/Alert";
 
 import {
@@ -72,7 +70,8 @@ function Game() {
 
     const [openMenu, setOpenMenu] = useState(false);
     const [visibleCartMobile, setVisibleCartMobile] = useState(false);
-    const [visibleInfoMinimumValueBet, SetVisibleInfoMinimumValueBet] = useState(false);
+    const [visibleInfoBet, SetVisibleInfoBet] = useState(false);
+    const [infoBet, SetInfoBet] = useState("");
     const [visibleInfoValueQuantityBalls, SetVisibleInfoValueQuantityBalls] = useState(false);
 
     const [activeId, setActiveId] = useState(1)
@@ -252,9 +251,12 @@ function Game() {
     async function saveCart() {
         // return console.log("Click save")
         if (cartValue() < Number(selectedGame?.min_cart_value)) {
-            SetVisibleInfoMinimumValueBet(true)
+            SetVisibleInfoBet(true)
+            SetInfoBet(`O valor mínimo das apostas é ${Number(selectedGame?.min_cart_value).toFixed(2)
+                .replace(".", ",")
+                .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`)
             setTimeout(() => {
-                SetVisibleInfoMinimumValueBet(false)
+                SetVisibleInfoBet(false)
             }, 4000);
         } else {
             setVisibleLoading(true);
@@ -265,10 +267,17 @@ function Game() {
                 });
 
                 if (betSave.status === 200) {
-                    SetVisibleInfoMinimumValueBet(false)
+                    SetVisibleInfoBet(false)
                     setCart([]);
                     setVisibleLoading(false);
-                    history.push("/");
+
+                    SetVisibleInfoBet(true)
+                    SetInfoBet("Aposta registrada, você será redirecionado...")
+                    setTimeout(() => {
+                        SetVisibleInfoBet(false)
+                        history.push("/");
+                    }, 4000);
+
                 }
 
             } catch (error) {
@@ -358,12 +367,16 @@ function Game() {
                                                 <SpanSaveButton>Save <i className="fas fa-arrow-right"></i></SpanSaveButton>
                                             </DivSaveButton>
                                             {
-                                                visibleInfoMinimumValueBet ?
-                                                    <DivAlert>
-                                                        <span>{`O valor mínimo das apostas é ${Number(selectedGame?.min_cart_value).toFixed(2)
-                                                            .replace(".", ",")
-                                                            .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`}</span>
-                                                    </DivAlert>
+                                                visibleInfoBet ?
+                                                    // <DivAlert>
+                                                    //     <span>{`O valor mínimo das apostas é ${Number(selectedGame?.min_cart_value).toFixed(2)
+                                                    //         .replace(".", ",")
+                                                    //         .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`}</span>
+                                                    // </DivAlert>
+                                                    infoBet === "Aposta registrada, você será redirecionado..." ?
+                                                        <Alert title={infoBet} color={"#d4edda"} />
+                                                        :
+                                                        <Alert title={infoBet} color={"#f8d7da"} />
                                                     :
                                                     null
                                             }
@@ -474,12 +487,16 @@ function Game() {
                         </DivSaveButton>
                         {/* <button onClick={() => seeCart()}>See cart</button> */}
                         {
-                            visibleInfoMinimumValueBet ?
-                                <DivAlert>
-                                    <span>{`O valor mínimo das apostas é ${Number(selectedGame?.min_cart_value).toFixed(2)
-                                        .replace(".", ",")
-                                        .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`}</span>
-                                </DivAlert>
+                            visibleInfoBet ?
+                                // <DivAlert>
+                                //     <span>{`O valor mínimo das apostas é ${Number(selectedGame?.min_cart_value).toFixed(2)
+                                //         .replace(".", ",")
+                                //         .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`}</span>
+                                // </DivAlert>
+                                infoBet === "Aposta registrada, você será redirecionado..." ?
+                                    <Alert title={infoBet} color={"#d4edda"} />
+                                    :
+                                    <Alert title={infoBet} color={"#f8d7da"} />
                                 :
                                 null
                         }

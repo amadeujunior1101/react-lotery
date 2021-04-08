@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useHistory, Link } from "react-router-dom";
 import { logout } from '../auth/authentication';
 
 const BASE_URL_LOCAL = process.env.REACT_APP_BASE_URL;
@@ -9,18 +8,9 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
-  if (
-    !config.baseURL?.endsWith('login') ||
-    !config.baseURL?.endsWith('register') ||
-    !config.baseURL?.endsWith('update-password') ||
-    !config.baseURL?.endsWith('confirmation-user') ||
-    !config.baseURL?.endsWith('error-connection') ||
-    !config.baseURL?.endsWith('reset-password') ||
-    !config.baseURL?.endsWith('*')
-  ) {
-    const userToken = await localStorage.getItem('auth:token');
-    config.headers.Authorization = `Bearer ${userToken}`;
-  }
+
+  const userToken = await localStorage.getItem('auth:token');
+  config.headers.Authorization = `Bearer ${userToken}`;
 
   return config;
 }, (error) => {
