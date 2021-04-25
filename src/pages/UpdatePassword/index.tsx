@@ -33,7 +33,7 @@ function UpdatePassword() {
             const params = new URLSearchParams(search);
             const token = params.get('token');
 
-            const response = await api.post(`/confirmation-user?token=${token}`)
+            const response = await api.post(`/confirmation-user-reset?token=${token}`)
             //    return console.log("response=>", response)
             if (response.data.user_message === "Token invalido.") {
                 setInformation("Token inválido, expirado ou revogado, você será redirecionado....");
